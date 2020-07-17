@@ -1,2 +1,3 @@
-# google-apps-script-projects
-My Google Apps Script projects shared on YouTube videos
+# GAS-058 Google Form with File Categorization
+## Categorize the uploaded files by the selected folder or entered keyword.
+## Share the uploaded files to the respondent
