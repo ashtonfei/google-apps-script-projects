@@ -1,13 +1,9 @@
 # GAS-058 Google Form with File Categorization
 
 ### Description
-<<<<<<< HEAD
-This project is used to handle the uploaded files in Google Form with Google Apps Script. If you want to classify or organize the uploaded files automatically, you might be intreseted. You can try the deom form [here](https://forms.gle/FaYWFcbqSnzsFsCv6).
-=======
-This project is used to handle the uploaded files in Google Form with Google Apps Script. If you want to classify or organize the uploaded files automatically, you might be    instreseted. You can try the deom form [here](https://forms.gle/FaYWFcbqSnzsFsCv6).
->>>>>>> 2f46f0b7145d2b8a18c5050415dbe99e2e2968ab
+This project is used to handle the uploaded files in Google Form with Google Apps Script. If you want to classify or organize the uploaded files automatically, you might be instreseted. You can try the deom form 
 
-### Apps Script type
+### Apps Script Type
 Google Form
 
 ### Features
