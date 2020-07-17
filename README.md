@@ -24,15 +24,15 @@ Google Form
    ```javascript
    const files_keyword = "Files"    // The question title in the form for the file uploader
    ```
-![image](https://user-images.githubusercontent.com/16481229/87748247-f3ee9380-c827-11ea-86a2-b4a0cd0265da.png)
+   ![image](https://user-images.githubusercontent.com/16481229/87748247-f3ee9380-c827-11ea-86a2-b4a0cd0265da.png)
 2. Create the trigger if you can see the "addon icon" in the form. Click on the icon, you should be able to see and "App" button, after click it you can use "Create trigger". (Notes, you'll be asked to authorize the app when use it at the first time.)
-![image](https://user-images.githubusercontent.com/16481229/87755072-dd046d00-c838-11ea-8481-2e681a5ebe1d.png)
+    ![image](https://user-images.githubusercontent.com/16481229/87755072-dd046d00-c838-11ea-8481-2e681a5ebe1d.png)
 
 ### Output
 1. Files classified in folders
-![image](https://user-images.githubusercontent.com/16481229/87748308-184a7000-c828-11ea-9e70-e2deecd98012.png)
+    ![image](https://user-images.githubusercontent.com/16481229/87748308-184a7000-c828-11ea-9e70-e2deecd98012.png)
 2. Files shared with respondent
-![image](https://user-images.githubusercontent.com/16481229/87755512-b561d480-c839-11ea-8063-0e63a4fbf31e.png)
+    ![image](https://user-images.githubusercontent.com/16481229/87755512-b561d480-c839-11ea-8063-0e63a4fbf31e.png)
 
 ### YouTube
 * [GAS-058 Google Form with File Categorization](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
