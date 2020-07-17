@@ -18,7 +18,7 @@ You have 2 options here, you can choose the one you prefered.
     ```
     2. Create a new apps script project on your Google drive, and replace the "script id"(1IpfC6QBXRB3XoLGJv7MQHT-q0HHsIFsKiYfki5NbTr9XWhyExQ9yHZP-) in the file .clasp.json. The script id can be found the in the apps script project URL you just created.
     ``` javascript
-    {"scriptId":"1IpfC6QBXRB3XoLGJv7MQHT-q0HHsIFsKiYfki5NbTr9XWhyExQ9yHZP-")
+    {"scriptId":"1IpfC6QBXRB3XoLGJv7MQHT-q0HHsIFsKiYfki5NbTr9XWhyExQ9yHZP-"}
     ```
     3. Login clasp
     ```
