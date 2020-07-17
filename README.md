@@ -10,7 +10,7 @@ My Google Apps Script projects shared on YouTube videos, each branch is a projec
 * GAS-058 Google Form with File Categorization
 
 ### Notes
-* You can copy the files with extenstion *.js(*.gs), *.html, *.json to the [apps script editor](https://script.google.com/) on line.  
+* You can copy the files with extenstion .js(.gs), .html, .json to the [apps script editor](https://script.google.com/) on line.  
 * Files structure are optimized for CLASP, please make sure you have node, clasp, and git installed if you want to work with them on your locally.
 * Install [node](https://nodejs.org/en/).
 * Install [clasp](https://github.com/google/clasp).
