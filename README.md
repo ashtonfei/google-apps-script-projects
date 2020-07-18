@@ -24,16 +24,17 @@ This is a quick guide for you to use [git](https://git-scm.com/downloads) and [c
     ``` json
     {"scriptId":"Place your project id here"}
     ```
-4. Login clasp
+4. Clasp login and authorization
+    * Login
     ```
     clasp login
     ```
-    Sign in
-    ![image](https://user-images.githubusercontent.com/16481229/87847929-51f5a680-c90e-11ea-92d5-0003b92f372c.png)
-    Authroization
-    ![image](https://user-images.githubusercontent.com/16481229/87847942-718ccf00-c90e-11ea-9e70-07152beed0ca.png)
-    Success
-    ![image](https://user-images.githubusercontent.com/16481229/87847959-a39e3100-c90e-11ea-94f5-e67ae6ab8707.png)
+    * Sign in
+    ![image](https://user-images.githubusercontent.com/16481229/87848211-836f7180-c910-11ea-969b-e55b1b6cbfc8.png)
+    * Authroization
+    ![image](https://user-images.githubusercontent.com/16481229/87848222-9b46f580-c910-11ea-8f6a-f4d942b50abf.png)
+    * Success
+    ![image](https://user-images.githubusercontent.com/16481229/87848237-c3365900-c910-11ea-8fe4-5399b3deb4db.png)
 5. Push your local project to the online apps script project
     ```
     clasp push
@@ -45,4 +46,3 @@ This is a quick guide for you to use [git](https://git-scm.com/downloads) and [c
     
 ### YouTube
 My playlist about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
-
