@@ -9,29 +9,39 @@ This is a quick guide for you to use [git](https://git-scm.com/downloads) and [c
 * Install [git](https://git-scm.com/downloads).
 
 ### Quick guide
-1. Git clone my project or one branch from my porject to your local dicrectory
-    * Clone project
+1. Git clone my project or one branch of my project to your local dicrectory.
+    * Command in terminal, clone project
     ``` git
     git clone https://github.com/ashtonfei/google-apps-script-projects.git
     ``` 
-    * Clone one branch
+    * Command in terminal, clone one branch **(-b|--branch)**
     ```git
     git clone -b GAS-058 https://github.com/ashtonfei/google-apps-script-projects.git
     ```
-
-2. Create a new apps script project on your Google drive, and replace the "script id"(e.g. 1IpfC6QBXRB3XoLGJv7MQHT-q0HHsIFsKiYfki5NbTr9XWhyExQ9yHZP-) in the file .clasp.json. The script id can be found the in the apps script project URL you just created.
+2. Create a new apps script project on your Google drive, and get the script id of your project. You can find the id either in the url or in the project properties.
+    ![image](https://user-images.githubusercontent.com/16481229/87847833-8cab0f00-c90d-11ea-84d5-594b5d98655b.png)
+3. Replace the script id in the file .clasp.json with yours.
     ``` json
-    {"scriptId":"1IpfC6QBXRB3XoLGJv7MQHT-q0HHsIFsKiYfki5NbTr9XWhyExQ9yHZP-"}
+    {"scriptId":"Place your project id here"}
     ```
-3. Login clasp
+4. Login clasp
+    * Command in terminal
     ```
     clasp login
     ```
-4. Push your local project to the online apps script project
+    * Sign in
+    ![image](https://user-images.githubusercontent.com/16481229/87847929-51f5a680-c90e-11ea-92d5-0003b92f372c.png)
+    * Authroization
+    ![image](https://user-images.githubusercontent.com/16481229/87847942-718ccf00-c90e-11ea-9e70-07152beed0ca.png)
+    * Success
+    ![image](https://user-images.githubusercontent.com/16481229/87847959-a39e3100-c90e-11ea-94f5-e67ae6ab8707.png)
+5. Push your local project to the online apps script project
+    * Command in terminal
     ```
     clasp push
     ```
-5. Open the apps script project to validate the result
+6. Open the apps script project to validate the result
+    * Command in terminal
     ```
     clasp open
     ```
