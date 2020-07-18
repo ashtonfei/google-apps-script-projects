@@ -20,21 +20,21 @@ This is a quick guide for you to use [clasp](https://github.com/google/clasp) to
     ```
 
 2. Create a new apps script project on your Google drive, and replace the "script id"(e.g. 1IpfC6QBXRB3XoLGJv7MQHT-q0HHsIFsKiYfki5NbTr9XWhyExQ9yHZP-) in the file .clasp.json. The script id can be found the in the apps script project URL you just created.
-``` json
-{"scriptId":"1IpfC6QBXRB3XoLGJv7MQHT-q0HHsIFsKiYfki5NbTr9XWhyExQ9yHZP-"}
-```
+    ``` json
+    {"scriptId":"1IpfC6QBXRB3XoLGJv7MQHT-q0HHsIFsKiYfki5NbTr9XWhyExQ9yHZP-"}
+    ```
 3. Login clasp
-```
-clasp login
-```
+    ```
+    clasp login
+    ```
 4. Push your local project to the online apps script project
-```
-clasp push
-```
+    ```
+    clasp push
+    ```
 5. Open the apps script project to validate the result
-```
-clasp open
-```
+    ```
+    clasp open
+    ```
 
 ### YouTube
 My playlist about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
