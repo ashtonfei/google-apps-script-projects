@@ -1,4 +1,4 @@
-# How to use clasp
+# GAS-059 How to Use clasp
 
 ### Description
 This is a quick guide for you to use [git](https://git-scm.com/downloads) and [clasp](https://github.com/google/clasp) to clone and deploy my google apps script project on your Google drive.
