@@ -10,11 +10,11 @@ This is a quick guide for you to use [git](https://git-scm.com/downloads) and [c
 
 ### Quick guide
 1. Git clone my project or one branch of my project to your local dicrectory.
-    * Command in terminal, clone project
+    * Clone project
     ``` git
     git clone https://github.com/ashtonfei/google-apps-script-projects.git
     ``` 
-    * Command in terminal, clone one branch **(-b|--branch)**
+    * Clone one branch **(-b|--branch)**
     ```git
     git clone -b GAS-058 https://github.com/ashtonfei/google-apps-script-projects.git
     ```
@@ -25,27 +25,24 @@ This is a quick guide for you to use [git](https://git-scm.com/downloads) and [c
     {"scriptId":"Place your project id here"}
     ```
 4. Login clasp
-    * Command in terminal
     ```
     clasp login
     ```
-    * Sign in
+    Sign in
     ![image](https://user-images.githubusercontent.com/16481229/87847929-51f5a680-c90e-11ea-92d5-0003b92f372c.png)
-    * Authroization
+    Authroization
     ![image](https://user-images.githubusercontent.com/16481229/87847942-718ccf00-c90e-11ea-9e70-07152beed0ca.png)
-    * Success
+    Success
     ![image](https://user-images.githubusercontent.com/16481229/87847959-a39e3100-c90e-11ea-94f5-e67ae6ab8707.png)
 5. Push your local project to the online apps script project
-    * Command in terminal
     ```
     clasp push
     ```
 6. Open the apps script project to validate the result
-    * Command in terminal
     ```
     clasp open
     ```
-
+    
 ### YouTube
 My playlist about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 
