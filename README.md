@@ -35,5 +35,5 @@ Google Form
     ![image](https://user-images.githubusercontent.com/16481229/87755512-b561d480-c839-11ea-8063-0e63a4fbf31e.png)
 
 ### YouTube
-* [GAS-058 Google Form with File Categorization](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
+* [GAS-058 Google Form with File Categorization](https://youtu.be/5gXcSGUYJVA)
 * My Playlist about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
