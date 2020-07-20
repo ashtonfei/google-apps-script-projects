@@ -14,7 +14,7 @@ My Google Apps Script projects shared on YouTube videos, each branch is a projec
 
 ### Notes
 * You can copy the files with extenstion .js(.gs), .html, .json to the [apps script editor](https://script.google.com/) on line.  
-* Files structure are optimized for clasp, please read this doc if you want to use it with clasp. * [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-059) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
+* Files structure are optimized for clasp, please read this doc if you want to use it with clasp. [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-059) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
 
 
 ### YouTube
