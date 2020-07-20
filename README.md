@@ -9,7 +9,7 @@ My Google Apps Script projects shared on YouTube videos, each branch is a projec
 ### All projects
 * [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-059) - [Watch on YouTube coming...](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 * [GAS-058 Google Form with File Categorization](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-058) - [Watch on YouTube](https://youtu.be/5gXcSGUYJVA)
-*[GAS-057 Custom Form with VueJS and MCSS](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-057) - [Watch on YouTube](https://youtu.be/MfmjUUS4UUE)
+* [GAS-057 Custom Form with VueJS and MCSS](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-057) - [Watch on YouTube](https://youtu.be/MfmjUUS4UUE)
 
 
 ### Notes
