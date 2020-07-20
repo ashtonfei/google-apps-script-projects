@@ -36,4 +36,4 @@ Google Form
 
 ### YouTube
 * [GAS-058 Google Form with File Categorization](https://youtu.be/5gXcSGUYJVA)
-* My Playlist about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
+* More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
