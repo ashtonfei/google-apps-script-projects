@@ -1,7 +1,7 @@
 # GAS-057 Custom Form with VueJS and MCSS
 
 ### Description
-Build a custom form in a Google Sheet with Google Apps Script, Vue JS, and Materialize CSS. Here is the [demo web app](https://script.google.com/macros/s/AKfycbzm-W-K56IVKtF71DeKa3n55ZR3JBZNQQzzhG-27nJsVMARuo2i/exec).
+Build a custom form in a Google Sheet with [Google Apps Script](https://developers.google.com/apps-script), [Vue JS](https://vuejs.org/), and [Materialize CSS](https://materializecss.com/getting-started.html). Here is the [demo web app](https://script.google.com/macros/s/AKfycbzm-W-K56IVKtF71DeKa3n55ZR3JBZNQQzzhG-27nJsVMARuo2i/exec).
 
 ### Apps Script Type
 Google Sheet, Web App
