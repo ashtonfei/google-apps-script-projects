@@ -45,5 +45,5 @@ This is a quick guide for you to use [git](https://git-scm.com/downloads) and [c
     ```
     
 ### YouTube
-[GAS-059 How to Use clasp - coming...]()
+[GAS-059 How to Use clasp](https://youtu.be/V-oE2OyvTKM)
 My playlist about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
