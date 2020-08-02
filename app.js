@@ -2,7 +2,6 @@ const OVER_HOURS = 24 // {integer} hours of email you didn't reply
 const NEWER_THAN_DAYS = 30 // {integer} days of email recieved in the past
 const NO_REPLY_LABEL_NAME = "NoReply"  // {string} label name to be applied to no reply emails
 const QUERY = "in:inbox" // {string} limit the search result with query string
-const GMAIL_SEARCH_OPERATOR_URL = "https://support.google.com/mail/answer/7190?hl=en"
 const MAX = 100 // {integer} max search result
 const SEND_NOTIFICATION = true // send yourself an email notification with a list of no reply emails
 
