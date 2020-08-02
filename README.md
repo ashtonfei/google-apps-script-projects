@@ -1,7 +1,7 @@
 # Google Apps Script Projects
 
 ### Description
-My Google Apps Script projects shared on YouTube videos, each branch is a project about the video I shared on [YouTube](https://www.youtube.com/ashtonfei/), you can find all the source code about the project there.
+My Google Apps Script projects shared on [YouTube](https://www.youtube.com/ashtonfei/), each branch is a project about the video. You can find the source code about the projects here, branch name is in the video title.
 
 ### All projects
 * [GAS-060 No Reply Emails](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-060) - [YouTube](https://youtu.be/4z0d6RUA96g)
