@@ -18,6 +18,8 @@ Standalone
 * Day
 
 ### Screenshots
+* Email notification
+    ![image](https://user-images.githubusercontent.com/16481229/89123831-f37f1980-d504-11ea-8c4b-7c0416bb6293.png)
 
 
 ### YouTube
