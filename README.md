@@ -4,7 +4,7 @@
 Apply an Gmail label to the emails that you didn't rely in a specific time(e.g. in the past 24 hours) in Gmail, and remove the label is the email is replied.
 
 ### Make a copy of the source code from my drive
-[Make a copy](https://script.google.com/d/1Tsn__jf1XFpfOjT_PmJxejAEjqrP60dtwJhYLJk-JBz0ZuiKbugjZ_dL/copy)
+[Make a copy](https://script.google.com/d/1Tsn__jf1XFpfOjT_PmJxejAEjqrP60dtwJhYLJk-JBz0ZuiKbugjZ_dL/edit?usp=sharing)
 
 ### If you prefer to use clasp
 * [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-059) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
