@@ -6,7 +6,7 @@ My Google Apps Script projects shared on YouTube videos, each branch is a projec
 ### All projects
 * [GAS-060 No Reply Emails](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-060) - [YouTube](https://youtu.be/4z0d6RUA96g)
 * [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-059) - [YouTube](https://youtu.be/V-oE2OyvTKM)
-* [GAS-058 Google Form with File Categorization](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-058) - [ouTube](https://youtu.be/5gXcSGUYJVA)
+* [GAS-058 Google Form with File Categorization](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-058) - [YouTube](https://youtu.be/5gXcSGUYJVA)
 * [GAS-057 Custom Form with VueJS and MCSS](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-057) - [YouTube](https://youtu.be/MfmjUUS4UUE)
 
 ### How to use this project
