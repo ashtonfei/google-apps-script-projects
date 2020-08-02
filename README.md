@@ -1,20 +1,23 @@
-# Google Apps Script Projects
+# GAS-060 No Reply Emails
 
 ### Description
-My Google Apps Script projects shared on YouTube videos, each branch is a project about the video I shared on [YouTube](https://www.youtube.com/ashtonfei/), you can find all the source code about the project there.
+Get the emails that you didn't rely in a specific time(like in the past 48 hours) in Gmail.
 
 ### How to use my projects with clasp
 * [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-059) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
 
-### All projects
-* [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-059) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
-* [GAS-058 Google Form with File Categorization](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-058) - [Watch on YouTube](https://youtu.be/5gXcSGUYJVA)
-* [GAS-057 Custom Form with VueJS and MCSS](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-057) - [Watch on YouTube](https://youtu.be/MfmjUUS4UUE)
+### Make a copy of the source code from my drive
+[Make a copy](https://script.google.com/d/1Tsn__jf1XFpfOjT_PmJxejAEjqrP60dtwJhYLJk-JBz0ZuiKbugjZ_dL/edit?usp=sharing)
+
+### Script Type
+Standalone
 
 
-### Notes
-* You can copy the files with extenstion .js(.gs), .html, .json to the online [apps script editor](https://script.google.com/) of your project.  
-* Files structure are optimized for clasp, please read this doc if you want to use it with clasp. [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-059) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
+### Settings
+* Time
+* Day
+
+### Screenshots
 
 
 ### YouTube
