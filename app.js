@@ -43,7 +43,6 @@ function addNoReplyLabel(){
         })
         start += MAX
     }while(threads.length === MAX)
-    console.log(noReplyEmails.length)
     if(SEND_NOTIFICATION && noReplyEmails.length){
         sendNotification(activeUser, noReplyEmails)
     }
@@ -123,7 +122,6 @@ function sendNotification(activeUser, noReplyEmails){
         GmailApp.sendEmail(activeUser, subject, body, options)
     }catch(e){
         // pass
-        console.log(e.message)
     }
 }
 
@@ -136,13 +134,24 @@ function createTriggers(){
     // add a new trigger to add no reply label to emails meet your condition in the setup
     ScriptApp.newTrigger("addNoReplyLabel")
         .timeBased()
-        .everyDays(1)
-        .atHour(9)
+        .everyDays(1) // check every day
+        .atHour(9)  // check at 9am to 10am
         .create()
    
    // add a new trigger to remove no reply label for the replied emails
     ScriptApp.newTrigger("removeNoReplyLabel")
         .timeBased()
-        .everyHours(1)
+        .everyHours(1) // check every hour
         .create()
 }
+
+
+
+
+
+
+
+
+
+
+
