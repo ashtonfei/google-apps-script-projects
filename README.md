@@ -1,7 +1,7 @@
 # GAS-060 No Reply Emails
 
 ### Description
-Apply an Gmail label to the emails that you didn't rely in a specific time(e.g. in the past 24 hours) in Gmail, and remove the label is the email is replied.
+Apply an Gmail label to the emails that was not replied in a specific time(e.g. in the past 24 hours) in Gmail, and remove the label if the email was replied.
 
 ### Make a copy of the source code from my drive
 [Make a copy](https://script.google.com/d/1Tsn__jf1XFpfOjT_PmJxejAEjqrP60dtwJhYLJk-JBz0ZuiKbugjZ_dL/edit?usp=sharing)
@@ -39,5 +39,6 @@ Standalone
 
 
 ### YouTube
+Check on YouTube [GAS-060 No Reply Emails](https://youtu.be/4z0d6RUA96g)
 More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 
