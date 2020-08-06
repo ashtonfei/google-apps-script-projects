@@ -1,157 +1,210 @@
-const OVER_HOURS = 24 // {integer} hours of email you didn't reply 
-const NEWER_THAN_DAYS = 30 // {integer} days of email recieved in the past
-const NO_REPLY_LABEL_NAME = "NoReply"  // {string} label name to be applied to no reply emails
-const QUERY = "in:inbox" // {string} limit the search result with query string
-const MAX = 100 // {integer} max search result
-const SEND_NOTIFICATION = true // send yourself an email notification with a list of no reply emails
+const APP_SETTINGS_KEY = "app_setting_key"
+const TEMPLATE_NAME = "Prefilled Content"
+const THEME_BACKGROUND_COLOR = "#448AFF"
+const THEME_FONT_COLOR = "#FFFFFF"
+const SEPARATOR = ","
+
+function onOpen(e) {
+    const ui = SpreadsheetApp.getUi()
+    ui.createMenu("App")
+        .addItem("Send prefilled form", "sendPrefilledForm")
+        .addItem("Open settings", "showSettings")
+        .addToUi()
+}
 
 
-function addNoReplyLabel(){    
-    const query = `${QUERY} newer_than:${NEWER_THAN_DAYS}d`
-    let start = 0
-    let threads = []
-    const noReplyEmails = []
-    const now = new Date()
-    const activeUser = Session.getActiveUser().getEmail()
-    const labelNoReply = getLabelByName(NO_REPLY_LABEL_NAME)
+function showSettings(){
+    const template = HtmlService.createTemplateFromFile("setup.html")
+    const userInterface = template.evaluate()
+    userInterface.setTitle("Settings")
+        .setWidth(800)
+        .setHeight(550)
     
-    removeNoReplyLabel()
+    SpreadsheetApp.getActive().show(userInterface)
+}
+
+
+function getAppSettings(){
+    const scriptProps = PropertiesService.getScriptProperties()
+    const appSettings = scriptProps.getProperty(APP_SETTINGS_KEY)
+    return appSettings
+}
+
+
+function saveAppSettings(appSettings){
+    const scriptProps = PropertiesService.getScriptProperties()
+    scriptProps.setProperty(APP_SETTINGS_KEY, appSettings)
+    return appSettings
+}
+
+function validateForm(url){
+    const appSettings = {
+        url: null,
+        publishedUrl: null,
+        editResponseUrl: null,
+        hasFirstResponse: null,
+    }
+    if (!url) url = JSON.parse(getAppSettings()).url
+    if (url) {
+        const form = FormApp.openByUrl(url)
+        if (form){
+            const reponses = form.getResponses()
+            appSettings.url = form.getEditUrl()
+            appSettings.publishedUrl = form.getPublishedUrl()
+            if (reponses.length) {
+                appSettings.hasFirstResponse = true
+                appSettings.editResponseUrl = reponses[0].getEditResponseUrl()
+            }
+        }
+    }
+    return saveAppSettings(JSON.stringify(appSettings))
+}
+
+function getTemplateData(){
+    const url = JSON.parse(getAppSettings()).url
+    const form = FormApp.openByUrl(url)
+    const firstResponse = form.getResponses()[0]
+    const prefilledUrl = firstResponse.toPrefilledUrl()
+    const pattern = /entry.[0-9]+/gm
+    let headers = prefilledUrl.match(pattern)
+    headers = [... new Set(headers)]
+    headers.push("Prefilled URL")
+    headers.push("Send To")
+    headers.push("Status")
     
-    do {
-        threads = GmailApp.search(query, start, MAX)
-        threads.forEach(thread=>{
-            // thread = threads[0]
-            const lastMessage = thread.getMessages().pop()
-            
-            // check if the last message of the thread is over hours in the app settings
-            const date = lastMessage.getDate()
-            const isOverHours = (now - date) > OVER_HOURS * 60 * 60 * 1000
-            
-            // check if the last message is from the active user
-            const from = lastMessage.getFrom()
-            const isFromOthers = from.indexOf(activeUser) === -1
-            
-            // mark the thread is no reply if last message is over hours and is not from the active user
-            if (isOverHours && isFromOthers){
-                // push the thread to no reply email array
-                noReplyEmails.push(thread)
+    const itemResponses = firstResponse.getItemResponses()
+    const values = []
+    const notes = []
+    itemResponses.forEach((response,i)=>{
+        //response = itemResponses[0].getItem().asMultipleChoiceItem().getChoices()
+        const itemTitle = response.getItem().getTitle()
+        const itemType = response.getItem().getType()
+        let choices
+        switch (itemType){
+            case FormApp.ItemType.CHECKBOX:
+                choices = response.getItem().asCheckboxItem().getChoices().map(choice=>choice.getValue()).join("\n")
+                choices = `Multiple select\nSeparate with ${SEPARATOR}\nOptions as below:\n${choices}`
+                notes.push(choices)
+                break
+            case FormApp.ItemType.LIST:
+                choices = response.getItem().asListItem().getChoices().map(choice=>choice.getValue()).join("\n")
+                choices = `Single select\nOptions as below:\n${choices}`
+                notes.push(choices)
+                break
+            case FormApp.ItemType.MULTIPLE_CHOICE:
+                choices = response.getItem().asMultipleChoiceItem().getChoices().map(choice=>choice.getValue()).join("\n")
+                choices = `Single select\nOptions as below:\n${choices}`
+                notes.push(choices)
+                break
+            default:
+                notes.push(null)
                 
-                // apply no reply label to the thread
-                thread.addLabel(labelNoReply)
+        } 
+        headers[i] = [itemTitle, headers[i]].join("\n")
+        const value = response.getResponse()
+        if (Array.isArray(value)){
+            values.push(value.join(SEPARATOR))
+        }else{
+            values.push(value)
+        }
+    })
+    values.push(prefilledUrl)
+    values.push("someone@example.com")
+    values.push("New")
+    
+    notes.push(null)
+    notes.push("Comma separated email addresses")
+    notes.push(`Sent: Email sent successfully, line will be ignored in the next run`)
+    return {headers, values, notes}
+    
+}
+
+function createTemplate(){
+    let ws = SpreadsheetApp.getActive().getSheetByName(TEMPLATE_NAME)
+    let message
+    if (ws) {
+        message = `There is a sheet name "${TEMPLATE_NAME}" in the spreadsheet, please rename it and try again.`
+    }else{
+        ws = SpreadsheetApp.getActive().insertSheet(TEMPLATE_NAME)
+        const {headers, values, notes} = getTemplateData()
+        ws.setTabColor(THEME_BACKGROUND_COLOR)
+        ws.getRange(1,1,2, headers.length).setValues([headers, values])
+        ws.getRange(1, 1, 1, headers.length)
+            .setBackground(THEME_BACKGROUND_COLOR)
+            .setFontColor(THEME_FONT_COLOR)
+            .setFontWeight("Bold")
+            .setHorizontalAlignment("Center")
+            .setVerticalAlignment("Middle")
+        ws.getRange(1, 1, 1, notes.length).setNotes([notes])
+        message = `Template named "${TEMPLATE_NAME}" has been created successfully.`
+    }
+    return message
+}
+
+function sendEmail(sendTo, value, headers, publishedUrl){
+    const key = "entry."
+    let prefilledUrl = publishedUrl + "?"
+    value.slice(0, value.length - 3).forEach((prefilledValue, i)=>{
+        const entry = key + headers[i].split(key)[1]
+        if (entry){
+            if(prefilledValue.indexOf(SEPARATOR) === -1){
+                prefilledUrl += `&${entry}=${prefilledValue}`
+            }else{
+                prefilledValue.split(SEPARATOR).forEach(segment=>{
+                    segment = segment.trim()
+                    prefilledUrl += `&${entry}=${segment}`
+                })
             }
             
-        })
-        start += MAX
-    }while(threads.length === MAX)
-    if(SEND_NOTIFICATION && noReplyEmails.length){
-        sendNotification(activeUser, noReplyEmails)
-    }
-}
-
-
-function removeNoReplyLabel(){
-    const query = `label:${NO_REPLY_LABEL_NAME}`
-    let start = 0
-    let threads = []
-    const noReplyEmails = []
-    const now = new Date()
-    const activeUser = Session.getActiveUser().getEmail()
-    const labelNoReply = getLabelByName(NO_REPLY_LABEL_NAME)
-
-    do {
-        threads = GmailApp.search(query, start, MAX)
-        threads.forEach(thread => {
-            // thread = threads[0]
-            const lastMessage = thread.getMessages().pop()
-            
-            // check if the last message is from the active user
-            const from = lastMessage.getFrom()
-            const isFromActiveUser = from.indexOf(activeUser) !== -1
-            if (isFromActiveUser) thread.removeLabel(labelNoReply)
-            
-        })
-    }while(threads.length === MAX)
-}
-
-
-function getLabelByName(labelName){
-    let label = GmailApp.getUserLabelByName(labelName)
-    if (!label) label = GmailApp.createLabel(labelName)
-    return label
-}
-
-
-function createHtmlTabel(noReplyEmails){
-    let html = `<p><table style="width: 100%; border-collapse: collapse;">
-        <tr>
-            <th style="border-bottom: 1px solid #111;">No.<\/th>
-            <th style="border-bottom: 1px solid #111;">Subject<\/th>
-            <th style="border-bottom: 1px solid #111;">Date<\/th>
-        <\/tr>`
-    noReplyEmails.forEach((thread, i) =>{
-        const lastMessage = thread.getMessages().pop()
-        const subject = lastMessage.getSubject()
-        const date = Utilities.formatDate(lastMessage.getDate(), Session.getScriptTimeZone(), "dd/MMM/YYYY hh:mm:ss")
-        const from = lastMessage.getFrom()
-        const htmlRow = `<tr>
-            <td style="border-bottom: 1px solid #111;">${i + 1}<\/td>
-            <td style="border-bottom: 1px solid #111;">${subject}<\/td>
-            <td style="border-bottom: 1px solid #111;">${date}<\/td>
-        <\/tr>`
-        html += htmlRow
+        }
     })
-    html += "<\/table><\/p>"
-    return html
-}
-
-function sendNotification(activeUser, noReplyEmails){
-    try {
-        const daytime = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "dd/MMM/YYYY hh:mm:ss")
-        const subject = `No Reply Emails Checked at ${daytime}`
-        const body = ""
-        const options = {}
-        const htmlTable = createHtmlTabel(noReplyEmails)
-        options.htmlBody = `
-            <p>You have <b>${noReplyEmails.length}<\/b> no-rely emails, please go and check them in the label: <b>${NO_REPLY_LABEL_NAME}<\/b>.<br>
-            Checked at ${daytime}.<\/p>
-            ${htmlTable}
-            <p>Created by Ashton Fei<br>
-            Powered by <a href="https://developers.google.com/apps-script">Google Apps Script<\/a><br>
-            More videos on <a href="https://youtube.com/ashtonfei/">YouTube<\/a><br>
-            Check the source code here on <a href="https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-060">Github<\/a><\/p>`
-        GmailApp.sendEmail(activeUser, subject, body, options)
+    const template = HtmlService.createTemplateFromFile("email.html")
+    template.value = value
+    template.prefilledUrl = prefilledUrl
+    console.log(prefilledUrl)
+    console.log(value)
+    const htmlBody = template.evaluate().getContent()
+    
+    const subject = "Prefilled Form Link"
+    const body = ""
+    const options = {
+        htmlBody
+    }
+    try{
+        GmailApp.sendEmail(sendTo, subject, body, options)
+        return {status: "Sent", prefilledUrl}
     }catch(e){
-        // pass
+        return {status: e.message, prefilledUrl}
     }
 }
 
-
-function createTriggers(){
-    // delete triggers
-    const triggers = ScriptApp.getProjectTriggers()
-    triggers.forEach(trigger => ScriptApp.deleteTrigger(trigger))
+function sendPrefilledForm(){
+    const {url, publishedUrl} = JSON.parse(getAppSettings())
+    const ss = SpreadsheetApp.getActive()
+    const ui = SpreadsheetApp.getUi()
+    const ws = ss.getSheetByName(TEMPLATE_NAME)
     
-    // add a new trigger to add no reply label to emails meet your condition in the setup
-    ScriptApp.newTrigger("addNoReplyLabel")
-        .timeBased()
-        .everyDays(1) // check every day
-        .atHour(9)  // check at 9am to 10am
-        .create()
-   
-   // add a new trigger to remove no reply label for the replied emails
-    ScriptApp.newTrigger("removeNoReplyLabel")
-        .timeBased()
-        .everyHours(1) // check every hour
-        .create()
+    let title = "Message"
+    let prompt = ""
+    let buttons = ui.ButtonSet.OK
+    if (ws){
+        const values = ws.getDataRange().getDisplayValues()
+        const headers = values[0]
+        values.forEach((value, i)=>{
+            let status = value[value.length - 1].toLowerCase().trim()
+            const sendTo = value[value.length - 2]
+            if (i > 0 && sendTo.indexOf("@") !== -1 && status !== "sent"){
+                const {status, prefilledUrl} = sendEmail(sendTo, value, headers, publishedUrl)
+                values[i][value.length - 1] = status
+                values[i][value.length - 3] = prefilledUrl
+            }
+        })
+        
+        ws.getRange(1, 1, values.length, values[0].length).setValues(values)
+        
+    }else{
+        prompt = `Sheet "${TEMPLATE_NAME}" was not found in the spreadsheet. You may need to open the app settings to create the template.`
+        ui.alert(title, prompt, buttons)
+    }
 }
-
-
-
-
-
-
-
-
-
-
 
