@@ -12,6 +12,16 @@ Embed a prefilled form in Gmail with dynamic content from a spreadsheet.
 ### Script Type
 Google Sheet
 
+### Supported Google Form Inputs
+* Short answer
+* Long answer
+* Radio
+* Checkbox
+* Dropdown
+* Scale
+* Date
+* Time
+
 ### Instructions
 1. Send a embed form to your Gmail
     ![image](https://user-images.githubusercontent.com/16481229/89705457-25263380-d990-11ea-9743-ebdf16ea8ed3.png)
