@@ -141,7 +141,7 @@
                         this.submitting = false
                         appSettings = JSON.parse(appSettings)
                         this.appSettings = appSettings
-                        console.log(appSettings)
+                        
                         if (!appSettings.url) {
                             this.alert = {
                                 active: true,
@@ -204,7 +204,7 @@
             .withSuccessHandler(appSettings=>{
                 appSettings = JSON.parse(appSettings)
                 if (appSettings !== null) data.appSettings = appSettings
-                console.log(data)
+                
                 const App = new Vue({
                     el: "#app",
                     data,

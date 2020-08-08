@@ -101,6 +101,12 @@ function getTemplateData(){
                 notes.push(choices)
                 formItems.push({type: "radio", id: headers[i], value:null})
                 break
+            case FormApp.ItemType.SCALE:
+                let lbound = response.getItem().asScaleItem().getLowerBound()
+                let ubound = response.getItem().asScaleItem().getUpperBound()
+                notes.push(`Scale\nLower bound is ${lbound}\nUpper bound is ${ubound}`)
+                formItems.push({type: "scale", id: headers[i], value:null})
+                break
             case FormApp.ItemType.TEXT:
                 notes.push("Input")
                 formItems.push({type: "input", id: headers[i], value:null})
@@ -190,17 +196,16 @@ function sendEmail(sendTo, value, headers, publishedUrl, formItems){
     
     let htmlBody = template.evaluate().getContent()
     htmlBody.replace(' selected=""', "")
-    console.log(formItems)
+    
     formItems.forEach(({id, value, type})=>{
         switch (type) {
             case "input":
                 if (value) htmlBody = htmlBody.replace(`name="${id}" value=""`, `name="${id}" value="${value}"`)
-                console.log(`Input: name="${id}" value="${value}"`)
                 break
             case "textarea":
                 if (value) {
                     id = id.replace("entry.", "")
-                    let re = new RegExp(`${id}".+\s+.+">`)
+                    let re = new RegExp(`<textarea .*${id}".*">`)
                     let match = htmlBody.match(re)
                     if (match){
                         match = match[0]
@@ -211,14 +216,15 @@ function sendEmail(sendTo, value, headers, publishedUrl, formItems){
                 break
             case "radio":
                 if (value) htmlBody = htmlBody.replace(`name="${id}" value="${value}"`, `name="${id}" value="${value}" checked `)
-                console.log(`Radio: name="${id}" value="${value}" checked `)
+                break
+            case "scale":
+                if (value) htmlBody = htmlBody.replace(`name="${id}" value="${value}"`, `name="${id}" value="${value}" checked `)
                 break
             case "checkbox":
                 if (value) {
                     value.split(SEPARATOR).forEach(segment=>{
                         segment = segment.trim()
                         htmlBody = htmlBody.replace(`name="${id}" value="${segment}"`, `name="${id}" value="${segment}" checked `)
-                        console.log(`Checkbox: name="${id}" value="${segment}" checked `)
                     })
                 }
                 break
@@ -230,15 +236,12 @@ function sendEmail(sendTo, value, headers, publishedUrl, formItems){
                     if (match) {
                         match = match[0]
                         htmlBody = htmlBody.replace(match, `${match} selected `)
-                        console.log(`Select: ${match} selected `)
                     }
                 }
                 break
              case "date":
-                 console.log(value)
                  if (value){
                      const date = new Date(value)
-                     console.log(date)
                      id = id.replace("entry.", "")
                      let re
                      let match
@@ -247,12 +250,9 @@ function sendEmail(sendTo, value, headers, publishedUrl, formItems){
                      if (!isNaN(year)){
                          re = new RegExp(`${id}_year".+\\s+.+<option value="${year}"`, "gm")
                          match = htmlBody.match(re)
-                         console.log(re)
-                         console.log(match)
                          if (match){
                               match = match[0]
                               htmlBody = htmlBody.replace(match, `${match} selected `)
-                              console.log(`Select: ${match} selected `)
                          }
                      }
                      
@@ -260,12 +260,9 @@ function sendEmail(sendTo, value, headers, publishedUrl, formItems){
                      if(!isNaN(month)){
                          re = new RegExp(`${id}_month".+\\s+.+<option value="${month}"`, "gm")
                          match = htmlBody.match(re)
-                         console.log(re)
-                         console.log(match)
                          if (match){
                               match = match[0]
                               htmlBody = htmlBody.replace(match, `${match} selected `)
-                              console.log(`Select: ${match} selected `)
                          }
                      }
                      
@@ -273,18 +270,14 @@ function sendEmail(sendTo, value, headers, publishedUrl, formItems){
                      if (!isNaN(day)){
                          re = new RegExp(`${id}_day".+\\s+.+<option value="${day}"`, "gm")
                          match = htmlBody.match(re)
-                         console.log(re)
-                         console.log(match)
                          if (match){
                               match = match[0]
                               htmlBody = htmlBody.replace(match, `${match} selected `)
-                              console.log(`Select: ${match} selected `)
                          }
                      }
                  }
                  break
-            case "time":
-                console.log(value)
+             case "time":
                 if(value){
                     id = id.replace("entry.", "")
                     let ampm = "AM"
