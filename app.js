@@ -3,6 +3,7 @@ const TEMPLATE_NAME = "Prefilled Content"
 const THEME_BACKGROUND_COLOR = "#448AFF"
 const THEME_FONT_COLOR = "#FFFFFF"
 const SEPARATOR = ","
+const EMBED_FLAG = true
 
 function onOpen(e) {
     const ui = SpreadsheetApp.getUi()
@@ -75,6 +76,7 @@ function getTemplateData(){
     const itemResponses = firstResponse.getItemResponses()
     const values = []
     const notes = []
+    const formItems = []
     itemResponses.forEach((response,i)=>{
         //response = itemResponses[0].getItem().asMultipleChoiceItem().getChoices()
         const itemTitle = response.getItem().getTitle()
@@ -85,19 +87,41 @@ function getTemplateData(){
                 choices = response.getItem().asCheckboxItem().getChoices().map(choice=>choice.getValue()).join("\n")
                 choices = `Multiple select\nSeparate with ${SEPARATOR}\nOptions as below:\n${choices}`
                 notes.push(choices)
+                formItems.push({type: "checkbox", id: headers[i], value:null})
                 break
             case FormApp.ItemType.LIST:
                 choices = response.getItem().asListItem().getChoices().map(choice=>choice.getValue()).join("\n")
                 choices = `Single select\nOptions as below:\n${choices}`
                 notes.push(choices)
+                formItems.push({type: "select", id: headers[i], value:null})
                 break
             case FormApp.ItemType.MULTIPLE_CHOICE:
                 choices = response.getItem().asMultipleChoiceItem().getChoices().map(choice=>choice.getValue()).join("\n")
                 choices = `Single select\nOptions as below:\n${choices}`
                 notes.push(choices)
+                formItems.push({type: "radio", id: headers[i], value:null})
                 break
+            case FormApp.ItemType.TEXT:
+                notes.push("Input")
+                formItems.push({type: "input", id: headers[i], value:null})
+                break
+            case FormApp.ItemType.PARAGRAPH_TEXT:
+                notes.push("Paragraph")
+                formItems.push({type: "textarea", id: headers[i], value:null})
+                break
+            case FormApp.ItemType.DATE:
+                notes.push("Date")
+                formItems.push({type: "date", id: headers[i], value:null})
+                break
+            case FormApp.ItemType.DATETIME:
+                notes.push("Datetime")
+                formItems.push({type: "datetime", id: headers[i], value:null})
+            case FormApp.ItemType.TIME:
+                notes.push("Time")
+                formItems.push({type: "time", id: headers[i], value:null})
             default:
                 notes.push(null)
+                formItems.push({type: null, id: headers[i], value:null})
                 
         } 
         headers[i] = [itemTitle, headers[i]].join("\n")
@@ -115,8 +139,7 @@ function getTemplateData(){
     notes.push(null)
     notes.push("Comma separated email addresses")
     notes.push(`Sent: Email sent successfully, line will be ignored in the next run`)
-    return {headers, values, notes}
-    
+    return {headers, values, notes, formItems}
 }
 
 function createTemplate(){
@@ -141,12 +164,14 @@ function createTemplate(){
     return message
 }
 
-function sendEmail(sendTo, value, headers, publishedUrl){
+function sendEmail(sendTo, value, headers, publishedUrl, formItems){
     const key = "entry."
     let prefilledUrl = publishedUrl + "?"
+    
     value.slice(0, value.length - 3).forEach((prefilledValue, i)=>{
         const entry = key + headers[i].split(key)[1]
         if (entry){
+            formItems[i].value = prefilledValue
             if(prefilledValue.indexOf(SEPARATOR) === -1){
                 prefilledUrl += `&${entry}=${prefilledValue}`
             }else{
@@ -158,12 +183,108 @@ function sendEmail(sendTo, value, headers, publishedUrl){
             
         }
     })
+    
     const template = HtmlService.createTemplateFromFile("email.html")
-    template.value = value
+    template.embedFlag = EMBED_FLAG
     template.prefilledUrl = prefilledUrl
-    console.log(prefilledUrl)
-    console.log(value)
-    const htmlBody = template.evaluate().getContent()
+    
+    let htmlBody = template.evaluate().getContent()
+    htmlBody.replace(' selected=""', "")
+    console.log(formItems)
+    formItems.forEach(({id, value, type})=>{
+        switch (type) {
+            case "input":
+                if (value) htmlBody = htmlBody.replace(`name="${id}" value=""`, `name="${id}" value="${value}"`)
+                console.log(`Input: name="${id}" value="${value}"`)
+                break
+            case "textarea":
+                if (value) {
+                    id = id.replace("entry.", "")
+                    let re = new RegExp(`${id}".+\s+.+">`)
+                    let match = htmlBody.match(re)
+                    if (match){
+                        match = match[0]
+                        htmlBody = htmlBody.replace(match, `${match}${value}`)
+                        console.log(`Textarea: ${match}${value} `)
+                    }
+                }
+                break
+            case "radio":
+                if (value) htmlBody = htmlBody.replace(`name="${id}" value="${value}"`, `name="${id}" value="${value}" checked `)
+                console.log(`Radio: name="${id}" value="${value}" checked `)
+                break
+            case "checkbox":
+                if (value) {
+                    value.split(SEPARATOR).forEach(segment=>{
+                        segment = segment.trim()
+                        htmlBody = htmlBody.replace(`name="${id}" value="${segment}"`, `name="${id}" value="${segment}" checked `)
+                        console.log(`Checkbox: name="${id}" value="${segment}" checked `)
+                    })
+                }
+                break
+            case "select":
+                if (value) {
+                    id = id.replace("entry.", "")
+                    let re = new RegExp(`${id}".+\\s+.+<option value="${value}"`, "gm")
+                    let match = htmlBody.match(re)
+                    if (match) {
+                        match = match[0]
+                        htmlBody = htmlBody.replace(match, `${match} selected `)
+                        console.log(`Select: ${match} selected `)
+                    }
+                }
+                break
+             case "date":
+                 console.log(value)
+                 if (value){
+                     const date = new Date(value)
+                     console.log(date)
+                     id = id.replace("entry.", "")
+                     let re
+                     let match
+                         
+                     const year = date.getFullYear()
+                     if (!isNaN(year)){
+                         re = new RegExp(`${id}_year".+\\s+.+<option value="${year}"`, "gm")
+                         match = htmlBody.match(re)
+                         console.log(re)
+                         console.log(match)
+                         if (match){
+                              match = match[0]
+                              htmlBody = htmlBody.replace(match, `${match} selected `)
+                              console.log(`Select: ${match} selected `)
+                         }
+                     }
+                     
+                     const month = date.getMonth() + 1
+                     if(!isNaN(month)){
+                         re = new RegExp(`${id}_month".+\\s+.+<option value="${month}"`, "gm")
+                         match = htmlBody.match(re)
+                         console.log(re)
+                         console.log(match)
+                         if (match){
+                              match = match[0]
+                              htmlBody = htmlBody.replace(match, `${match} selected `)
+                              console.log(`Select: ${match} selected `)
+                         }
+                     }
+                     
+                     const day = date.getDate()
+                     if (!isNaN(day)){
+                         re = new RegExp(`${id}_day".+\\s+.+<option value="${day}"`, "gm")
+                         match = htmlBody.match(re)
+                         console.log(re)
+                         console.log(match)
+                         if (match){
+                              match = match[0]
+                              htmlBody = htmlBody.replace(match, `${match} selected `)
+                              console.log(`Select: ${match} selected `)
+                         }
+                     }
+                 }
+                 break
+        }
+    })
     
     const subject = "Prefilled Form Link"
     const body = ""
@@ -183,7 +304,7 @@ function sendPrefilledForm(){
     const ss = SpreadsheetApp.getActive()
     const ui = SpreadsheetApp.getUi()
     const ws = ss.getSheetByName(TEMPLATE_NAME)
-    
+    const {formItems} = getTemplateData()
     let title = "Message"
     let prompt = ""
     let buttons = ui.ButtonSet.OK
@@ -194,7 +315,7 @@ function sendPrefilledForm(){
             let status = value[value.length - 1].toLowerCase().trim()
             const sendTo = value[value.length - 2]
             if (i > 0 && sendTo.indexOf("@") !== -1 && status !== "sent"){
-                const {status, prefilledUrl} = sendEmail(sendTo, value, headers, publishedUrl)
+                const {status, prefilledUrl} = sendEmail(sendTo, value, headers, publishedUrl, formItems)
                 values[i][value.length - 1] = status
                 values[i][value.length - 3] = prefilledUrl
             }
