@@ -283,6 +283,41 @@ function sendEmail(sendTo, value, headers, publishedUrl, formItems){
                      }
                  }
                  break
+            case "time":
+                console.log(value)
+                if(value){
+                    id = id.replace("entry.", "")
+                    let ampm = "AM"
+                    let [hour, minute] = value.split(":")
+                    
+                    if (hour >= 12) ampm = "PM"
+                    if (hour == 0) hour = 12
+                    if (hour > 12) hour = hour - 12
+                    
+                    hour = hour > 9 ? `${hour}` : `0${hour}`
+
+                    let re = new RegExp(`${id}_hour".*\\s*.*<option value="${hour}"`, "gm")
+                    let match = htmlBody.match(re)
+                    if (match){
+                        match = match[0]
+                        htmlBody = htmlBody.replace(match, `${match} selected `)
+                    }
+
+                    re = new RegExp(`${id}_minute".*\\s*.*<option value="${minute}"`, "gm")
+                    match = htmlBody.match(re)
+                    if (match){
+                        match = match[0]
+                        htmlBody = htmlBody.replace(match, `${match} selected `)
+                    }
+
+                    re = new RegExp(`${id}_ampm".*\\s*.*<option value="${ampm}"`, "gm")
+                    match = htmlBody.match(re)
+                    if (match){
+                        match = match[0]
+                        htmlBody = htmlBody.replace(match, `${match} selected `)
+                    }
+                }
+                break
         }
     })
     
