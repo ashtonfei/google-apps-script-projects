@@ -46,6 +46,6 @@ Google Sheet
     ![image](https://user-images.githubusercontent.com/16481229/89536514-9946c700-d82a-11ea-8520-f59ce2fe6828.png)
 
 ### YouTube
-* Check on YouTube [GAS-061 Embed Prefilled Form to Gmail](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
+* Check on YouTube [GAS-061 Embed Prefilled Form to Gmail](https://youtu.be/dUGDwNoMHcs)
 * More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 
