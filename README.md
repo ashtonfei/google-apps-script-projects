@@ -28,15 +28,15 @@ Google Sheet
 
 ### Screenshots
 * Start page
-    ![image](https://user-images.githubusercontent.com/16481229/89536284-3e14d480-d82a-11ea-80aa-36efda78c7f4.png)
+    ![image](https://user-images.githubusercontent.com/16481229/90259114-17831900-de7c-11ea-8625-57194ad1354d.png)
 * Input page
-
+    ![image](https://user-images.githubusercontent.com/16481229/90259180-2ec20680-de7c-11ea-9f22-b3c836742cb7.png)
 * Radio page
-
+    ![image](https://user-images.githubusercontent.com/16481229/90259279-53b67980-de7c-11ea-8d03-d935dcf0ce12.png)
 * Checkbox page
-
+    ![image](https://user-images.githubusercontent.com/16481229/90259300-5c0eb480-de7c-11ea-9c92-616a663bc9db.png)
 * End page
-
+    ![image](https://user-images.githubusercontent.com/16481229/90259361-734da200-de7c-11ea-9c69-f776ab8d1893.png)
 
 ### YouTube
 * Check on YouTube [GAS-062 Typeform Style Form](https://youtu.be/dUGDwNoMHcs)
