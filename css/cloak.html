@@ -1,0 +1,35 @@
+<style>
+    [v-cloak] {
+        display: block;
+        padding: 50px 0;
+    }
+
+    @keyframes spinner {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    [v-cloak]:before {
+        content: "";
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        margin-top: -25px;
+        margin-left: -25px;
+        border-radius: 50%;
+        border: 5px solid #ccc;
+        border-top-color: #448AFF;
+        animation: spinner 0.8s linear infinite;
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    [v-cloak]>* {
+        display: none;
+    }
+</style>

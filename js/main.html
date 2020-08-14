@@ -1,0 +1,93 @@
+<script>
+    
+    // Initialize Vue Material
+    Vue.use(VueMaterial.default)
+
+    const validateForm = function(item){
+        item.valid = true
+        if (item.required){
+            if (item.type === "radio") {
+                if(item.value == null) item.valid = false
+            }else if(item.type === "checkbox"){
+                const min = item.min || 1
+                const max = item.max || item.options.length
+                if (item.value.length < min || item.value > max) item.valid = false
+            }else{
+                if (item.value == null) {
+                    item.valid = false
+                }else{
+                    let regex = new RegExp(item.pattern, item.modifier)
+                    if (!regex.test(item.value)) item.valid = false
+                }
+            }
+        }
+        
+        this.form.valid = true
+        const count = this.form.items.length
+        for (let i = 0; i < count; i ++){
+            if (this.form.items[i].valid !== true && 
+                this.form.items[i].required){
+                this.form.valid = false
+                break
+            }
+        }
+    }
+
+    const submit = function(){
+        this.app.submitting = true
+        const values = []
+        const headers = []
+        this.form.items.forEach(item=>{
+            headers.push(item.title)
+            if (Array.isArray(item.value)) {
+                values.push(item.value.join(","))
+            }else{
+                values.push(item.value)
+            }
+        })
+        const response = JSON.stringify({headers, values})
+        google.script.run
+            .withSuccessHandler(result=>{
+                this.app.submitting = false
+                this.form.end.message = result
+                this.goToSession(this.form.end.session)
+                this.form.items.forEach(item=>{
+                    if (Array.isArray(item.value)){
+                        item.value = []
+                    }else{
+                        item.value = null
+                    }
+                    item.valid = null
+                })
+            })
+            .withFailureHandler(error=>{
+                this.app.submitting = false
+                this.form.end.message = error.message
+                this.goToSession(this.form.end.session)
+            })
+            .saveDataToSheet(response)
+    }
+    
+    const goToSession = function(session = app.session){
+        this.app.session = session
+    }
+
+    // Vue Methods object
+    const methods = {
+        goToSession,
+        submit,
+        validateForm,
+    }
+
+    // Vue Object
+    google.script.run
+        .withSuccessHandler(data=>{
+            data = JSON.parse(data)
+            new Vue({
+                el: "#app",
+                data,
+                methods,
+            })
+        })
+        .getAppData()
+</script>
