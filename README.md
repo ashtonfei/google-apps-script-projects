@@ -7,7 +7,7 @@ This is typeform style form built with Google Apps Script, Vue Material. One pag
 [Make a copy](https://docs.google.com/spreadsheets/d/1KP9djz0gV6L3cSIcBBKpUo6j5vmj-7vvIfhWfFZRQMA/copy)
 
 ### If you prefer to use clasp
-* [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-062) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
+* [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-259) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
 
 ### Script Type
 Google Sheet
