@@ -2,7 +2,7 @@
     
     // Initialize Vue Material
     Vue.use(VueMaterial.default)
-
+    
     const validateForm = function(item){
         item.valid = true
         if (item.required){
@@ -67,7 +67,7 @@
             })
             .saveDataToSheet(response)
     }
-    
+
     const goToSession = function(session = app.session){
         this.app.session = session
     }
@@ -79,14 +79,34 @@
         validateForm,
     }
 
+    const created = function(){
+        this.checkValidDateTime = setInterval(()=>{
+            const now = new Date()
+            const validFrom = new Date(this.form.validFrom) || now
+            const validTo = new Date(this.form.validTo) || now
+            if (now > validTo || now < validFrom){
+                this.form.visible = false
+            }else{
+                this.form.visible = true
+            }
+        }, 1 * 1000)    
+    }
+
+    const destroyed = function(){
+        clearInterval(this.checkValidDateTime)
+    }
+
     // Vue Object
     google.script.run
         .withSuccessHandler(data=>{
             data = JSON.parse(data)
+            data.checkValidDateTime = null
             new Vue({
                 el: "#app",
                 data,
                 methods,
+                created,
+                destroyed,
             })
         })
         .getAppData()
