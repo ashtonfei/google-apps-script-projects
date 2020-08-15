@@ -49,9 +49,21 @@ const form = {
     items: [
         {
             type: "input", // item type
-            title: "Full name", // item title
-            description: "What's your name please?", // item description
-            placeholder: "Your full name", // item input placeholder
+            title: "First name", // item title
+            description: "What's your first name please?", // item description
+            placeholder: "Your first name", // item input placeholder
+            pattern: ".+", // regex pattern for item validation
+            modifier: "igs", // regex modifier for item validation
+            error: "This is a required question", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, // item default value
+        },
+        {
+            type: "input", // item type
+            title: "Last name", // item title
+            description: "What's your last name please?", // item description
+            placeholder: "Your last name", // item input placeholder
             pattern: ".+", // regex pattern for item validation
             modifier: "igs", // regex modifier for item validation
             error: "This is a required question", // item error message
