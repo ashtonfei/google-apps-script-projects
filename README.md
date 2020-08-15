@@ -23,7 +23,7 @@ Google Sheet
 * Form validation with REGEX
 * Form background images
 
-### Instructions
+### Form Configurations
 * Maximum responses
     ``` javascript
     maxResponses: 500,
@@ -122,15 +122,21 @@ Google Sheet
 
 ### Screenshots
 * Start page
-    ![image](https://user-images.githubusercontent.com/16481229/90259114-17831900-de7c-11ea-8625-57194ad1354d.png)
+    ![image](https://user-images.githubusercontent.com/16481229/90312091-48bf2000-df34-11ea-8e5f-06e44a6a4f20.png)
 * Input page
-    ![image](https://user-images.githubusercontent.com/16481229/90259180-2ec20680-de7c-11ea-9f22-b3c836742cb7.png)
+    ![image](https://user-images.githubusercontent.com/16481229/90312102-596f9600-df34-11ea-9990-b25d9e13eeb6.png)
 * Radio page
-    ![image](https://user-images.githubusercontent.com/16481229/90259279-53b67980-de7c-11ea-8d03-d935dcf0ce12.png)
+    ![image](https://user-images.githubusercontent.com/16481229/90312126-80c66300-df34-11ea-8195-9cae4cff81c6.png)
 * Checkbox page
-    ![image](https://user-images.githubusercontent.com/16481229/90259300-5c0eb480-de7c-11ea-9c92-616a663bc9db.png)
+    ![image](https://user-images.githubusercontent.com/16481229/90312134-920f6f80-df34-11ea-951f-924921adb0ee.png)
+* Textarea page
+    ![image](https://user-images.githubusercontent.com/16481229/90312146-b8350f80-df34-11ea-9922-50d85c5ef2e8.png)
+* Date page
+    ![image](https://user-images.githubusercontent.com/16481229/90312175-e87cae00-df34-11ea-8013-e4cbbc0d2fad.png)
+* File input page
+    ![image](https://user-images.githubusercontent.com/16481229/90312192-ff230500-df34-11ea-80ff-d6a1ee1dad0b.png)
 * End page
-    ![image](https://user-images.githubusercontent.com/16481229/90259361-734da200-de7c-11ea-9c69-f776ab8d1893.png)
+    ![image](https://user-images.githubusercontent.com/16481229/90312209-119d3e80-df35-11ea-8394-784dca34ecd6.png)
 
 ### YouTube
 * Check on YouTube [GAS-062 Typeform Style Form](https://youtu.be/dUGDwNoMHcs)

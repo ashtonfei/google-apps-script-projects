@@ -20,7 +20,7 @@
                 if (files.length){
                     item.valid = false
                     const file = files[0]
-                    console.log(file)
+                    
                     if (file.size / 1000 > item.maxSize){
                         item.error = `File size is over ${item.maxSize}KB`
                         item.valid = false
@@ -29,8 +29,6 @@
                         reader.onload = (e) => {
                             item.data = e.target.result
                             item.valid = true
-                            console.log(item)
-
                             this.form.valid = true
                             const count = this.form.items.length
                             for (let i = 0; i < count; i ++){
@@ -46,13 +44,19 @@
                 }else{
                     item.valid = false
                     item.data = null
-                    console.log(item)
                 }
             }else{
                 if (item.value == null) {
                     item.valid = false
                 }else{
                     let regex = new RegExp(item.pattern, item.modifier)
+                    const match = item.value.match(regex)
+                    if (match === null){
+                        item.valid = false
+                    }else{
+                        if (item.length > 1) item.valid = false
+                        if (match[0] !== item.value) item.valid = false
+                    }
                     if (!regex.test(item.value)) item.valid = false
                 }
             }
@@ -85,7 +89,7 @@
                 values.push(item.value)
             }
         })
-        console.log({headers, values})
+        
         const response = JSON.stringify({headers, values})
         google.script.run
             .withSuccessHandler(result=>{

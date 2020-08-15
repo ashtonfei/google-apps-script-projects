@@ -28,6 +28,7 @@
         background-repeat: no-repeat;
         background-position: center;
         background-size: cover;
+        position: relative;
     }
     
     #app div .md-button:nth-child(1){
@@ -47,5 +48,20 @@
     
     #app .md-field>.md-icon:after{
         content: none;
+    }
+    
+    
+    #app .cover{
+      content: "";
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      opacity: 0.3;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      position: absolute;
+      z-index: -1;   
     }
 </style>

@@ -1,10 +1,10 @@
 const RESPONSE_SHEET_NAME = "Responses"
 const UPLOADS_FOLDER = "Uploads"
-const START_IMAGE = "https://images.unsplash.com/photo-1454262041357-5d96f50a2f27?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+const START_IMAGE = "https://images.unsplash.com/photo-1468174578019-d2e029959f4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
 const END_IMAGE = "https://images.unsplash.com/photo-1471899236350-e3016bf1e69e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1051&q=80"
 const FORM_IMAGES = [
-    "https://images.unsplash.com/photo-1508717146309-25a0019d0381?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-    "https://images.unsplash.com/photo-1520763185298-1b434c919102?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80",
+    "https://images.unsplash.com/photo-1498480086004-2400bd8c3663?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1487537177666-94b1f521631a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
     "https://images.unsplash.com/photo-1431263154979-0982327fccbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
     "https://images.unsplash.com/photo-1490291268787-39288ca029c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
     "https://images.unsplash.com/photo-1590101490234-780fb118bd84?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
@@ -39,7 +39,7 @@ const form = {
         `,
         next: 0,
         style: {
-            "background-image": `url("${START_IMAGE}")`
+            "background-image": `url("${START_IMAGE}")`,
         },
     },
     items: [
@@ -132,7 +132,7 @@ const form = {
         endButtonName: "Go back to start",
         endButtonIcon: null,
         style: {
-            "background-image": `url("${END_IMAGE}")`
+            "background-image": `url("${END_IMAGE}")`,
         },
     }
 }
@@ -148,11 +148,11 @@ function getAppData(){
         let url = FORM_IMAGES[i]
         if (url){
             item.style = {
-                "background-image": `url("${FORM_IMAGES[i]}")`
+                "background-image": `url("${FORM_IMAGES[i]}")`,
             }
         }else{
             item.style = {
-                "background-image": `url("${START_IMAGE}")`
+                "background-image": `url("${START_IMAGE}")`,
             }
         }
     })
