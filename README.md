@@ -59,7 +59,7 @@ Google Sheet
             valid: null, // item default valid status
             value: null, //  item default value
             options: ["Male", "Female", "Other"], // options for the radio buttons
-        },
+        }
     ```
 * Form item checkbox
     ``` javascript
@@ -74,7 +74,7 @@ Google Sheet
             valid: null, // item default valid status
             value: [], //  item default value, must be an array
             options: ["JavaScript", "Python", "Visual Basic", "C#", "Java", "Lua", "C++"], // options for the radio buttons
-        },
+        }
     ```
 * From item textarea
     ``` javascript
