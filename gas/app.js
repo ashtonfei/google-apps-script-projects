@@ -1,13 +1,17 @@
 const RESPONSE_SHEET_NAME = "Responses"
 const UPLOADS_FOLDER = "Uploads"
-const START_IMAGE = "https://images.unsplash.com/photo-1468174578019-d2e029959f4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+const START_IMAGE = "https://images.unsplash.com/photo-1591990348263-9f9154d568b6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
 const END_IMAGE = "https://images.unsplash.com/photo-1471899236350-e3016bf1e69e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1051&q=80"
 const FORM_IMAGES = [
+    "https://images.unsplash.com/photo-1584515453937-c00929e621d1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1517391882955-e1b20cafee7f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
     "https://images.unsplash.com/photo-1498480086004-2400bd8c3663?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
     "https://images.unsplash.com/photo-1487537177666-94b1f521631a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
     "https://images.unsplash.com/photo-1431263154979-0982327fccbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
     "https://images.unsplash.com/photo-1490291268787-39288ca029c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-    "https://images.unsplash.com/photo-1590101490234-780fb118bd84?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+    "https://images.unsplash.com/photo-1590101490234-780fb118bd84?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1542491873-0e9ee074d427?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1468174578019-d2e029959f4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
 ]
 
 // App object
@@ -27,14 +31,14 @@ const form = {
     start: {
         session: "start",
         startButtonName: "Start",
-        startButtonIcon: null,
+        startButtonIcon: "play_arrow",
         title: "Typeform Style Form with Google Apps Script",
         subTitle: `
             <p>This is a demo form built with Google Apps Script, Vue Material, and Typeform. 
             The form can be configured to have below features:<br>
-            1. Maximun allowed responses<br>
+            1. Maximum allowed responses<br>
             2. Valid in a date time range<br>
-            3. Differece background image for each form question<br>
+            3. A different background image for each form question<br>
             4. Form validation with REGEX<\/p>
         `,
         next: 0,
@@ -49,7 +53,7 @@ const form = {
             description: "What's your name please?", // item description
             placeholder: "Your full name", // item input placeholder
             pattern: ".+", // regex pattern for item validation
-            modifier: "gim", // regex modifier for item validation
+            modifier: "igs", // regex modifier for item validation
             error: "This is a required question", // item error message
             required: true, // is item required
             valid: null, // item default valid status
@@ -61,7 +65,7 @@ const form = {
             description: "We'll need your email for sending you a copy of this submission.",
             placeholder: "Your email address",
             pattern: "[a-z0-9_\\.]+@[a-z0-9_\\.]+", // regex pattern
-            modifier: "gm", // regex modifier
+            modifier: "igs", // regex modifier
             error: "Invaid email addess, choose letters from [a-z0-1_.]",
             required: true,
             valid: null,
@@ -95,7 +99,7 @@ const form = {
             description: "Any comment about this form", // item description
             placeholder: "enter your comments here", // item input placeholder
             pattern: ".+", // regex pattern for item validation
-            modifier: "gm", // regex modifier for item validation
+            modifier: "igs", // regex modifier for item validation
             error: "This is a required question", // item error message
             required: true, // is item required
             valid: null, // item default valid status
@@ -127,8 +131,8 @@ const form = {
         session: "end",
         title: "Confirmation Message",
         message: null,
-        endButtonName: "Go back to start",
-        endButtonIcon: null,
+        endButtonName: "Back to home",
+        endButtonIcon: "home",
         style: {
             "background-image": `url("${END_IMAGE}")`,
         },
@@ -198,7 +202,7 @@ function saveDataToSheet(data){
     
     if (now < validFrom || now > validTo) return `<p>Sorry, the form is currently unavailable.<\/p>`
     
-    if (counts >= form.maxResponses && form.maxResponses) return `<p>Sorry, you've reached the maximun allowed responses.<\/p>`
+    if (counts >= form.maxResponses && form.maxResponses) return `<p>Sorry, you've reached the maximum allowed responses.<\/p>`
    
     let {values, headers} = JSON.parse(data)
 

@@ -9,8 +9,8 @@
                     class="md-primary md-raised"
                     :disabled="!form.visible"
                     @click="goToSession(form.start.next)">
-                        {{form.start.startButtonName}}
                         <md-icon v-if="form.start.startButtonIcon">{{form.start.startButtonIcon}}</md-icon>
+                        <md-tooltip md-direction="bottom">{{form.start.startButtonName}}</md-tooltip>
                     </md-button>
             </div>
             <div v-if="form.validFrom" style="margin-top: 12px;">
@@ -124,6 +124,7 @@
                         :disabled="app.submitting"
                         @click="goToSession(i - 1)">
                         <md-icon>chevron_left</md-icon>
+                        <md-tooltip md-direction="bottom">Previous</md-tooltip>
                     </md-button>
                     <md-button
                         v-if="!app.submitting"
@@ -131,12 +132,15 @@
                         :disabled="app.submitting || !form.valid"
                         @click="submit">
                         Submit
+                        <md-tooltip md-direction="bottom">Submit</md-tooltip>
                     </md-button>
                     <md-progress-spinner
                         v-if="app.submitting"
                         :md-diameter="30" 
                         :md-stroke="3" 
-                        md-mode="indeterminate"></md-progress-spinner>
+                        md-mode="indeterminate">
+                        <md-tooltip md-direction="bottom">submitting...</md-tooltip>
+                    </md-progress-spinner>
                 </template>
                 
                 <template v-else>
@@ -146,6 +150,7 @@
                         :disabled="app.submitting"
                         @click="goToSession(form.start.session)">
                         <md-icon>chevron_left</md-icon>
+                        <md-tooltip md-direction="bottom">Previous</md-tooltip>
                     </md-button>
                     <md-button
                         class="md-raised"
@@ -153,12 +158,14 @@
                         @click="goToSession(i - 1)"
                         v-else>
                         <md-icon>chevron_left</md-icon>
+                        <md-tooltip md-direction="bottom">Previous</md-tooltip>
                     </md-button>
                     <md-button
                         class="md-raised md-accent"
                         :disabled="(app.submitting || !item.valid) && item.required"
                         @click="goToSession(i + 1)">
                         <md-icon>chevron_right</md-icon>
+                        <md-tooltip md-direction="bottom">Next</md-tooltip>
                     </md-button>
                 </template>
             </div>
@@ -167,7 +174,9 @@
                 <md-progress-bar 
                     md-mode="determinate" 
                     class="md-accent md-layout-item md-size-50 md-small-size-100" 
-                    :md-value=" ((i + 1) / form.items.length) * 100 "></md-progress-bar>
+                    :md-value=" ((i + 1) / form.items.length) * 100 ">
+                </md-progress-bar>
+                <md-tooltip md-direction="bottom">({{i + 1}}/{{form.items.length}})</md-tooltip>
             </div>
         </div>
     </div>
@@ -189,8 +198,8 @@
                 <md-button 
                     class="md-primary md-raised"
                     @click="goToSession(form.start.session)">
-                        {{form.end.endButtonName}}
                         <md-icon v-if="form.end.endButtonIcon">{{form.end.endButtonIcon}}</md-icon>
+                        <md-tooltip md-direction="bottom">{{form.end.endButtonName}}</md-tooltip>
                     </md-button>
             </div>
         </div>
