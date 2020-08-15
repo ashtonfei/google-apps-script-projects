@@ -39,7 +39,6 @@ Google Sheet
             type: "input", // item type
             title: "Full name", // item title
             description: "What's your name please?", // item description
-            icon: null, // material icon name (not supported well yet)
             placeholder: "Your full name", // item input placeholder
             pattern: ".+", // regex pattern for item validation
             modifier: "im", // regex modifier for item validation
@@ -55,7 +54,6 @@ Google Sheet
             type: "radio", // item type
             title: "Gender", // item title
             description: "Your gender please, we'll keep it as a secret.", // item description
-            icon: null, // material icon name (not supported well yet)
             error: "This is a required question", // item error message
             required: true, // is item required
             valid: null, // item default valid status
@@ -69,7 +67,6 @@ Google Sheet
             type: "checkbox", // item type
             title: "Programming languages", // item title
             description: "Choose your favorite programming languages.", // item description
-            icon: null, // material icon name (not supported well yet)
             min: 2, // minimun selection required
             max: null, // maximum selection allowed
             error: "Choose at least two", // item error message
@@ -85,7 +82,6 @@ Google Sheet
             type: "textarea", // item type
             title: "Comments", // item title
             description: "Any comment about this form", // item description
-            icon: null, // material icon name (not supported well yet)
             placeholder: "enter your comments here", // item input placeholder
             pattern: ".+", // regex pattern for item validation
             modifier: "im", // regex modifier for item validation

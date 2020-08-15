@@ -12,6 +12,10 @@
                 const min = item.min || 1
                 const max = item.max || item.options.length
                 if (item.value.length < min || item.value > max) item.valid = false
+            }else if(item.type === "date"){
+                if (item.value == null) item.valid = false
+                console.log(item.value)
+                console.log(item.valid)
             }else{
                 if (item.value == null) {
                     item.valid = false
