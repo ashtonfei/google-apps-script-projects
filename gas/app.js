@@ -43,17 +43,17 @@ const form = {
     },
     items: [
         {
-            type: "input",
-            title: "Full name",
-            description: "What's your name please?",
-            icon: null,
-            placeholder: "Your full name",
-            pattern: ".+", // regex pattern
-            modifier: "im", // regex modifier
-            error: "This is a required question",
-            required: true,
-            valid: null,
-            value: null,
+            type: "input", // item type
+            title: "Full name", // item title
+            description: "What's your name please?", // item description
+            icon: null, // material icon name (not supported well yet)
+            placeholder: "Your full name", // item input placeholder
+            pattern: ".+", // regex pattern for item validation
+            modifier: "im", // regex modifier for item validation
+            error: "This is a required question", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, // item default value
         },
         {
             type: "input",
@@ -69,29 +69,42 @@ const form = {
             value: null,
         },
         {
-            type: "radio",
-            title: "Gender",
-            description: "Your gender please, we'll keep it as a secret.",
-            icon: null,
-            error: "This is a required question",
-            required: true,
-            valid: null,
-            value: null,
-            options: ["Male", "Female", "Other"],
+            type: "radio", // item type
+            title: "Gender", // item title
+            description: "Your gender please, we'll keep it as a secret.", // item description
+            icon: null, // material icon name (not supported well yet)
+            error: "This is a required question", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, //  item default value
+            options: ["Male", "Female", "Other"], // options for the radio buttons
         },
         {
-            type: "checkbox",
-            title: "Programming languages",
-            description: "Choose your favorite programming languages.",
-            icon: null,
-            min: 2,
-            max: null,
-            error: "Choose at least two",
-            required: true,
-            valid: null,
-            value: [],
-            options: ["JavaScript", "Python", "Visual Basic", "C#", "Java", "Lua", "C++"],
+            type: "checkbox", // item type
+            title: "Programming languages", // item title
+            description: "Choose your favorite programming languages.", // item description
+            icon: null, // material icon name (not supported well yet)
+            min: 2, // minimun selection required
+            max: null, // maximum selection allowed
+            error: "Choose at least two", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: [], //  item default value, must be an array
+            options: ["JavaScript", "Python", "Visual Basic", "C#", "Java", "Lua", "C++"], // options for the radio buttons
         },
+        {
+            type: "textarea", // item type
+            title: "Comments", // item title
+            description: "Any comment about this form", // item description
+            icon: null, // material icon name (not supported well yet)
+            placeholder: "enter your comments here", // item input placeholder
+            pattern: ".+", // regex pattern for item validation
+            modifier: "im", // regex modifier for item validation
+            error: "This is a required question", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, // item default value
+        }
     ],
     end: {
         session: "end",

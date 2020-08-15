@@ -68,6 +68,20 @@
                 </md-input>
                 <span class="md-error">{{item.error}}</span>
             </md-field>
+
+            <md-field 
+                v-if=" item.type === 'textarea' "
+                :class=" item.valid === false ? 'md-invalid' : '' ">
+                <md-textarea
+                    :disabled="app.submitting"
+                    :required="item.required"
+                    :placeholder="item.placeholder" 
+                    v-model.trim="item.value"
+                    @blur="validateForm(item)"
+                    @keyup="validateForm(item)"
+                    md-autogrow></md-textarea>
+                <span class="md-error">{{item.error}}</span>
+            </md-field>
             
             <div v-else-if=" item.type === 'radio' ">
                 <md-icon class="md-primary" v-if="item.icon">{{item.icon}}</md-icon>

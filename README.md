@@ -24,7 +24,77 @@ Google Sheet
 * Form background images
 
 ### Instructions
-
+* Maximum responses
+    ``` javascript
+    maxResponses: 500,
+    ```
+* Form valid date time
+    ``` javascript
+    validFrom: new Date(2020, 0, 1, 8, 30, 0), // 2020 Jan 1st 8:30:00 am
+    validTo: new Date(2020, 11, 25, 20, 30, 0), // 2020 Dec(11 + 1) 25th 8:30:00 pm
+    ```
+* From item input
+    ``` javascript
+        {
+            type: "input", // item type
+            title: "Full name", // item title
+            description: "What's your name please?", // item description
+            icon: null, // material icon name (not supported well yet)
+            placeholder: "Your full name", // item input placeholder
+            pattern: ".+", // regex pattern for item validation
+            modifier: "im", // regex modifier for item validation
+            error: "This is a required question", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, // item default value
+        }
+    ```
+* Form item radio
+    ``` javascript
+        {
+            type: "radio", // item type
+            title: "Gender", // item title
+            description: "Your gender please, we'll keep it as a secret.", // item description
+            icon: null, // material icon name (not supported well yet)
+            error: "This is a required question", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, //  item default value
+            options: ["Male", "Female", "Other"], // options for the radio buttons
+        },
+    ```
+* Form item checkbox
+    ``` javascript
+        {
+            type: "checkbox", // item type
+            title: "Programming languages", // item title
+            description: "Choose your favorite programming languages.", // item description
+            icon: null, // material icon name (not supported well yet)
+            min: 2, // minimun selection required
+            max: null, // maximum selection allowed
+            error: "Choose at least two", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: [], //  item default value, must be an array
+            options: ["JavaScript", "Python", "Visual Basic", "C#", "Java", "Lua", "C++"], // options for the radio buttons
+        },
+    ```
+* From item textarea
+    ``` javascript
+        {
+            type: "textarea", // item type
+            title: "Comments", // item title
+            description: "Any comment about this form", // item description
+            icon: null, // material icon name (not supported well yet)
+            placeholder: "enter your comments here", // item input placeholder
+            pattern: ".+", // regex pattern for item validation
+            modifier: "im", // regex modifier for item validation
+            error: "This is a required question", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, // item default value
+        }
+    ```
 
 ### Screenshots
 * Start page
