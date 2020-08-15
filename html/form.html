@@ -88,6 +88,7 @@
                     :required="item.required"
                     v-model="item.value"
                     @input="validateForm(item)"
+                    @blur="validateForm(item)"
                     :class=" item.valid === false ? 'md-invalid' : '' "
                     :md-debounce="100"
                     md-immediately>

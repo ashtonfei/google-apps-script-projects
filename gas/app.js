@@ -60,7 +60,7 @@ const form = {
             description: "We'll need your email for sending you a copy of this submission.",
             placeholder: "Your email address",
             pattern: "[a-z0-9_\.]+@[a-z0-9_\.]+", // regex pattern
-            modifier: "im", // regex modifier
+            modifier: "m", // regex modifier
             error: "Invaid email addess, choose letters from [a-z0-1_.]",
             required: true,
             valid: null,
