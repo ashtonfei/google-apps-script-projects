@@ -49,7 +49,7 @@ const form = {
             description: "What's your name please?", // item description
             placeholder: "Your full name", // item input placeholder
             pattern: ".+", // regex pattern for item validation
-            modifier: "im", // regex modifier for item validation
+            modifier: "gim", // regex modifier for item validation
             error: "This is a required question", // item error message
             required: true, // is item required
             valid: null, // item default valid status
@@ -60,8 +60,8 @@ const form = {
             title: "Email",
             description: "We'll need your email for sending you a copy of this submission.",
             placeholder: "Your email address",
-            pattern: "[a-z0-9_\.]+@[a-z0-9_\.]+", // regex pattern
-            modifier: "m", // regex modifier
+            pattern: "[a-z0-9_\\.]+@[a-z0-9_\\.]+", // regex pattern
+            modifier: "gm", // regex modifier
             error: "Invaid email addess, choose letters from [a-z0-1_.]",
             required: true,
             valid: null,
@@ -95,7 +95,7 @@ const form = {
             description: "Any comment about this form", // item description
             placeholder: "enter your comments here", // item input placeholder
             pattern: ".+", // regex pattern for item validation
-            modifier: "im", // regex modifier for item validation
+            modifier: "gm", // regex modifier for item validation
             error: "This is a required question", // item error message
             required: true, // is item required
             valid: null, // item default valid status
@@ -105,8 +105,6 @@ const form = {
             type: "date", // item type
             title: "Due date", // item title
             description: "Pick a date", // item description
-            pattern: ".+", // regex pattern for item validation
-            modifier: "im", // regex modifier for item validation
             error: "This is a required question", // item error message
             required: true, // is item required
             valid: null, // item default valid status
