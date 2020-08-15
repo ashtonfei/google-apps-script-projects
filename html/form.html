@@ -86,11 +86,11 @@
                 <md-datepicker
                     :disabled="app.submitting"
                     :required="item.required"
-                    v-model.lazy="item.value"
-                    @blur="validateForm(item)"
-                    @md-closed="validateForm(item)"
+                    v-model="item.value"
+                    @input="validateForm(item)"
                     :class=" item.valid === false ? 'md-invalid' : '' "
-                    md-autogrow>
+                    :md-debounce="100"
+                    md-immediately>
                     <span class="md-error">{{item.error}}</span>
                 </md-datepicker>
             </div>
@@ -130,7 +130,7 @@
                         class="md-raised"
                         :disabled="app.submitting"
                         @click="goToSession(i - 1)">
-                        <md-icon>arrow_upward</md-icon>
+                        <md-icon>chevron_left</md-icon>
                     </md-button>
                     <md-button
                         class="md-raised md-primary"
@@ -147,13 +147,13 @@
                         class="md-raised"
                         :disabled="app.submitting"
                         @click="goToSession(i - 1)">
-                        <md-icon>arrow_upward</md-icon>
+                        <md-icon>chevron_left</md-icon>
                     </md-button>
                     <md-button
                         class="md-raised md-accent"
                         :disabled="(app.submitting || !item.valid) && item.required"
                         @click="goToSession(i + 1)">
-                        <md-icon>arrow_downward</md-icon>
+                        <md-icon>chevron_right</md-icon>
                     </md-button>
                 </template>
             </div>

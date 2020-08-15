@@ -59,9 +59,9 @@ const form = {
             title: "Email",
             description: "We'll need your email for sending you a copy of this submission.",
             placeholder: "Your email address",
-            pattern: ".+", // regex pattern
+            pattern: "[a-z0-9_\.]+@[a-z0-9_\.]+", // regex pattern
             modifier: "im", // regex modifier
-            error: "This is a required question",
+            error: "Invaid email addess, choose letters from [a-z0-1_.]",
             required: true,
             valid: null,
             value: null,
@@ -109,7 +109,7 @@ const form = {
             error: "This is a required question", // item error message
             required: true, // is item required
             valid: null, // item default valid status
-            value: null, // item default value
+            value: Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd"), // item default value
         }
     ],
     end: {
