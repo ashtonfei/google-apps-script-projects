@@ -112,7 +112,8 @@
                     v-model="item.value"
                     @click="validateForm(this.event, item)"
                     @blur="validateForm(this.event, item)"
-                    @md-change="validateForm(this.event, item)" />
+                    @md-change="validateForm(this.event, item)">
+                </md-file>
                 <span class="md-error">{{item.error}}</span>
             </md-field>
         

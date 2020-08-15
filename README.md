@@ -118,8 +118,7 @@ Google Sheet
             fileTypes: "image/*, .pdf", // acceptable file types, null for all file types
         }
     ```
-
-
+    
 ### Screenshots
 * Start page
     ![image](https://user-images.githubusercontent.com/16481229/90312091-48bf2000-df34-11ea-8e5f-06e44a6a4f20.png)
@@ -139,6 +138,6 @@ Google Sheet
     ![image](https://user-images.githubusercontent.com/16481229/90312209-119d3e80-df35-11ea-8394-784dca34ecd6.png)
 
 ### YouTube
-* Check on YouTube [GAS-062 Typeform Style Form](https://youtu.be/dUGDwNoMHcs)
+* Check on YouTube [GAS-062 Typeform Style Form](https://youtu.be/6RwjYyfZDBs)
 * More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 
