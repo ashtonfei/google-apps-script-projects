@@ -91,6 +91,34 @@ Google Sheet
             value: null, // item default value
         }
     ```
+* Form item date
+    ``` javascript
+        {
+            type: "date", // item type
+            title: "Due date", // item title
+            description: "Pick a date", // item description
+            error: "This is a required question", // item error message
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd"), // item default value
+        }
+    ```
+* Form item file uploader
+    ``` javascript
+        {
+            type: "file", // item type
+            title: "File", // item title
+            description: "We need you to upload a file about yourself", // item description
+            error: "This is a required question", // item error message
+            data: null, // data for uploaded file, keep it null
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, // item default value
+            maxSize: 5000, // max file size in KB
+            fileTypes: "image/*, .pdf", // acceptable file types, null for all file types
+        }
+    ```
+
 
 ### Screenshots
 * Start page
