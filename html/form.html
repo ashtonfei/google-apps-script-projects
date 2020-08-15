@@ -24,26 +24,6 @@
     </div>
 </template>
 
-
-<template v-if=" app.session === form.end.session && form.visible">
-    <div 
-        class="md-content md-layout md-alignment-center-left"
-        :style="form.end.style">
-        <div class="md-layout-item md-size-50 md-medium-60 md-small-70 md-xsmall-size-95">
-            <div class="md-title" v-html="form.end.title"></div>
-            <div v-html="form.end.message"></div>
-            <div>
-                <md-button 
-                    class="md-primary md-raised"
-                    @click="goToSession(form.start.session)">
-                        {{form.end.endButtonName}}
-                        <md-icon v-if="form.end.endButtonIcon">{{form.end.endButtonIcon}}</md-icon>
-                    </md-button>
-            </div>
-        </div>
-    </div>
-</template>
-
 <template v-for="(item, i) in form.items">
     <div 
         class="md-content md-layout md-alignment-center-left"
@@ -62,8 +42,8 @@
                     :required="item.required"
                     :placeholder="item.placeholder"
                     v-model.trim="item.value"
-                    @blur="validateForm(item)"
-                    @keyup="validateForm(item)">
+                    @blur="validateForm(null, item)"
+                    @keyup="validateForm(null, item)">
                 </md-input>
                 <span class="md-error">{{item.error}}</span>
             </md-field>
@@ -76,8 +56,8 @@
                     :required="item.required"
                     :placeholder="item.placeholder" 
                     v-model.trim="item.value"
-                    @blur="validateForm(item)"
-                    @keyup="validateForm(item)"
+                    @blur="validateForm(null, item)"
+                    @keyup="validateForm(null, item)"
                     md-autogrow></md-textarea>
                 <span class="md-error">{{item.error}}</span>
             </md-field>
@@ -87,8 +67,8 @@
                     :disabled="app.submitting"
                     :required="item.required"
                     v-model="item.value"
-                    @input="validateForm(item)"
-                    @blur="validateForm(item)"
+                    @input="validateForm(null, item)"
+                    @blur="validateForm(null, item)"
                     :class=" item.valid === false ? 'md-invalid' : '' "
                     :md-debounce="100"
                     md-immediately>
@@ -103,8 +83,8 @@
                     :value="option"
                     v-model="item.value"
                     :disabled="app.submitting"
-                    @blur="validateForm(item)"
-                    @change="validateForm(item)">
+                    @blur="validateForm(null, item)"
+                    @change="validateForm(null, item)">
                     {{option}}
                 </md-radio>
                 <span class="error" v-if="item.valid === false">{{item.error}}</span>
@@ -117,12 +97,27 @@
                     :value="option"
                     v-model="item.value"
                     :disabled="app.submitting"
-                    @blur="validateForm(item)"
-                    @change="validateForm(item)">
+                    @blur="validateForm(null, item)"
+                    @change="validateForm(null, item)">
                     {{option}}
                 </md-checkbox>
                 <span class="error" v-if="item.valid === false">{{item.error}}</span>
             </div>
+
+            <md-field 
+                v-else-if=" item.type === 'file' "
+                :class=" item.valid === false ? 'md-invalid' : '' ">
+                <md-file
+                    :disabled="app.submitting"
+                    :required="item.required"
+                    :accept="item.fileTypes"
+                    v-model="item.value"
+                    @click="validateForm(this.event, item)"
+                    @blur="validateForm(this.event, item)"
+                    @md-change="validateForm(this.event, item)">
+                </md-file>
+                <span class="md-error">{{item.error}}</span>
+            </md-field>
         
             <div>
                 <template v-if=" i === form.items.length - 1 ">
@@ -134,20 +129,32 @@
                         <md-icon>chevron_left</md-icon>
                     </md-button>
                     <md-button
+                        v-if="!app.submitting"
                         class="md-raised md-primary"
                         :disabled="app.submitting || !form.valid"
                         @click="submit">
                         Submit
-                        <span v-if="app.submitting">ting...</span>
                     </md-button>
+                    <md-progress-spinner
+                        v-if="app.submitting"
+                        :md-diameter="30" 
+                        :md-stroke="3" 
+                        md-mode="indeterminate"></md-progress-spinner>
                 </template>
                 
                 <template v-else>
                     <md-button
-                        v-if="i !== 0"
+                        v-if="i === 0"
                         class="md-raised"
                         :disabled="app.submitting"
-                        @click="goToSession(i - 1)">
+                        @click="goToSession(form.start.session)">
+                        <md-icon>chevron_left</md-icon>
+                    </md-button>
+                    <md-button
+                        class="md-raised"
+                        :disabled="app.submitting"
+                        @click="goToSession(i - 1)"
+                        v-else>
                         <md-icon>chevron_left</md-icon>
                     </md-button>
                     <md-button
@@ -164,6 +171,31 @@
                     md-mode="determinate" 
                     class="md-accent md-layout-item md-size-50 md-small-size-100" 
                     :md-value=" ((i + 1) / form.items.length) * 100 "></md-progress-bar>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template v-if=" app.session === form.end.session && form.visible">
+    <div 
+        class="md-content md-layout md-alignment-center-left"
+        :style="form.end.style">
+        <div class="md-layout-item md-size-50 md-medium-60 md-small-70 md-xsmall-size-95">
+            <div class="md-title" v-html="form.end.title"></div>
+            <div v-html="form.end.message"></div>
+            <div>
+                <md-button 
+                    class="md-raised"
+                    @click="goToSession(form.items.length - 1)">
+                        <md-icon>chevron_left</md-icon>
+                    </md-button>
+                <md-button 
+                    class="md-primary md-raised"
+                    @click="goToSession(form.start.session)">
+                        {{form.end.endButtonName}}
+                        <md-icon v-if="form.end.endButtonIcon">{{form.end.endButtonIcon}}</md-icon>
+                    </md-button>
             </div>
         </div>
     </div>

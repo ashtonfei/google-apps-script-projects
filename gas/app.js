@@ -1,4 +1,5 @@
 const RESPONSE_SHEET_NAME = "Responses"
+const UPLOADS_FOLDER = "Uploads"
 const START_IMAGE = "https://images.unsplash.com/photo-1454262041357-5d96f50a2f27?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
 const END_IMAGE = "https://images.unsplash.com/photo-1471899236350-e3016bf1e69e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1051&q=80"
 const FORM_IMAGES = [
@@ -110,6 +111,18 @@ const form = {
             required: true, // is item required
             valid: null, // item default valid status
             value: Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd"), // item default value
+        },
+        {
+            type: "file", // item type
+            title: "File", // item title
+            description: "We need you to upload a file about yourself", // item description
+            error: "This is a required question", // item error message
+            data: null, // data for uploaded file, keep it null
+            required: true, // is item required
+            valid: null, // item default valid status
+            value: null, // item default value
+            maxSize: 5000, // max file size in KB
+            fileTypes: "image/*, .pdf", // accept file types, null for all file types
         }
     ],
     end: {
@@ -155,6 +168,25 @@ function getAppData(){
     return JSON.stringify(data)
 }
 
+function createFile({name, data}){
+    const id = SpreadsheetApp.getActive().getId()
+    const parentFolder = DriveApp.getFileById(id).getParents().next()
+    let folder
+    const folders = parentFolder.getFoldersByName(UPLOADS_FOLDER)
+    if (folders.hasNext()) {
+        folder = folders.next()
+    }else{
+        folder = parentFolder.createFolder(UPLOADS_FOLDER)
+    }
+    
+    let [contentType, dataBytes] = data.split(";base64,")
+    contentType = contentType.replace("data:", "")
+    dataBytes = Utilities.base64Decode(dataBytes)
+    const blob = Utilities.newBlob(dataBytes, contentType, name)
+    const file = folder.createFile(blob)
+    return file.getUrl()
+}
+
 function saveDataToSheet(data){
     const ss = SpreadsheetApp.getActive()
     let ws = ss.getSheetByName(RESPONSE_SHEET_NAME)
@@ -171,6 +203,13 @@ function saveDataToSheet(data){
     if (counts >= form.maxResponses && form.maxResponses) return `<p>Sorry, you've reached the maximun allowed responses.<\/p>`
    
     let {values, headers} = JSON.parse(data)
+
+    values.forEach((value, i)=>{
+        if (value.data){
+            values[i] = createFile(value)
+        }
+    })
+
     const uuid = Utilities.getUuid()
     headers = ["Timestamp", ...headers, "UUID"]
     values = [now, ...values, uuid]

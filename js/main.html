@@ -3,7 +3,7 @@
     // Initialize Vue Material
     Vue.use(VueMaterial.default)
     
-    const validateForm = function(item){
+    const validateForm = function(event = null,item){
         item.valid = true
         if (item.required){
             if (item.type === "radio") {
@@ -14,7 +14,40 @@
                 if (item.value.length < min || item.value > max) item.valid = false
             }else if(item.type === "date"){
                 if (item.value == null) item.valid = false
-                console.log(item.value)
+            }else if(item.type === "file"){
+                const files = event.target.files
+                item.error = "This is a required question"
+                if (files.length){
+                    item.valid = false
+                    const file = files[0]
+                    console.log(file)
+                    if (file.size / 1000 > item.maxSize){
+                        item.error = `File size is over ${item.maxSize}KB`
+                        item.valid = false
+                    }else{
+                        const reader = new FileReader()
+                        reader.onload = (e) => {
+                            item.data = e.target.result
+                            item.valid = true
+                            console.log(item)
+
+                            this.form.valid = true
+                            const count = this.form.items.length
+                            for (let i = 0; i < count; i ++){
+                                if (this.form.items[i].valid !== true && 
+                                    this.form.items[i].required){
+                                    this.form.valid = false
+                                    break
+                                }
+                            }
+                        }
+                        reader.readAsDataURL(file)
+                    }
+                }else{
+                    item.valid = false
+                    item.data = null
+                    console.log(item)
+                }
             }else{
                 if (item.value == null) {
                     item.valid = false
@@ -44,10 +77,15 @@
             headers.push(item.title)
             if (Array.isArray(item.value)) {
                 values.push(item.value.join(","))
+            }else if(item.type === "date" && item.value){
+                values.push(new Date(item.value))
+            }else if(item.type === "file" && item.data){
+                values.push({name: item.value, data: item.data})
             }else{
                 values.push(item.value)
             }
         })
+        console.log({headers, values})
         const response = JSON.stringify({headers, values})
         google.script.run
             .withSuccessHandler(result=>{
@@ -57,6 +95,11 @@
                 this.form.items.forEach(item=>{
                     if (Array.isArray(item.value)){
                         item.value = []
+                    }else if(item.type === "date"){
+                        item.value = new Date()
+                    }else if(item.type === "file"){
+                        item.data = null
+                        item.value = null
                     }else{
                         item.value = null
                     }
