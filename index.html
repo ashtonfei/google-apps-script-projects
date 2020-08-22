@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      .copy-text {
+        display: none;
+      }
+      .copy-button {
+        color: #4285F4;
+        display: inline-block;
+        margin-left: 12px;
+        cursor: pointer;
+        background: #eee;
+        border-radius: 3px;
+        padding: 2px 6px;
+        font-size: 0.8em;
+      }
+      .copy-button:hover{
+        color: #fff;
+        background: #4285F4;
+      }
+    </style>
+  </head>
+  <body>
+    <h4>API Documentation</h4>
+    <p>Base url</p>
+    <p><?= baseUrl ?></p>
+    <p>Query parameters</p>
+    <ul>
+      <li><b>name</b><span> - required, sheet name in the spreadsheet</span></li>
+      <li><b>format</b><span> - required, content type (json is supported only for now)</span></li>
+      <li><b>download</b><span> - optional, default value is false</span></li>
+    </ul>
+    <p>API List</p>
+    <ol>
+      <? apis.forEach(api=>{ ?> 
+        <li>
+          <a href="<?= api ?>" target="_blank"><?= api ?></a>
+          <input class="copy-text" type="text" value="<?= api ?>"/>
+          <span class="copy-button" onclick="copy(this)">Copy</span>
+        </li>
+      <? }) ?>
+    </ol>
+    <p>Download API List</p>
+    <ol>
+      <? downloads.forEach(download=>{ ?> 
+        <li>
+          <a href="<?= download ?>" target="_blank"><?= download ?></a>
+          <input class="copy-text" type="text" value="<?= download ?>"/>
+          <span class="copy-button" onclick="copy(this)">Copy</span>
+        </li>
+      <? }) ?>
+    </ol>
+    
+    <script>
+        function copy(target){
+            const textInput = target.previousElementSibling
+            textInput.style.display = "inline"
+            textInput.select()
+            document.execCommand("copy")
+            textInput.style.display = "none"
+        }
+    </script>
+  </body>
+</html>
+
+
