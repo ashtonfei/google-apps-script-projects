@@ -11,7 +11,7 @@ This is an API built with Google Apps Script with data in a Google Sheet.
 [Make a copy](https://docs.google.com/spreadsheets/d/1OK3SBa6eZyJ5Rrd2oZr2HBmhsws8opivW2LnCqOXYtA/copy)
 
 ### If you prefer to use clasp
-* [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-259) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
+[GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-259) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
 
 ### Script Type
 Google Sheet
