@@ -28,7 +28,7 @@ const createHomePage = () => {
     template.apis = apis
     template.downloads = downloads
     
-    return template.evaluate().setTitle("API Documentation")
+    return template.evaluate().setTitle("API Documentation").setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
 }
 
 
