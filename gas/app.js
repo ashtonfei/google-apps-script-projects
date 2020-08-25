@@ -39,7 +39,8 @@ const form = {
             1. Maximum allowed responses<br>
             2. Valid in a date time range<br>
             3. A different background image for each form question<br>
-            4. Form validation with REGEX<\/p>
+            4. Form validation with REGEX<br>
+            5. Use previous inputs as an dynamic prefix in the description<\/p>
         `,
         next: 0,
         style: {
@@ -70,6 +71,8 @@ const form = {
             required: true, // is item required
             valid: null, // item default valid status
             value: null, // item default value
+            usePreviousAsPrefix: [0],
+            prefix: "Hi",
         },
         {
             type: "input",
@@ -82,6 +85,8 @@ const form = {
             required: true,
             valid: null,
             value: null,
+            usePreviousAsPrefix: [0, 1],
+            prefix: "Hi",
         },
         {
             type: "radio", // item type
@@ -92,6 +97,8 @@ const form = {
             valid: null, // item default valid status
             value: null, //  item default value
             options: ["Male", "Female", "Other"], // options for the radio buttons
+            usePreviousAsPrefix: [0, 1],
+            prefix: "Hi",
         },
         {
             type: "checkbox", // item type
@@ -104,6 +111,8 @@ const form = {
             valid: null, // item default valid status
             value: [], //  item default value, must be an array
             options: ["JavaScript", "Python", "Visual Basic", "C#", "Java", "Lua", "C++"], // options for the radio buttons
+            usePreviousAsPrefix: [0, 1],
+            prefix: "Hi",
         },
         {
             type: "textarea", // item type
@@ -116,6 +125,8 @@ const form = {
             required: true, // is item required
             valid: null, // item default valid status
             value: null, // item default value
+            usePreviousAsPrefix: [0, 1],
+            prefix: "Hi",
         },
         {
             type: "date", // item type
@@ -125,6 +136,8 @@ const form = {
             required: true, // is item required
             valid: null, // item default valid status
             value: Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd"), // item default value
+            usePreviousAsPrefix: [0, 1],
+            prefix: "Hi",
         },
         {
             type: "file", // item type
@@ -132,11 +145,13 @@ const form = {
             description: "We need you to upload a file about yourself", // item description
             error: "This is a required question", // item error message
             data: null, // data for uploaded file, keep it null
-            required: true, // is item required
+            required: false, // is item required
             valid: null, // item default valid status
             value: null, // item default value
             maxSize: 5000, // max file size in KB
             fileTypes: "image/*, .pdf", // accept file types, null for all file types
+            usePreviousAsPrefix: [0, 1],
+            prefix: "Hi",
         }
     ],
     end: {
@@ -217,10 +232,11 @@ function saveDataToSheet(data){
     if (counts >= form.maxResponses && form.maxResponses) return `<p>Sorry, you've reached the maximum allowed responses.<\/p>`
    
     let {values, headers} = JSON.parse(data)
-
     values.forEach((value, i)=>{
-        if (value.data){
-            values[i] = createFile(value)
+        if (value){
+          if (value.data){
+              values[i] = createFile(value)
+          }
         }
     })
 

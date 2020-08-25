@@ -22,6 +22,7 @@ Google Sheet
 * Form vailaible during a specific date time
 * Form validation with REGEX
 * Form background images
+* Use previous inputs as an dynamic prefix in the description
 
 ### Form Configurations
 * Maximum responses
@@ -46,6 +47,8 @@ Google Sheet
             required: true, // is item required
             valid: null, // item default valid status
             value: null, // item default value
+            usePreviousAsPrefix: [0], // user previous item input as an prefix in the description
+            prefix: "Hi", // prefix world
         }
     ```
 * Form item radio
@@ -59,6 +62,8 @@ Google Sheet
             valid: null, // item default valid status
             value: null, //  item default value
             options: ["Male", "Female", "Other"], // options for the radio buttons
+            usePreviousAsPrefix: [0], // user previous item input as an prefix in the description
+            prefix: "Hi", // prefix world
         }
     ```
 * Form item checkbox
@@ -74,6 +79,8 @@ Google Sheet
             valid: null, // item default valid status
             value: [], //  item default value, must be an array
             options: ["JavaScript", "Python", "Visual Basic", "C#", "Java", "Lua", "C++"], // options for the radio buttons
+            usePreviousAsPrefix: [0], // user previous item input as an prefix in the description
+            prefix: "Hi", // prefix world
         }
     ```
 * From item textarea
@@ -89,6 +96,8 @@ Google Sheet
             required: true, // is item required
             valid: null, // item default valid status
             value: null, // item default value
+            usePreviousAsPrefix: [0], // user previous item input as an prefix in the description
+            prefix: "Hi", // prefix world
         }
     ```
 * Form item date
@@ -101,6 +110,8 @@ Google Sheet
             required: true, // is item required
             valid: null, // item default valid status
             value: Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd"), // item default value
+            usePreviousAsPrefix: [0], // user previous item input as an prefix in the description
+            prefix: "Hi", // prefix world
         }
     ```
 * Form item file uploader
@@ -116,6 +127,8 @@ Google Sheet
             value: null, // item default value
             maxSize: 5000, // max file size in KB
             fileTypes: "image/*, .pdf", // acceptable file types, null for all file types
+            usePreviousAsPrefix: [0], // user previous item input as an prefix in the description
+            prefix: "Hi", // prefix world
         }
     ```
     
