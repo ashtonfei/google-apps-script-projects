@@ -21,12 +21,14 @@ https://script.google.com/macros/s/AKfycbzeI0x3BF5YO1Bv43Zkr3Bj5CfmK-UTxtjHQrFDz
 
 ### API query parameters
 * name - required (sheet name in the spreadsheet)
-* format - required (json is supported only for now)
+* format - required (json, xml are supported only for now)
 * download - optional (default value is false)
 
 ### API examples
 * https://script.google.com/macros/s/AKfycbzeI0x3BF5YO1Bv43Zkr3Bj5CfmK-UTxtjHQrFDzwwEJ8Qlx2Y/exec?name=users&format=json
 * https://script.google.com/macros/s/AKfycbzeI0x3BF5YO1Bv43Zkr3Bj5CfmK-UTxtjHQrFDzwwEJ8Qlx2Y/exec?name=users&format=json&download=true
+* https://script.google.com/macros/s/AKfycbzeI0x3BF5YO1Bv43Zkr3Bj5CfmK-UTxtjHQrFDzwwEJ8Qlx2Y/exec?name=users&format=xml
+* https://script.google.com/macros/s/AKfycbzeI0x3BF5YO1Bv43Zkr3Bj5CfmK-UTxtjHQrFDzwwEJ8Qlx2Y/exec?name=users&format=xml&download=true
 
 ### Screenshots
 ![image](https://user-images.githubusercontent.com/16481229/91168067-92172880-e707-11ea-9cbc-a29031a203ee.png)

@@ -66,10 +66,10 @@
     <h4>Query parameters</h4>
     <ul>
       <li><span class="api">name</span><span> - required, sheet name in the spreadsheet</span></li>
-      <li><span class="api">format</span><span> - required, content type (json is supported only for now)</span></li>
+      <li><span class="api">format</span><span> - required, content type (json,xml are supported only for now)</span></li>
       <li><span class="api">download</span><span> - optional, default value is false</span></li>
     </ul>
-    <h4>API List</h4>
+    <h4>JSON API List</h4>
     <ol>
       <? apis.forEach(api=>{ ?> 
         <li>
@@ -79,9 +79,32 @@
         </li>
       <? }) ?>
     </ol>
-      <h4>Download Links</h4>
+    
+    <h4>JSON Download Links</h4>
     <ol>
       <? downloads.forEach(download=>{ ?> 
+        <li>
+          <a href="<?= download ?>" target="_blank" class="api"><?= download ?></a>
+          <input class="copy-text" type="text" value="<?= download ?>"/>
+          <span class="copy-button" onclick="copy(this)">Copy</span>
+        </li>
+      <? }) ?>
+    </ol>
+    
+    <h4>XML API List</h4>
+    <ol>
+      <? apisXml.forEach(api=>{ ?> 
+        <li>
+          <a href="<?= api ?>" target="_blank" class="api"><?= api ?></a>
+          <input class="copy-text" type="text" value="<?= api ?>"/>
+          <span class="copy-button" onclick="copy(this)">Copy</span>
+        </li>
+      <? }) ?>
+    </ol>
+    
+    <h4>XML Download Links</h4>
+    <ol>
+      <? downloadsXml.forEach(download=>{ ?> 
         <li>
           <a href="<?= download ?>" target="_blank" class="api"><?= download ?></a>
           <input class="copy-text" type="text" value="<?= download ?>"/>
