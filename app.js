@@ -38,7 +38,11 @@ const createHomePage = () => {
     template.apisXml = apisXml
     template.downloadsXml = downloadsXml
     
-    return template.evaluate().setTitle("API Documentation").setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+    return template
+        .evaluate()
+        .setTitle("API Documentation")
+        .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
 }
 
 
