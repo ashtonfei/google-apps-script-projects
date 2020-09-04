@@ -35,6 +35,6 @@ https://script.google.com/macros/s/AKfycbzeI0x3BF5YO1Bv43Zkr3Bj5CfmK-UTxtjHQrFDz
 
 
 ### YouTube
-* Check on YouTube [GAS-063 Build an API with Data in Google Sheet](https://youtu.be/6RwjYyfZDBs)
+* Check on YouTube [GAS-063 Build an API with Data in Google Sheet](https://youtu.be/NUYR39JxlJA)
 * More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 
