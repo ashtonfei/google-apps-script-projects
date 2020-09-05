@@ -1,0 +1,43 @@
+<div class="md-layout-item md-size-60 md-xsmall-size-100 md-small-size-100">
+    <div class="md-layout date-time-container">
+        <div class="md-layout-item md-size-50 padding-right">
+            <md-icon class="md-primary">today</md-icon>
+            <div>Select a Date</div>
+            <div class="date-time-list md-scrollbar">
+                <div
+                    v-for="(day, i) in nextDays"
+                    :key=" 'date-' + i ">
+                    <md-button
+                        class="md-dense md-primary date-time-button"
+                        :class=" selectedDate === day.value ? 'md-raised' : '' "
+                        :disabled=" submitting || offDays.indexOf(day.weekdayName) !== -1 "
+                        @click="checkEvents(day)">
+                        <b>{{day.weekdayName}}</b> {{day.day}}/{{day.monthName}}/{{day.year}}
+                    </md-button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="md-layout-item md-size-50">
+            <md-icon class="md-accent">schedule</md-icon>
+            <div>Select a Time</div>
+            <div class="date-time-list md-scrollbar">
+                <div v-if="submitting && events.length === 0">
+                    <md-progress-bar md-mode="indeterminate" class="md-accent"></md-progress-bar>
+                </div>
+                <div
+                    v-for="(event, i) in events"
+                    :key=" 'event-' + i "
+                    e-else>
+                    <md-button
+                        class="md-dense md-accent date-time-button "
+                        :class=" selectedTime === event.startDate ? 'md-raised' : '' "
+                        :disabled=" submitting || !event.hasNoEvent"
+                        @click="addNewMeeting(event)"> 
+                        {{event.displayValue}}
+                    </md-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

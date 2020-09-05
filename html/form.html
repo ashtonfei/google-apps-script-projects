@@ -1,0 +1,99 @@
+<template>
+  <div>
+    <md-dialog class="event-form" :md-active.sync="form.active">
+      <md-dialog-content class="md-layout">
+        <div class="md-layout-item md-size-40 md-xsmall-size-100 md-small-size-100 padding-right">
+          <div>
+              <div>
+                  <md-avatar class="md-avatar-icon md-large">
+                    <md-icon>{{logo}}</md-icon>
+                  </md-avatar>
+              </div>
+              <div class="md-subhead">{{company}}</div>
+              <div class="md-title">{{name}}</div>
+              <div class="md-subhead">
+                  <md-icon>schedule</md-icon>
+                  {{meetingTime}} mins
+              </div>
+              <div class="md-subhead">
+                  <md-icon>language</md-icon>
+                  {{userTimeZone}}
+              </div>
+              <div class="md-subhead" v-if="form.event">
+                  <md-icon class="md-accent">event</md-icon>
+                  {{form.event.eventDateTimeDetails}}
+              </div>
+          </div>
+        </div>
+      
+        <div class="md-layout-item md-size-60 md-xsmall-size-100 md-small-size-100">
+          <div class="md-title">Enter Details</div>
+          <md-field :class=" form.name.valid === false ? 'md-invalid' : '' ">
+            <label>{{form.name.label}}</label>
+            <md-input 
+              v-model.trim="form.name.value" 
+              @keyup="validateForm(form.name)" 
+              @blur="validateForm(form.name)" 
+              :disabled="submitting"
+              required></md-input>
+            <span class="md-error">{{form.name.error}}</span>
+          </md-field>
+          <md-field :class=" form.email.valid === false ? 'md-invalid' : '' ">
+            <label>{{form.email.label}}</label>
+            <md-input 
+              type="email"
+              v-model.trim="form.email.value"
+              @keyup="validateForm(form.email)" 
+              @blur="validateForm(form.email)"
+              :disabled="submitting"
+              required></md-input>
+            <span class="md-error">{{form.email.error}}</span>
+          </md-field>
+          
+          <div>
+            <md-chips
+              :class=" form.guests.valid === false ? 'md-invalid' : '' "
+              md-input-type="email"
+              :md-check-duplicated="true"
+              class="md-accent" 
+              v-model="form.guests.value" 
+              md-placeholder="Add guest email" 
+              :md-auto-insert="true"
+              @md-insert="validateGuests"
+              @md-delete="validateGuests"
+              :disabled="submitting"
+              :md-format="toLowerCase">
+              <label>{{form.guests.label}}</label>
+              <span class="md-error">{{form.guests.error}}</span>
+            </md-chips>
+          </div>
+          
+          <md-field :class=" form.content.valid === false ? 'md-invalid' : '' ">
+            <label>{{form.content.label}}</label>
+            <md-textarea 
+              v-model.trim="form.content.value" 
+              @keyup="validateForm(form.content)" 
+              @blur="validateForm(form.content)" 
+              :disabled="submitting"
+              required 
+              md-autogrow></md-textarea>
+            <span class="md-error">{{form.content.error}}</span>
+          </md-field>
+          <div>
+              <md-button 
+                  class="md-accent md-raised submit-button"
+                  :disabled="submitting || !form.valid"
+                  @click="form.callback">Schedule Event</md-button>
+              <md-button 
+                  class="md-raised"
+                  :disabled="submitting"
+                  @click="form.active = false">Cancel</md-button>
+              <md-progress-bar v-if="submitting" md-mode="indeterminate" class="md-accent"></md-progress-bar>
+          </div>
+          
+        </div>
+      </md-dialog-content>
+    </md-dialog>
+  </div>
+</template>
+
