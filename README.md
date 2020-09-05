@@ -56,6 +56,6 @@ about: `
 
 
 ### YouTube
-* Check on YouTube [GAS-064 Meeting Assistant](https://youtu.be/NUYR39JxlJA)
+* Check on YouTube [GAS-064 Meeting Assistant](https://youtu.be/RwmFq40Usns)
 * More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 
