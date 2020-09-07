@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <style>
+        input, textarea, select {
+            width: 100%;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+        <div class="block form-group">
+            <label for="title">Choose title</label>
+            <select id="title" value="<?= title ?>">
+                <? for (let textTitle of titles ) { ?>
+                    <option value="<?= textTitle ?>"><?= textTitle ?></option>
+                <? } ?>
+            </select>
+        </div>
+        <div class="block form-group">
+            <label for="items">Valid items</label>
+            <textarea id="items" class="block" placeholder="One line per item" rows="10"><?= items ?></textarea>
+        </div>
+        <div class="block form-group">
+            <label for="error">Error message</label>
+            <input id="error" type="text" value="<?= error ?>" class="block">
+        </div>
+        
+        <div class="block form-group">
+            <button class="action" id="update">Update</button>
+            <div id="message"></div>
+        </div>
+    </div>
+    
+    <script>
+        const titleElement = document.querySelector("#title")
+        const itemsElement = document.querySelector("#items")
+        const errorElement = document.querySelector("#error")
+        const updateElement = document.querySelector("#update")
+        const messageElement = document.querySelector("#message")
+        
+        updateElement.addEventListener("click", updateRestriction)
+        
+        function updateRestriction(){
+            const title = titleElement.value
+            const error = errorElement.value
+            let items = itemsElement.value.split("\n").map( item => item.trim() ).filter( item => item != "" )
+            items = [... new Set(items)]
+            titleElement.style.disabled = true
+            itemsElement.style.disabled = true
+            errorElement.style.disabled = true
+            messageElement.style.disabled = true
+            
+            console.log({title, error, items})
+            messageElement.innerHTML = `<p>submitting...<\/p>`
+            google.script.run
+                .withSuccessHandler((message)=>{
+                    messageElement.innerHTML = message
+                    titleElement.style.disabled = false
+                    itemsElement.style.disabled = false
+                    errorElement.style.disabled = false
+                    messageElement.style.disabled = false
+                })
+                .withFailureHandler(err => {
+                    messageElement.innerHTML = `<p class="error">${err.message}<\/p>`
+                    titleElement.style.disabled = false
+                    itemsElement.style.disabled = false
+                    errorElement.style.disabled = false
+                    messageElement.style.disabled = false
+                })
+                .updateRestriction({title, error, items})
+        }
+    </script>
+  </body>
+</html>
+
+
