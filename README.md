@@ -1,4 +1,4 @@
-# GAS-064 Google Form Restriction
+# GAS-065 Google Form Restriction
 
 ### Description
 This is a Google Form with a restriction question built with Google form [text validation](https://support.google.com/docs/answer/3378864) and apps script. It uses text validation for the restriction of user input, and uses [onFormSubmit(event trigger)](https://developers.google.com/apps-script/reference/script/form-trigger-builder#onformsubmit) to update the text validation pattern after submission.
