@@ -49,6 +49,6 @@ const KEY_EMPTY_MESSAGE = "empty" // key name for storing the empty message
 
 
 ### YouTube
-* Check on YouTube [GAS-065 Google Form Restriction]()
+* Check on YouTube [GAS-065 Google Form Restriction](https://youtu.be/ial1XLfUvPc)
 * More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 
