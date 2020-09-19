@@ -4,99 +4,222 @@
     <base target="_top">
     <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
     <style>
-        input, textarea, select {
-            width: 100%;
-        }
-        a.button {
-            padding: 0px 8px;
-            background: #673AB7;
-            color: #fff;
-        }
+      #app {
+        padding: 8px ;
+        padding-top: 0px;
+      }
+      
+      input[type="text"], 
+      select {
+          width: 100%;
+      }
+      .sub-title {
+          display: block;
+          margin-top: 8px;
+          margin-bottom: 4px;
+          font-weight: bold;
+          color: #4285F4;
+      }
+      td {
+          padding: 0px 3px;
+      }
+      table{
+        margin-bottom: 3px;
+      }
     </style>
+    <style>
+      [v-cloak] {
+          display: block;
+          padding: 50px 0;
+      }
+  
+      @keyframes spinner {
+          to {
+              transform: rotate(360deg);
+          }
+      }
+  
+      [v-cloak]:before {
+          content: "";
+          box-sizing: border-box;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 50px;
+          height: 50px;
+          margin-top: -25px;
+          margin-left: -25px;
+          border-radius: 50%;
+          border: 5px solid #ccc;
+          border-top-color: #4285F4;
+          animation: spinner 0.8s linear infinite;
+          text-indent: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+      }
+  
+      [v-cloak]>* {
+          display: none;
+      }
+  </style>
   </head>
   <body>
-    <div class="sidebar">
-        <div class="block form-group">
-            <label for="title">Choose a text item</label>
-            <select id="title" value="<?= title ?>">
-                <? for (let textTitle of titles ) { ?>
-                    <option value="<?= textTitle ?>"><?= textTitle ?></option>
-                <? } ?>
-            </select>
+    <div id="app" v-cloak>
+      <template v-if="loadingError">
+        <p  class="error">{{loadingError}}</p>
+      </template>
+      <template v-else>
+        <span class="sub-title">Description</span>
+        <div class="form-group">
+          <div>Choose the Google Form linked sheet to check the formulas to be copied down in row 2. 
+          Save the sheet name and formulas to the script properties and create a trigger to run the copydown function when
+          there is a submission.
+          </div>
         </div>
-        <div class="block form-group">
-            <label for="description">Description</label>
-            <input id="description" type="text" value="<?= description ?>" class="block">
-        </div>
-        <div class="block form-group">
-            <label for="items">Valid items for response validation</label>
-            <textarea id="items" class="block" placeholder="One line per item" rows="6"><?= items ?></textarea>
-        </div>
-        <div class="block form-group">
-            <label for="error">Custom error text</label>
-            <input id="error" type="text" value="<?= error ?>" class="block">
-        </div>
-        <div class="block form-group">
-            <label for="empty-message">Empty message</label>
-            <input id="empty-message" type="text" value="<?= emptyMessage ?>" class="block">
+        <!-- select sheet -->
+        <div class="form-group">
+          <span class="sub-title">Sheets</span>
+          <label for="sheet">Choose Form Responses Sheet</label>
+          <select 
+            id="sheet" 
+            v-model="app.sheetName"
+            @change="onSheetChange"
+            :disabled="submitting">
+            <option 
+              v-for="(name, i) in app.sheetNames"
+              :key=" 'sheet-name-' + i "
+              :value="name"
+              >{{name}}</option>
+          </select>
         </div>
         
-        <div class="block form-group">
-            <button class="action" id="update">Update</button>
-            <a class="button" target="_blank" href="<?= url ?>">Submit a response</a>
-            <div id="message"></div>
-        </div>
+        <!-- Formulas -->
+          <template v-if="app.formulas.length">
+              <span class="sub-title">Formulas</span>
+              
+              <table>
+                <tr>
+                  <th>Header</th>
+                  <th>Formula</th>
+                  <th>Copy as Value</th>
+                </tr>
+                <tr 
+                  v-for="(formula, i) in app.formulas"
+                  :key=" 'formula-item-' + i ">
+                  <td>{{formula.label}}</td>
+                  <td>{{formula.formula}}</td>
+                  <td>
+                    <input type="checkbox" v-model="formula.copyAsValue">
+                  </td>
+                </tr>
+              </table>
+              <div class="form-group">
+                  <button class="action" @click="saveSettings" :disabled="submitting">Save</button>
+                  <button @click="refresh" :disabled="submitting">Refresh</button>
+              </div>
+              <div class="form-group">
+                <span class="sub-title">Status</span>
+                <template v-if="submitting">
+                  <div>{{submitting}}</div>
+                </template>
+                <template v-else>
+                  <div v-if="error" class="error">{{error}}</div>
+                  <template v-else>
+                    <div v-if="app.saved">Formulas saved.</div>
+                    <div class="error" v-else>Formulas not saved.</div>
+                  </template>
+                </template>
+              </div>
+          </template>
+          <template v-else>
+            <div class="form-group">
+              <span class="sub-title">Message</span>
+              <div class="error">No formulas in selected sheet.</div>
+            </div>
+          </template>
+      </template>
     </div>
     
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script>
-        const titleElement = document.querySelector("#title")
-        const descriptionElement = document.querySelector("#description")
-        const itemsElement = document.querySelector("#items")
-        const errorElement = document.querySelector("#error")
-        const emptyMessageElement = document.querySelector("#empty-message")
-        const updateElement = document.querySelector("#update")
-        const messageElement = document.querySelector("#message")
-        
-        
-        updateElement.addEventListener("click", updateRestriction)
-        
-        function updateRestriction(){
-            const title = titleElement.value
-            const description = descriptionElement.value
-            const error = errorElement.value
-            let items = itemsElement.value.split("\n").map( item => item.trim() ).filter( item => item != "" )
-            items = [... new Set(items)]
-            let emptyMessage = emptyMessageElement.value
-            
-            titleElement.style.disabled = true
-            descriptionElement.style.disabled = true
-            itemsElement.style.disabled = true
-            errorElement.style.disabled = true
-            emptyMessageElement.style.disabled = true
-            updateElement.style.disabled = true
-            
-            messageElement.innerHTML = `<p>submitting...<\/p>`
-            google.script.run
-                .withSuccessHandler((message)=>{
-                    messageElement.innerHTML = message
-                    titleElement.style.disabled = false
-                    descriptionElement.style.disabled = false
-                    itemsElement.style.disabled = false
-                    errorElement.style.disabled = false
-                    emptyMessageElement.style.disabled = false
-                    updateElement.style.disabled = false
-                })
-                .withFailureHandler(err => {
-                    messageElement.innerHTML = `<p class="error">${err.message}<\/p>`
-                    titleElement.style.disabled = false
-                    descriptionElement.style.disabled = false
-                    itemsElement.style.disabled = false
-                    errorElement.style.disabled = false
-                    emptyMessageElement.style.disabled = false
-                    updateElement.style.disabled = false
-                })
-                .updateRestriction({title, description, error, items, emptyMessage})
-        }
+      
+      const onSheetChange = function(){
+        this.submitting = "Checking formulas..."
+        google.script.run
+          .withSuccessHandler( (appData) => {
+              appData = JSON.parse(appData)
+              this.app = appData
+              this.submitting = false
+          })
+          .withFailureHandler( (error) => {
+              this.error = error.message
+              this.submitting = false
+          })
+          .onSheetChange(this.app.sheetName)
+      }
+      
+      const saveSettings = function() {
+        this.submitting = "Saving..."
+        google.script.run
+          .withSuccessHandler( (appData) => {
+              appData = JSON.parse(appData)
+              this.app = appData
+              this.submitting = false
+          })
+          .withFailureHandler( (error) => {
+              conosle.log(error.message)
+              this.submitting = false
+          })
+          .saveSettings(this.app.sheetName, JSON.stringify(this.app.formulas))
+      }
+      
+      const refresh = function(){
+        this.submitting = "Refreshing..."
+        google.script.run
+          .withSuccessHandler( (appData) => {
+              appData = JSON.parse(appData)
+              this.app = appData
+              this.submitting = false
+          })
+          .withFailureHandler( (error) => {
+              this.error = error.message
+              this.submitting = false
+          })
+          .onSheetChange(this.app.sheetName)
+      } 
+      
+      const methods = {
+        onSheetChange,
+        saveSettings,
+        refresh,
+      }
+      
+      const data = {
+        loadingError: null,
+        submitting: false,
+        error: null
+      }
+
+      
+      google.script.run
+        .withSuccessHandler((appData) => {
+          appData = JSON.parse(appData)
+          data.app = appData
+          new Vue({
+            el: "#app",
+            data: data,
+            methods: methods,
+          })
+        })
+        .withFailureHandler((error) => {
+          data.loadingError = error.message
+          new Vue({
+          el: "#app",
+          data: data,
+          })
+        })
+        .getAppData()
+    
     </script>
   </body>
 </html>
