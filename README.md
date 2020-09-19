@@ -17,6 +17,6 @@ Google Sheet
 ![image](https://user-images.githubusercontent.com/16481229/93658613-c2848500-fa6f-11ea-81e8-2b52e22eedac.png)
 
 ### YouTube
-* Check on YouTube [GAS-066 Copydown Addon Replication](https://youtu.be/ial1XLfUvPc)
+* Check on YouTube [GAS-066 Copydown Addon Replication](https://youtu.be/urj8_pjqT-k)
 * More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
 
