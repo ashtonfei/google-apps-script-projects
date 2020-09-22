@@ -1,134 +1,247 @@
-const APP_NAME = "Copydown Addon"
-const KEY_SHEET_NAME = "sheet-name"
-const KEY_FORMULAS = "formulas"
-const FUNCTION_NAME = "onFormSubmit"
+const QUERY = "subject:XML Demo has:attachment filename:xml newer_than:1d" //https://support.google.com/mail/answer/7190?hl=en 
+const SEP = ">"
+const XML_TYPE = "text/xml"
+const WS_XML = "XML"
+const WS_IMPORT = "IMPORT XML"
+const EXCLUDE_TAGS = ["Invoice>InvoicePDF"]
+const FUNCTION_NAME = "triggerFunction"
+const HOURS = [
+  "Midnight to 1am",
+  "1am to 2am",
+  "2am to 3am",
+  "3am to 4am",
+  "4am to 5am",
+  "5am to 6am",
+  "6am to 7am",
+  "7am to 8am",
+  "8am to 9am",
+  "9am to 10am",
+  "10am to 11am",
+  "11am to 12pm",
+  "12pm to 1pm",
+  "1pm to 2pm",
+  "2pm to 3pm",
+  "3pm to 4pm",
+  "4pm to 5pm",
+  "5pm to 6pm",
+  "6pm to 7pm",
+  "7pm to 8pm",
+  "8pm to 9pm",
+  "9pm to 10pm",
+  "10pm to 11pm",
+  "11pm to Midnight",
+]
 
-function onOpen(){
-    const ui = SpreadsheetApp.getUi()
-    const menu = ui.createMenu("Copydown")
-    menu.addItem("Open", "showSidebar")
-    menu.addToUi()
+function getSheetByName(name) {
+    const ss = SpreadsheetApp.getActive()
+    const ws = ss.getSheetByName(name)
+    if (ws) return ws
+    return ss.insertSheet(name)
 }
 
-function showSidebar(){
+
+function getQuery() {
+    const items = []
+    const {subject, from, to, others, xml} = PropertiesService.getScriptProperties().getProperties()
+    if (subject) items.push("subject:" + subject)
+    if (from) items.push("from:" + from)
+    if (to) items.push("to:" + to)
+    if (others) items.push(others)
+    items.push(xml)
+    return items.join(" ")
+}
+
+function triggerFunction(query) {
+    query = query || getQuery()
+    const attachments = getXmlAttachments(query)
+    let xmlValues = []
+    let xmlTags = []
+    let xmlKeys = []
+    attachments.forEach(attachment => {
+        const content = attachment.getDataAsString()
+        const filename = attachment.getName()
+        const [tags, keys, values] = convertXML(content, filename)
+        xmlTags = tags
+        xmlKeys = keys
+        xmlValues = [...xmlValues, ...values]
+    })
+
+    // write array data to sheet
+    let {keepOldRecords} = PropertiesService.getScriptProperties().getProperties()
+    keepOldRecords = keepOldRecords ? JSON.parse(keepOldRecords) : true
+    
+    const ws = getSheetByName(WS_XML)
+    if (!keepOldRecords) ws.clear()
+    if (xmlTags.length) ws.getRange(1, 1, 1, xmlTags.length).setValues([xmlTags]).setNotes([xmlKeys])
+    xmlValues.forEach(values => {
+        ws.appendRow(values)
+    })
+    ws.activate()
+}
+
+function getXmlAttachments(query){
+    // search for mail threads
+    const threads = GmailApp.search(query)
+    let xmls = []
+    threads.forEach(thread => {
+        let messages = thread.getMessages()
+        let lastMessage = messages.pop()
+        let attachments = lastMessage.getAttachments({includeInlineImages: false})
+        attachments = attachments.filter(attachment => {
+            return attachment.getContentType() === XML_TYPE
+        })
+        xmls = xmls.concat(attachments)
+    })
+    return xmls
+}
+
+function xmlToArray(root, parentKey = null, repeatTag = null, excludedTags = []){
+    //root = xml.getRootElement()
+    let headers = []
+    let keys = []
+    let values = []
+    
+    const children = root.getChildren()
+    const attributes = root.getAttributes()
+    const tagName = root.getName()
+    const key = parentKey ? [parentKey, root.getName()].join(SEP) : root.getName()
+    const tagValue = root.getText()
+    
+    attributes.forEach(attribute => {
+        const attributeKey = [key, attribute.getName()].join(SEP)
+        const attributeName = [tagName, attribute.getName()].join("")
+        const attributeValue = attribute.getValue()
+        if (excludedTags.indexOf(attributeKey) === -1){
+            headers.push(attributeName)
+            keys.push(attributeKey)
+            values.push(attributeValue)
+        }
+    })
+    
+    if (children.length) {
+        children.forEach(child => {
+            if (child.getName() !== repeatTag){
+                let [childHeaders, childKeys, childValues] = xmlToArray(child, key, null, excludedTags)
+                headers = [...headers, ...childHeaders]
+                keys = [...keys, ...childKeys]
+                values = [...values, ...childValues]
+            }
+        })
+    }else{
+        if (excludedTags.indexOf(key) === -1){
+            headers.push(tagName)
+            keys.push(key)
+            values.push(tagValue)
+        }
+    }
+    return [headers, keys, values]
+}
+
+
+function onOpen() {
     const ui = SpreadsheetApp.getUi()
-    const title = APP_NAME
-    const userInterface = HtmlService.createHtmlOutputFromFile("sidebar").setTitle(title)
+    ui.createMenu("XML")
+        .addItem("Open", "showSidebar")
+        .addToUi()
+}
+
+function showSidebar() {
+    const ui = SpreadsheetApp.getUi()
+    const userInterface = HtmlService.createHtmlOutputFromFile("sidebar").setTitle("XML Addon")
     ui.showSidebar(userInterface)
 }
 
-
-function getFormulasBySheet(sheet) {
-    const formulas = []
-    const formulasR1C1 = sheet.getDataRange().getFormulasR1C1()
-    if (formulasR1C1.length > 1) {
-      const headers = sheet.getDataRange().getValues()[0]
-      formulasR1C1[1].forEach((formula, i) => {
-        if (formula) {
-          formulas.push({
-            formula: formula,
-            label: headers[i],
-            copyAsValue: false,
-            column: i + 1,
-          })
-        }
-      })
+const getAppData = () => {
+    const props = PropertiesService.getScriptProperties().getProperties()
+    const {
+        subject,
+        from,
+        to,
+        others,
+        enabled,
+        hour,
+        tags,
+        repeatTag,
+        keepOldRecords,
+    } = props
+    const app = {
+        subject: subject || "XML",
+        from: from || '',
+        to: to || '',
+        others: others || '',
+        enabled: enabled ? JSON.parse(enabled) : false,
+        hour: parseInt(hour) || 8,
+        tags: tags ? JSON.parse(tags) : [],
+        repeatTag: repeatTag || '',
+        keepOldRecords: keepOldRecords ? JSON.parse(keepOldRecords) : true,
+        xml: "has:attachment filename:xml newer_than:1d",
+        hours: HOURS,
     }
-    return formulas
-}
-
-
-
-const getAppData = (sheet) => {
-    const scriptProps = PropertiesService.getScriptProperties().getProperties()
-    const appData = {
-        name: APP_NAME,
-        saved: scriptProps[KEY_SHEET_NAME] && scriptProps[KEY_FORMULAS],
-    }
-    const ss = SpreadsheetApp.getActive()
-    sheet = sheet || ss.getActiveSheet()
-    const sheetName = scriptProps[KEY_SHEET_NAME] ? scriptProps[KEY_SHEET_NAME] : sheet.getName()
-    const formulas = scriptProps[KEY_FORMULAS] ? JSON.parse(scriptProps[KEY_FORMULAS]) : getFormulasBySheet(sheet)
     
-    const sheetNames = ss.getSheets().map(sheet => sheet.getName())
-    appData.sheetName = sheetName
-    appData.formulas = formulas
-    appData.sheetNames = sheetNames
-    return JSON.stringify(appData)
+    return JSON.stringify(app)
 }
 
-const onSheetChange = (name) => {
-    const sheet = SpreadsheetApp.getActive().getSheetByName(name)
-    const scriptProps = PropertiesService.getScriptProperties()
-    scriptProps.deleteProperty(KEY_SHEET_NAME)
-    scriptProps.deleteProperty(KEY_FORMULAS)
-    return getAppData(sheet)
-}
-
-const saveSettings = (sheetname, formulas) => {
-    const scriptProps = PropertiesService.getScriptProperties()
-    scriptProps.setProperty(KEY_SHEET_NAME, sheetname)
-    scriptProps.setProperty(KEY_FORMULAS, formulas)
-    
-    // create trigger
+function deleteAllTriggers() {
     const triggers = ScriptApp.getProjectTriggers()
-    let trigger
-    for (let i = 0 ; i < triggers.length; i ++ ) {
-        if (triggers[i].getHandlerFunction() === FUNCTION_NAME &&
-        triggers[i].getEventType() === ScriptApp.EventType.ON_FORM_SUBMIT) {
-            trigger = triggers[i]
-            break
-        }
-    }
-    if (!trigger) {
-        const url = SpreadsheetApp.getActive().getFormUrl()
-        const form = FormApp.openByUrl(url)
-        ScriptApp.newTrigger(FUNCTION_NAME)
-            .forForm(form)
-            .onFormSubmit()
-            .create()
-    }
+    triggers.forEach(trigger => ScriptApp.deleteTrigger(trigger))
+}
+
+function createTrigger(hour) {
+    deleteAllTriggers()
+    ScriptApp.newTrigger(FUNCTION_NAME).timeBased().everyDays(1).atHour(hour).create()
+}
+
+const disableAddon = () => {
+    deleteAllTriggers()
+    PropertiesService.getScriptProperties().setProperty("enabled", false)
     return getAppData()
 }
 
-
-function onFormSubmit(e) {
-    const ss = SpreadsheetApp.getActive()
-    const formUrl = ss.getFormUrl()
-    const form = FormApp.openByUrl(formUrl)
-    const response = form.getResponses().pop()
-    
-    const {sheetName, saved, formulas} = JSON.parse(getAppData())
-
-    if (saved){
-        const ws = ss.getSheetByName(sheetName)
-        const lastRow = ws.getDataRange().getValues().length
-        formulas.forEach(({formula, column, copyAsValue}) => {
-            const cell = ws.getRange(lastRow, column)
-            cell.setFormulaR1C1(formula)
-            if (copyAsValue) {
-               cell.setValue(cell.getValue()) 
-            }
-        })
-    }
+const saveSettings = (app) => {
+    app = JSON.parse(app)
+    app.tags = JSON.stringify(app.tags)
+    const hour = parseInt(app.hour)
+    delete app.hours
+    PropertiesService.getScriptProperties().setProperties(app)
+    createTrigger(hour)
+    return getAppData()
 }
 
+function convertXML(xmlString, filename) {    
+    const {tags, repeatTag} = PropertiesService.getScriptProperties().getProperties()
+    const excludedTags = tags ? JSON.parse(tags) : []
+    
+    const xml = XmlService.parse(xmlString)
+    const root = xml.getRootElement()
+    const rootName = root.getName()
+    
+    const [rootTags, rootKeys, rootValues] = xmlToArray(root, null, repeatTag, excludedTags)
+    const xmlValues = []
+    let xmlTags = []
+    let xmlKeys = []
+    const repeatItems = root.getChildren(repeatTag)
+    repeatItems.forEach(item => {
+      let [tags, keys, values] = xmlToArray(item, rootName, null, excludedTags)
+      xmlTags = [...rootTags, ...tags, "Filename", "Timestamp"]
+      xmlKeys = [...rootKeys, ...keys, "Filename", "Timestamp"]
+      values = [...rootValues, ...values, filename, new Date()]
+      xmlValues.push(values)
+    })
+    return [xmlTags, xmlKeys, xmlValues]
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const importXml = (file) => {
+    const {name, data} = file
+    // write array data to sheet
+    const [xmlTags, xmlKeys, xmlValues] = convertXML(data, name)
+    
+    let {keepOldRecords} = PropertiesService.getScriptProperties().getProperties()
+    keepOldRecords = keepOldRecords ? JSON.parse(keepOldRecords) : true
+    const ws = getSheetByName(WS_IMPORT)
+    if (!keepOldRecords) ws.clear()
+    if (xmlTags.length) ws.getRange(1, 1, 1, xmlTags.length).setValues([xmlTags]).setNotes([xmlKeys])
+    xmlValues.forEach(values => {
+        ws.appendRow(values)
+    })
+    ws.activate()
+}
