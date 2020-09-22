@@ -1,281 +1,301 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <base target="_top">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
     <style>
-      [v-cloak] {
-          display: block;
-          padding: 50px 0;
-      }
-  
-      @keyframes spinner {
-          to {
-              transform: rotate(360deg);
-          }
-      }
-  
-      [v-cloak]:before {
-          content: "";
-          box-sizing: border-box;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 50px;
-          height: 50px;
-          margin-top: -25px;
-          margin-left: -25px;
-          border-radius: 50%;
-          border: 5px solid #ccc;
-          border-top-color: #448AFF;
-          animation: spinner 0.8s linear infinite;
-          text-indent: 100%;
-          white-space: nowrap;
-          overflow: hidden;
-      }
-  
-      [v-cloak]>* {
-          display: none;
-      }
-  </style>
-  <style>
-    #app {
-        padding: 0px 8px;
-    }
-    .md-button {
-      margin-left: 0px;
-    }
-    .md-field {
-        margin-bottom: 8px;
-    }
-    .md-chips {
-        padding-top: 0px;
-    }
-    .md-subheading {
-        margin-top: 8px;
-        color: #448AFF;
-    }
-  </style>
-  </head>
-  <body>
-    <div id="app" v-cloak>
-      <md-snackbar :md-active.sync="snackbar.active" md-persistent>
-      {{snackbar.content}}
-      </md-snackbar>
-      <div v-if="loadingError">
-        <p>{{loadingError}}</p>
-      </div>
-      <div v-else>
-        <div class="md-subheading">Trigger Settings</div>
-        <div>
-          <md-switch v-model="app.enabled" @change="disableAddon">Enable XML Addon</md-switch>
-        </div>
-        <md-field v-if="app.enabled">
-          <label for="movie">Time of the day to execute</label>
-          <md-select v-model="app.hour">
-            <md-option v-for="(option, i) in app.hours"
-              :value="i">{{option}}</md-option>
-          </md-select>
-        </md-field>
-        
-        <div class="md-subheading">Gmail Query Settings</div>
-        <md-field>
-            <label>Subject</label>
-            <md-input v-model.trim="app.subject"></md-input>
-        </md-field>
-        <md-field>
-            <label>From</label>
-            <md-input v-model.trim="app.from" type="email"></md-input>
-        </md-field>
-        <md-field>
-            <label>To</label>
-            <md-input v-model.trim="app.to" type="email"></md-input>
-        </md-field>
-        <md-field>
-            <label>Other queries</label>
-            <md-input v-model.trim="app.others"></md-input>
-        </md-field>
-        <md-field>
-          <label>Full search query(try it in Gmail)</label>
-          <md-textarea :value="query" disabled></md-textarea>
-        </md-field>
-        
-        <div class="md-subheading">XML Settings</div>
-        <div>
-          <label>Excluded Tags</label>
-          <md-chips v-model="app.tags" md-placeholder="Add tags..."></md-chips>
-        </div>
-        <md-field>
-            <label>Repeat child tag in the root</label>
-            <md-input v-model.trim="app.repeatTag"></md-input>
-        </md-field>
-        <div>
-            <md-checkbox v-model="app.keepOldRecords">Keep old records</md-checkbox>
-        </div>
-        <div>
-            <md-button class="md-raised md-primary"
-            :disabled="submitting || !app.enabled"
-            @click="saveSettings"
-            >Save Settings</md-button>
-            <md-button class="md-raised md-accent"
-            :disabled="submitting"
-            @click="runQuery"
-            >Run Query</md-button>
-        </div>
-        
-        <md-divider></md-divider>
-        <div class="md-subheading">Import from local</div>
-        <md-field>
-          <label>Import XML</label>
-          <md-file v-model="file.name" @md-change="readFile" accept=".xml" />
-        </md-field>
-        <div>
-            <md-button class="md-raised md-primary"
-            :disabled="submitting || !file.data"
-            @click="importXml"
-            >Import</md-button>
-        </div>
-      </div>
-    </div>
+        [v-cloak] {
+            display: block;
+            padding: 50px 0;
+        }
 
+        @keyframes spinner {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        [v-cloak]:before {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            margin-top: -25px;
+            margin-left: -25px;
+            border-radius: 50%;
+            border: 5px solid #ccc;
+            border-top-color: #448AFF;
+            animation: spinner 0.8s linear infinite;
+            text-indent: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        [v-cloak]>* {
+            display: none;
+        }
+    </style>
+    <style>
+        #app {
+            padding: 0px 8px;
+        }
+
+        .md-button {
+            margin-left: 0px;
+        }
+
+        .md-field {
+            margin-bottom: 8px;
+        }
+
+        .md-chips {
+            padding-top: 0px;
+        }
+
+        .md-subheading {
+            margin-top: 8px;
+            color: #448AFF;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <md-snackbar :md-active.sync="snackbar.active" md-persistent>
+            {{snackbar.content}}
+        </md-snackbar>
+        <div v-if="loadingError">
+            <p>{{loadingError}}</p>
+        </div>
+        <div v-else>
+            <div class="md-subheading">Trigger Settings</div>
+            <div>
+                <md-switch v-model="app.enabled" @change="disableAddon">Enable XML Addon</md-switch>
+            </div>
+            <md-field v-if="app.enabled">
+                <label for="movie">Time of the day to execute</label>
+                <md-select v-model="app.hour">
+                    <md-option v-for="(option, i) in app.hours" :value="i">{{option}}</md-option>
+                </md-select>
+            </md-field>
+            <div class="md-subheading">Gmail Query Settings</div>
+            <md-field>
+                <label>Subject</label>
+                <md-input v-model.trim="app.subject"></md-input>
+            </md-field>
+            <md-field>
+                <label>From</label>
+                <md-input v-model.trim="app.from" type="email"></md-input>
+            </md-field>
+            <md-field>
+                <label>To</label>
+                <md-input v-model.trim="app.to" type="email"></md-input>
+            </md-field>
+            <md-field>
+                <label>Other queries</label>
+                <md-input v-model.trim="app.others"></md-input>
+            </md-field>
+            <md-field>
+                <label>Full search query(try it in Gmail)</label>
+                <md-textarea :value="query" disabled></md-textarea>
+            </md-field>
+
+            <div class="md-subheading">XML Settings</div>
+            <div>
+                <label>Excluded Tags</label>
+                <md-chips v-model="app.tags" md-placeholder="Add tags..."></md-chips>
+            </div>
+            <md-field>
+                <label>Repeat child tag in the root</label>
+                <md-input v-model.trim="app.repeatTag"></md-input>
+            </md-field>
+            <div>
+                <md-checkbox v-model="app.keepOldRecords">Keep old records</md-checkbox>
+            </div>
+            <div>
+                <md-button class="md-raised md-primary" :disabled="submitting || !app.enabled" @click="saveSettings">
+                    Save Settings</md-button>
+                <md-button class="md-raised md-accent" :disabled="submitting" @click="runQuery">Run Query</md-button>
+            </div>
+
+            <md-divider></md-divider>
+            <div class="md-subheading">Import from local</div>
+            <md-field>
+                <label>Import XML</label>
+                <md-file v-model="file.name" @md-change="readFile" accept=".xml" />
+            </md-field>
+            <div>
+                <md-button class="md-raised md-primary" :disabled="submitting || !file.data" @click="importXml">Import
+                </md-button>
+            </div>
+        </div>
+    </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/vue-material"></script>
     <script>
-      Vue.use(VueMaterial.default)
-        
-      const showSnackbar = function(content) {
-          const data = {
-              active: true,
-              content: content,
-          }
-          this.snackbar = data
-          this.submitting = false
-      }
-      
-      const runQuery = function() {
-          this.submitting = true
-          google.script.run
-              .withSuccessHandler( () => {
-                  this.showSnackbar("Query was run successfully.")
-              } )
-              .withFailureHandler( (error) => {
-                  this.showSnackbar(error.message)
-              })
-              .triggerFunction(this.query)
-      }
-      
-      const disableAddon = function () {
-          if (!this.app.enabled) {
-              this.submitting = true
-              google.script.run
-                .withSuccessHandler( (appData) => {
-                    this.app = JSON.parse(appData)
-                    this.showSnackbar("XML addon has been disabled.")
-                } )
-                .withFailureHandler( (error) => {
+        Vue.use(VueMaterial.default)
+
+        /**
+         * Show message as a snackbar
+        */
+        const showSnackbar = function (content) {
+            const data = {
+                active: true,
+                content: content,
+            }
+            this.snackbar = data
+            this.submitting = false
+        }
+
+        /**
+         * Run the query
+        */
+        const runQuery = function () {
+            this.submitting = true
+            google.script.run
+                .withSuccessHandler(() => {
+                    this.showSnackbar("Query was run successfully.")
+                })
+                .withFailureHandler((error) => {
                     this.showSnackbar(error.message)
                 })
-                .disableAddon()
-          }
-      }
-      
-      const saveSettings = function() {
-          this.submitting = true
-          const app = JSON.stringify(this.app)
-          google.script.run
-              .withSuccessHandler( (appData) => {
-                  this.app = JSON.parse(appData)
-                  this.showSnackbar("XML addon settings have been saved.")
-              } )
-              .withFailureHandler( (error) => {
-                  this.showSnackbar(error.message)
-              })
-              .saveSettings(app)
-      }
-      
-      const readFile = function(fileList){
-          if (fileList.length){
-              const file = fileList[0]
-              const reader = new FileReader()
-              reader.onload = (event) => {
-                  this.file.data = event.target.result
-              }
-              reader.readAsText(file)
-          }else{
-              this.file.data = null
-          }
-      }
-      
-      const importXml = function() {
-          this.submitting = true
-          google.script.run
-              .withSuccessHandler( () => {
-                  this.showSnackbar("XML has been imported.")
-              } )
-              .withFailureHandler( (error) => {
-                  this.showSnackbar(error.message)
-              })
-              .importXml(this.file)
-      }
-      
-      const methods = {
-          showSnackbar,
-          saveSettings,
-          disableAddon,
-          runQuery,
-          readFile,
-          importXml,
-      }
-      
-      const data = {
-          submitting: false,
-          loadingError: null,
-          snackbar: {
-              active: false,
-              content: null,
-          },
-          file: {
-              name: null,
-              data: null,
-          },
-      }
-      
-      
-      const computed = {
-          query: function(){
-              const items = []
-              if (this.app.subject) items.push("subject:" + this.app.subject)
-              if (this.app.from) items.push("from:" + this.app.from)
-              if (this.app.to) items.push("to:" + this.app.to)
-              if (this.app.others) items.push(this.app.others)
-              items.push(this.app.xml)
-              return items.join(" ")
-          },
-      }
-      google.script.run
-        .withSuccessHandler( (appData) => {
-            const app = JSON.parse(appData)
-            data.app = app
-            new Vue({
-              el: '#app',
-              data,
-              methods,
-              computed,
+                .triggerFunction(this.query)
+        }
+
+        /**
+         * disable the xml addon
+        */
+        const disableAddon = function () {
+            if (!this.app.enabled) {
+                this.submitting = true
+                google.script.run
+                    .withSuccessHandler((appData) => {
+                        this.app = JSON.parse(appData)
+                        this.showSnackbar("XML addon has been disabled.")
+                    })
+                    .withFailureHandler((error) => {
+                        this.showSnackbar(error.message)
+                    })
+                    .disableAddon()
+            }
+        }
+
+        /**
+         * Save the settings
+        */
+        const saveSettings = function () {
+            this.submitting = true
+            const app = JSON.stringify(this.app)
+            google.script.run
+                .withSuccessHandler((appData) => {
+                    this.app = JSON.parse(appData)
+                    this.showSnackbar("XML addon settings have been saved.")
+                })
+                .withFailureHandler((error) => {
+                    this.showSnackbar(error.message)
+                })
+                .saveSettings(app)
+        }
+
+        /**
+         * handle files
+        */
+        const readFile = function (fileList) {
+            if (fileList.length) {
+                const file = fileList[0]
+                const reader = new FileReader()
+                reader.onload = (event) => {
+                    this.file.data = event.target.result
+                }
+                reader.readAsText(file)
+            } else {
+                this.file.data = null
+            }
+        }
+
+        /**
+         * Import xml from local
+        */
+        const importXml = function () {
+            this.submitting = true
+            google.script.run
+                .withSuccessHandler(() => {
+                    this.showSnackbar("XML has been imported.")
+                })
+                .withFailureHandler((error) => {
+                    this.showSnackbar(error.message)
+                })
+                .importXml(this.file)
+        }
+
+        // Vue methods object
+        const methods = {
+            showSnackbar,
+            saveSettings,
+            disableAddon,
+            runQuery,
+            readFile,
+            importXml,
+        }
+
+        // Vue data object
+        const data = {
+            submitting: false,
+            loadingError: null,
+            snackbar: {
+                active: false,
+                content: null,
+            },
+            file: {
+                name: null,
+                data: null,
+            },
+        }
+
+        // Vue computed object
+        const computed = {
+            query: function () {
+                const items = []
+                if (this.app.subject) items.push("subject:" + this.app.subject)
+                if (this.app.from) items.push("from:" + this.app.from)
+                if (this.app.to) items.push("to:" + this.app.to)
+                if (this.app.others) items.push(this.app.others)
+                items.push(this.app.xml)
+                return items.join(" ")
+            },
+        }
+
+        /**
+         * loading function
+        */
+        google.script.run
+            .withSuccessHandler((appData) => {
+                const app = JSON.parse(appData)
+                data.app = app
+                new Vue({
+                    el: '#app',
+                    data,
+                    methods,
+                    computed,
+                })
             })
-        })
-        .withFailureHandler( (error) => {
-            data.loadingError = error.message
-            new Vue({
-              el: '#app',
-              data,
+            .withFailureHandler((error) => {
+                data.loadingError = error.message
+                new Vue({
+                    el: '#app',
+                    data,
+                })
             })
-        })
-        .getAppData()
-      
+            .getAppData()
+
     </script>
-  </body>
+</body>
+
 </html>
-
-
