@@ -4,6 +4,7 @@
 My Google Apps Script projects shared on [YouTube](https://www.youtube.com/ashtonfei/), each branch is a project about the video. You can find the source code about the projects here, branch name is in the video title.
 
 ### All projects
+* [GAS-066 Copydown Addon Replication](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-065) - [YouTube](https://youtu.be/urj8_pjqT-k)
 * [GAS-065 Google Form Restriction](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-065) - [YouTube](https://youtu.be/ial1XLfUvPc)
 * [GAS-064 Meeting Assistant](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-064) - [YouTube](https://youtu.be/RwmFq40Usns)
 * [GAS-063 Build an API with Data in Google Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-063) - [YouTube](https://youtu.be/NUYR39JxlJA)
