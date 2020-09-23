@@ -44,7 +44,9 @@
     </style>
     <style>
         #app {
-            padding: 0px 8px;
+            padding: 8px;
+            padding-bottom: 16px;
+            background: #fff;
         }
 
         .md-button {
@@ -54,14 +56,26 @@
         .md-field {
             margin-bottom: 8px;
         }
+        
+        .md-field::after {
+            height: 0.5px !important;
+        }
+        
+        .md-has-textarea {
+            margin-top: 4px !important;
+        }
 
         .md-chips {
-            padding-top: 0px;
+            padding-top: 0px !important;
         }
 
         .md-subheading {
             margin-top: 8px;
             color: #448AFF;
+        }
+        
+        .md-divider {
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -75,64 +89,81 @@
             <p>{{loadingError}}</p>
         </div>
         <div v-else>
+            <div class="md-subheading">From author</div>
+            <p>This addon can create a trigger to read XML attachments from your Gmail, convert and write them to the spreadsheet which runs daily. 
+            Local XML files can also be imported manually. I assume your XML files have the same data structure, more configurations can be done below.
+            <br>
+            <a href="https://www.youtube.com/ashtonfei/" target="_blank" class="md-caption">Ashton Fei</a>
+            </p>
             <div class="md-subheading">Trigger Settings</div>
             <div>
-                <md-switch v-model="app.enabled" @change="disableAddon">Enable XML Addon</md-switch>
+                <md-switch v-model="app.enabled" :disabled="submitting">Enable XML Addon</md-switch>
             </div>
             <md-field v-if="app.enabled">
                 <label for="movie">Time of the day to execute</label>
-                <md-select v-model="app.hour">
+                <md-select v-model="app.hour" :disabled="submitting">
                     <md-option v-for="(option, i) in app.hours" :value="i">{{option}}</md-option>
                 </md-select>
             </md-field>
-            <div class="md-subheading">Gmail Query Settings</div>
+            <div class="md-subheading">Gmail Query Settings
+                <span>
+                    <a href="https://support.google.com/mail/answer/7190?hl=en" target="_blank">
+                        <md-icon>help_outline</md-icon>
+                    </a>
+                </span>
+            </div>
             <md-field>
                 <label>Subject</label>
-                <md-input v-model.trim="app.subject"></md-input>
+                <md-input v-model.trim="app.subject" :disabled="submitting"></md-input>
             </md-field>
             <md-field>
                 <label>From</label>
-                <md-input v-model.trim="app.from" type="email"></md-input>
+                <md-input v-model.trim="app.from" type="email" :disabled="submitting"></md-input>
             </md-field>
             <md-field>
                 <label>To</label>
-                <md-input v-model.trim="app.to" type="email"></md-input>
+                <md-input v-model.trim="app.to" type="email" :disabled="submitting"></md-input>
             </md-field>
             <md-field>
                 <label>Other queries</label>
-                <md-input v-model.trim="app.others"></md-input>
+                <md-input v-model.trim="app.others" :disabled="submitting"></md-input>
             </md-field>
             <md-field>
                 <label>Full search query(try it in Gmail)</label>
-                <md-textarea :value="query" disabled></md-textarea>
+                <md-textarea :value="query" md-autogrow disabled></md-textarea>
             </md-field>
 
             <div class="md-subheading">XML Settings</div>
             <div>
                 <label>Excluded Tags</label>
-                <md-chips v-model="app.tags" md-placeholder="Add tags..."></md-chips>
+                <md-chips v-model="app.tags" md-placeholder="Add tags..." :md-static="submitting" :md-check-duplicated="true" :md-auto-insert="true"></md-chips>
             </div>
             <md-field>
                 <label>Repeat child tag in the root</label>
-                <md-input v-model.trim="app.repeatTag"></md-input>
+                <md-input v-model.trim="app.repeatTag" :disabled="submitting"></md-input>
             </md-field>
             <div>
-                <md-checkbox v-model="app.keepOldRecords">Keep old records</md-checkbox>
+                <md-checkbox v-model="app.keepOldRecords" :disabled="submitting">Keep old records</md-checkbox>
             </div>
             <div>
-                <md-button class="md-raised md-primary" :disabled="submitting || !app.enabled" @click="saveSettings">
+                <md-button class="md-raised md-primary" :disabled="submitting" @click="saveSettings">
                     Save Settings</md-button>
-                <md-button class="md-raised md-accent" :disabled="submitting" @click="runQuery">Run Query</md-button>
+                <md-button class="md-raised md-accent" :disabled="submitting" @click="runQuery">
+                    Run Query
+                    <md-tooltip md-direction="bottom">Save settings before running</md-tooltip>
+                </md-button>
             </div>
 
             <md-divider></md-divider>
             <div class="md-subheading">Import from local</div>
             <md-field>
                 <label>Import XML</label>
-                <md-file v-model="file.name" @md-change="readFile" accept=".xml" />
+                <md-file v-model="filesFieldValue" @md-change="readFiles" :disabled="submitting" accept=".xml" multiple />
             </md-field>
             <div>
-                <md-button class="md-raised md-primary" :disabled="submitting || !file.data" @click="importXml">Import
+                <md-button class="md-raised md-primary" :disabled="submitting || files.length === 0" @click="importXml">
+                    Import
+                    <md-tooltip md-direction="bottom">XMLs should have the same structure</md-tooltip>
                 </md-button>
             </div>
         </div>
@@ -145,13 +176,13 @@
         /**
          * Show message as a snackbar
         */
-        const showSnackbar = function (content) {
+        const showSnackbar = function (content, submitting=false) {
             const data = {
                 active: true,
                 content: content,
             }
             this.snackbar = data
-            this.submitting = false
+            if (!submitting) this.submitting = false
         }
 
         /**
@@ -159,32 +190,17 @@
         */
         const runQuery = function () {
             this.submitting = true
+            this.showSnackbar("Running the query...", true)
             google.script.run
-                .withSuccessHandler(() => {
+                .withSuccessHandler((appData) => {
+                    const app = JSON.parse(appData)
+                    this.app = app
                     this.showSnackbar("Query was run successfully.")
                 })
                 .withFailureHandler((error) => {
                     this.showSnackbar(error.message)
                 })
-                .triggerFunction(this.query)
-        }
-
-        /**
-         * disable the xml addon
-        */
-        const disableAddon = function () {
-            if (!this.app.enabled) {
-                this.submitting = true
-                google.script.run
-                    .withSuccessHandler((appData) => {
-                        this.app = JSON.parse(appData)
-                        this.showSnackbar("XML addon has been disabled.")
-                    })
-                    .withFailureHandler((error) => {
-                        this.showSnackbar(error.message)
-                    })
-                    .disableAddon()
-            }
+                .runQuery()
         }
 
         /**
@@ -192,6 +208,7 @@
         */
         const saveSettings = function () {
             this.submitting = true
+            this.showSnackbar("Saving the settings...", true)
             const app = JSON.stringify(this.app)
             google.script.run
                 .withSuccessHandler((appData) => {
@@ -207,16 +224,19 @@
         /**
          * handle files
         */
-        const readFile = function (fileList) {
-            if (fileList.length) {
-                const file = fileList[0]
+        const readFiles = function (fileList) {
+            this.files = []
+            for (let i= 0; i < fileList.length; i++) {
+                const file = fileList[i]
                 const reader = new FileReader()
+                reader.filename = file.name
                 reader.onload = (event) => {
-                    this.file.data = event.target.result
+                    this.files.push({
+                        data: event.target.result,
+                        name: event.target.filename,
+                    })
                 }
                 reader.readAsText(file)
-            } else {
-                this.file.data = null
             }
         }
 
@@ -225,23 +245,25 @@
         */
         const importXml = function () {
             this.submitting = true
+            this.showSnackbar("Importing XML files...", true)
             google.script.run
                 .withSuccessHandler(() => {
-                    this.showSnackbar("XML has been imported.")
+                    this.showSnackbar("XML files have been imported.")
+                    this.files = []
+                    this.filesFieldValue = ""
                 })
                 .withFailureHandler((error) => {
                     this.showSnackbar(error.message)
                 })
-                .importXml(this.file)
+                .importXml(this.files)
         }
 
         // Vue methods object
         const methods = {
             showSnackbar,
             saveSettings,
-            disableAddon,
             runQuery,
-            readFile,
+            readFiles,
             importXml,
         }
 
@@ -253,10 +275,8 @@
                 active: false,
                 content: null,
             },
-            file: {
-                name: null,
-                data: null,
-            },
+            files: [],
+            filesFieldValue: "",
         }
 
         // Vue computed object

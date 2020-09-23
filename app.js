@@ -56,14 +56,21 @@ function getQuery() {
     if (to) items.push("to:" + to)
     if (others) items.push(others)
     items.push(xml)
-    return items.join(" ")
+    return items.join(" ") || QUERY
 }
 
 /**
- * trigger function
+* trigger function
+*/
+function triggerFunction() {
+    runQuery()
+}
+
+/**
+ * runQuery
  */
-function triggerFunction(query) {
-    query = query || getQuery()
+function runQuery() {
+    const query = getQuery()
     const attachments = getXmlAttachments(query)
     let xmlValues = []
     let xmlTags = []
@@ -86,6 +93,7 @@ function triggerFunction(query) {
         ws.appendRow(values)
     })
     ws.activate()
+    return getAppData()
 }
 
 /**
@@ -187,10 +195,18 @@ function convertXML(xmlString, filename) {
 /**
  * import local xml file to spreadsheet
  */
-const importXml = (file) => {
-    const { name, data } = file
-    // write array data to sheet
-    const [xmlTags, xmlKeys, xmlValues] = convertXML(data, name)
+const importXml = (files) => {
+    let xmlValues = []
+    let xmlTags = []
+    let xmlKeys = []
+    files.forEach( (file) => {
+        const { name, data } = file
+        const [tags, keys, values] = convertXML(data, name)
+        xmlTags = tags
+        xmlKeys = keys
+        xmlValues = [...xmlValues, ...values]
+    })
+    
     let { keepOldRecords } = PropertiesService.getScriptProperties().getProperties()
     keepOldRecords = keepOldRecords ? JSON.parse(keepOldRecords) : true
     const ws = getSheetByName(WS_IMPORT)
@@ -288,6 +304,10 @@ const saveSettings = (app) => {
     const hour = parseInt(app.hour)
     delete app.hours
     PropertiesService.getScriptProperties().setProperties(app)
-    createTrigger(hour)
+    if (app.enabled) {
+        createTrigger(hour)
+    }else{
+        disableAddon()
+    }
     return getAppData()
 }
