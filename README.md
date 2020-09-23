@@ -1,7 +1,7 @@
 # GAS-067 Read XML from Gmail to Sheet
 
 ### Description
-This is a Google Sheet addon which can read XML attachments from Gmail to Google Sheet.
+This is a Google Sheet addon which can read XML attachments from Gmail to Google Sheet. It can create a trigger to read XML attachments from your Gmail, convert and write them to the spreadsheet which runs daily. Local XML files can also be imported manually. I assume your XML files have the same data structure, more configurations can be done in the addon.
 
 ### Settings
 * Trigger settings
@@ -19,7 +19,7 @@ Google Sheet
 
 ### Screenshots
 * XML Addon
-![image](https://user-images.githubusercontent.com/16481229/93886384-e9fd7b00-fd17-11ea-8b23-6762358702ec.png)
+![image](https://user-images.githubusercontent.com/16481229/94007628-4f16a680-fdd4-11ea-9393-0a9b916c2bd9.png)
 
 ### YouTube
 * Check on YouTube [GAS-067 Read XML from Gmail to Sheet](https://youtu.be/urj8_pjqT-k)
