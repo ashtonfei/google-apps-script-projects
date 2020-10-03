@@ -4,6 +4,14 @@
 
 Build a Bot with Telegram Bot API and Google Apps Script. I only built two bot commands for demo, you can add more.
 
+### Join the channel to test
+
+[https://t.me/appsScriptAshton](https://t.me/appsScriptAshton)
+
+### Webhook built with Netlify functions
+
+[https://github.com/ashtonfei/gas-webhook-with-netlify-functions](https://github.com/ashtonfei/gas-webhook-with-netlify-functions)
+
 ### Make a copy of the script
 
 [Script file](https://script.google.com/d/1Lj3ozp7qfoGqMio4o0t9hbeizQTdnKm95QIhkCH6EHFv1XqkSb3KKrEc/edit?usp=sharing)
@@ -26,5 +34,5 @@ Standalone
 
 ### YouTube
 
-- Check on YouTube [GAS-068 Build a Telegram Bot](https://youtu.be/dvtXro10qd8)
+- Check on YouTube [GAS-068 Build a Telegram Bot](https://youtu.be/RNPyCH55bWQ)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
