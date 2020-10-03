@@ -1,8 +1,8 @@
-# GAS-067 Read XML from Gmail to Sheet
+# GAS-068 Telegram Bot API
 
 ### Description
 
-This is a Google Sheet addon which can read XML attachments from Gmail to Google Sheet. It can create a trigger to read XML attachments from your Gmail, convert and write them to the spreadsheet which runs daily. Local XML files can also be imported manually. I assume your XML files have the same data structure, more configurations can be done in the addon.
+Build your own bot with Telegram Bot API and Google Apps Script.
 
 ### Settings
 
