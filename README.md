@@ -1,18 +1,12 @@
-# GAS-068 Telegram Bot API
+# GAS-068 Build a Telegram Bot
 
 ### Description
 
-Build your own bot with Telegram Bot API and Google Apps Script.
-
-### Settings
-
-- Trigger settings
-- Gmail search settings
-- XML settings
+Build a Bot with Telegram Bot API and Google Apps Script. I only built two bot commands for demo, you can add more.
 
 ### Make a copy of the script
 
-[Make a copy](https://docs.google.com/spreadsheets/d/1fc9uPCvTEf2uTDT8vCKfroYxyllwyz3ZilpW46xfujM/copy)
+[Script file](https://script.google.com/d/1Lj3ozp7qfoGqMio4o0t9hbeizQTdnKm95QIhkCH6EHFv1XqkSb3KKrEc/edit?usp=sharing)
 
 ### If you prefer to use clasp
 
@@ -20,14 +14,17 @@ Build your own bot with Telegram Bot API and Google Apps Script.
 
 ### Script Type
 
-Google Sheet
+Standalone
 
 ### Screenshots
 
-- XML Addon
-  ![image](https://user-images.githubusercontent.com/16481229/94007628-4f16a680-fdd4-11ea-9393-0a9b916c2bd9.png)
+- /append_row append row to a google sheet from telegram
+  ![image](https://user-images.githubusercontent.com/16481229/94992900-c95ade00-05bf-11eb-9788-ed485e5b7a3b.png)
+
+- /send_email send an email with GmailApp api from telegram
+  ![image](https://user-images.githubusercontent.com/16481229/94992976-40907200-05c0-11eb-9a9a-a7b86198a56f.png)
 
 ### YouTube
 
-- Check on YouTube [GAS-067 Read XML from Gmail to Sheet](https://youtu.be/dvtXro10qd8)
+- Check on YouTube [GAS-068 Build a Telegram Bot](https://youtu.be/dvtXro10qd8)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
