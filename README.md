@@ -6,6 +6,7 @@ My Google Apps Script projects shared on [YouTube](https://www.youtube.com/ashto
 
 ### All projects
 
+- [GAS-069 CRUD with Airtable API](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-069) - [YouTube](https://youtu.be/JVH72QDiOfY)
 - [GAS-068 Build a Telegram Bot](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-068) - [YouTube](https://youtu.be/RNPyCH55bWQ)
 - [GAS-067 Read XML from Gmail to Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-067) - [YouTube](https://youtu.be/dvtXro10qd8)
 - [GAS-066 Copydown Addon Replication](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-066) - [YouTube](https://youtu.be/urj8_pjqT-k)
