@@ -23,5 +23,5 @@ Spreadsheet
 
 ### YouTube
 
-- Check on YouTube [GAS-069 CRUD with Airtable API](https://youtu.be/RNPyCH55bWQ)
+- Check on YouTube [GAS-069 CRUD with Airtable API](https://youtu.be/JVH72QDiOfY)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
