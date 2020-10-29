@@ -1,0 +1,47 @@
+<script>
+    window.onload = () => {
+        const commentsTextarea = document.getElementById("comments")
+        const approveButton = document.getElementById("approve")
+        const rejectButton = document.getElementById("reject")
+        const promptDiv = document.getElementById("prompt-message")
+        const form = document.forms[0]
+        
+        if (form){
+          const taskId = form.getAttribute("data")
+          const url = form.getAttribute("url")
+          approveButton.addEventListener("click", (e) => {
+              e.preventDefault()
+              promptDiv.innerHTML = `<label>Submitting...</label>`
+              const comments = commentsTextarea.value
+              
+              google.script.run
+                  .withSuccessHandler(()=>{
+                      promptDiv.innerHTML = `<label class='green-text'>Approved</label>`
+                      window.open(url, "_top")
+                  })
+                  .withFailureHandler((error) => {
+                      promptDiv.innerHTML = `<label class='red-text'>${error.message}</label>`
+                  })
+                  .approve({taskId, comments})
+          })
+          
+          rejectButton.addEventListener("click", (e) => {
+              e.preventDefault()
+              promptDiv.innerHTML = `<label>Submitting...</label>`
+              const comments = commentsTextarea.value
+              google.script.run
+                  .withSuccessHandler(()=>{
+                      promptDiv.innerHTML = `<label class='red-text'>Rejected</label>`
+                      window.open(url, "_top")
+                  })
+                  .withFailureHandler((error) => {
+                      console.log(error.message)
+                      promptDiv.innerHTML = `<label class='red-text'>${error.message}</label>`
+                  })
+                  .reject({taskId, comments})
+          })
+        }
+    }
+</script>
+
+

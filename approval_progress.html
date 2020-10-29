@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <?!= include("css.html") ?>
+  <body>
+    <div id="app">
+        <div class="app-header <?= status === rejected ? 'red-bg' : '' ?>">
+            <h1><?= title ?></h1>
+        </div>
+        <? if (task) { ?>
+        <div class="app-content">
+            <div class="left">
+                <h2 class="section">Approval Request</h2>
+                <div class="section">
+                  <ul class="list">
+                      <? task.forEach( item => { ?>
+                      <li>
+                          <label><?= item.label ?></label>
+                          <div class="<?= item.value === pending ? 'yellow-text' :  item.value === approved ?  'green-text' : item.value === rejected ? 'red-text' : '' ?>"><?= item.value ?></div>
+                      </li>
+                      <? }) ?>
+                  </ul>
+                </div>
+            </div>
+            
+            <div class="middle">
+                <h2 class="section">Approval Flow</h2>
+                <div class="section">
+                  <ul class="list">
+                      <? approvers.forEach((item, i) => { ?>
+                      <li>
+                          <label><?= item.name + "(" + item.title + ")" ?></label>
+                          <div class="<?= item.status === pending ? 'yellow-text' :  item.status === approved ?  'green-text' : item.status === rejected ? 'red-text' : '' ?>"><?= item.status ? item.status : 'Waiting' ?></div>
+                      </li>
+                      <? }) ?>
+                  </ul>
+                </div>
+            </div>
+        </div>
+        <? } else { ?>
+        <div class="app-content">
+            <h2 class="red-text">No Record Found</h2>
+        </div>
+        <? } ?>
+    </div>
+    <?!= include("js.html") ?>
+  </body>
+</html>
+
+
