@@ -160,6 +160,7 @@ function App() {
     this.resetUid = () => {
         const props = PropertiesService.getDocumentProperties()
     }
+
     this.sendApproval = ({ task, approver, approvers }) => {
         const template = HtmlService.createTemplateFromFile("approval_email.html")
         template.title = this.title
@@ -221,7 +222,7 @@ function App() {
         const newValues = [this.createUid(), this.pending, responseId]
 
         const flowKey = values[lastRow - 1][headers.indexOf(this.flowHeader)]
-        const flow = FLOWS[flowKey]
+        const flow = FLOWS[flowKey] || FLOWS.defaultFlow
         let taskId
         flow.forEach((item, i) => {
             newHeaders.push("_approver_" + (i + 1))

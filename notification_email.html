@@ -51,11 +51,19 @@
             <table style="width: 100%;" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="text-align: left;">
+                    <? if (status === rejected ) { ?>
                       <a 
+                        href="<?= approvalProgressUrl ?>"
+                        target="_blank"
+                        style="border-radius: 3px; border: none; display: inline-block; text-decoration: none; padding: 12px 24px; background: #EA4335; color: #fff;">
+                        Check Approval Progress</a>
+                    <? } else { ?>
+                        <a 
                         href="<?= approvalProgressUrl ?>"
                         target="_blank"
                         style="border-radius: 3px; border: none; display: inline-block; text-decoration: none; padding: 12px 24px; background: #34A853; color: #fff;">
                         Check Approval Progress</a>
+                    <? } ?>
                   </td>
                 </tr>
               </table>

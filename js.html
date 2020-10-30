@@ -6,27 +6,36 @@
         const promptDiv = document.getElementById("prompt-message")
         const form = document.forms[0]
         
+        const disableForm = (status) => {
+            form.disabled = status
+            approveButton.disabled = status
+            rejectButton.disabled = status
+            commentsTextarea.disabled = status
+        }
+
         if (form){
           const taskId = form.getAttribute("data")
           const url = form.getAttribute("url")
           approveButton.addEventListener("click", (e) => {
               e.preventDefault()
+              disableForm(true)
               promptDiv.innerHTML = `<label>Submitting...</label>`
               const comments = commentsTextarea.value
-              
               google.script.run
                   .withSuccessHandler(()=>{
                       promptDiv.innerHTML = `<label class='green-text'>Approved</label>`
                       window.open(url, "_top")
                   })
                   .withFailureHandler((error) => {
-                      promptDiv.innerHTML = `<label class='red-text'>${error.message}</label>`
+                        disableForm(false)
+                        promptDiv.innerHTML = `<label class='red-text'>${error.message}</label>`
                   })
                   .approve({taskId, comments})
           })
           
           rejectButton.addEventListener("click", (e) => {
               e.preventDefault()
+              disableForm(true)
               promptDiv.innerHTML = `<label>Submitting...</label>`
               const comments = commentsTextarea.value
               google.script.run
@@ -35,8 +44,8 @@
                       window.open(url, "_top")
                   })
                   .withFailureHandler((error) => {
-                      console.log(error.message)
-                      promptDiv.innerHTML = `<label class='red-text'>${error.message}</label>`
+                        disableForm(false)
+                        promptDiv.innerHTML = `<label class='red-text'>${error.message}</label>`
                   })
                   .reject({taskId, comments})
           })

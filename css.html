@@ -84,6 +84,7 @@
     .list li label,
     #app form label {
         font-size: 0.8em;
+        margin-bottom: 0.2em;
     }
     
     #app form label,
@@ -114,6 +115,15 @@
         border-radius: 3px;
         background: var(--gray);
         border: none;
+        cursor: pointer;
+    }
+
+    .button:disabled {
+        cursor: not-allowed;
+        pointer-events: all !important;
+        background: var(--gray) !important;
+        color: var(--black) !important;
+        border: 1px solid var(--black) !important;
     }
     
     .green-bg {
