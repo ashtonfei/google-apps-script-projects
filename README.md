@@ -4,6 +4,10 @@
 
 This is an approval workflow built with Google Form, Gmail, and Google Apps Script.
 
+### Make a copy of the script
+
+[Make a copy] (https://docs.google.com/forms/d/10GCs_lLFg_kUnfLEAzjI6_W8YLhzugjc-G_lBPAUcIg/copy)
+
 ### If you prefer to use clasp
 
 [GAS-059 How to use clasp](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-259) - [Watch on YouTube](https://youtu.be/V-oE2OyvTKM)
@@ -91,6 +95,9 @@ this.flowHeader = "Department"; // IMPORTANT - key field for your flows
   ![image](https://user-images.githubusercontent.com/16481229/97605013-1ad47c80-1a49-11eb-9e30-ffec44331609.png)
 - Approval progress check page
   ![image](https://user-images.githubusercontent.com/16481229/97605179-4c4d4800-1a49-11eb-8334-9591a4243890.png)
+
+- Reset UID
+  ![image](https://user-images.githubusercontent.com/16481229/97674096-e653d580-1ac7-11eb-8c12-e81c5d3150e2.png)
 
 ### YouTube
 

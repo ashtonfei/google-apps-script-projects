@@ -159,6 +159,7 @@ function App() {
 
     this.resetUid = () => {
         const props = PropertiesService.getDocumentProperties()
+        props.deleteProperty(this.uidHeader)
     }
 
     this.sendApproval = ({ task, approver, approvers }) => {
@@ -340,3 +341,25 @@ function doGet(e) {
         .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
     return htmlOutput
 }
+
+function resetUid(){
+    const app = new App()
+    app.resetUid()
+}
+
+function createTrigger(){
+    const functionName = "_onFormSubmit"
+    const triggers = ScriptApp.getProjectTriggers()
+    const match = triggers.find(trigger => trigger.getHandlerFunction() === functionName)
+    if (match) return 
+    return ScriptApp.newTrigger(functionName).forForm(FormApp.getActiveForm()).onFormSubmit().create()
+}
+
+function onOpen(){
+    const trigger = createTrigger()
+    const ui = FormApp.getUi()
+    const menu = ui.createMenu("Approval")
+    menu.addItem("Reset UID", "resetUid")
+    menu.addToUi()
+}
+
