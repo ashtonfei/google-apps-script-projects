@@ -6,7 +6,7 @@ This is an approval workflow built with Google Form, Gmail, and Google Apps Scri
 
 ### Make a copy of the script
 
-[Make a copy] (https://docs.google.com/forms/d/10GCs_lLFg_kUnfLEAzjI6_W8YLhzugjc-G_lBPAUcIg/copy)
+[Make a copy](https://docs.google.com/forms/d/10GCs_lLFg_kUnfLEAzjI6_W8YLhzugjc-G_lBPAUcIg/copy)
 
 ### If you prefer to use clasp
 
@@ -101,5 +101,5 @@ this.flowHeader = "Department"; // IMPORTANT - key field for your flows
 
 ### YouTube
 
-- Check on YouTube [GAS-070 Google Form Approval](https://youtu.be/JVH72QDiOfY)
+- Check on YouTube [GAS-070 Google Form Approval](https://youtu.be/PtIo_oPoAtk)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
