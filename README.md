@@ -6,7 +6,7 @@ This is a tool to create a Google Form with multiple dependent dropdowns.
 
 ### Try this form
 
-[Demo Form](https://forms.gle/Z596QNPr5pwfeiDP6)
+[Demo Form](https://forms.gle/KfydEgDpc6ZPiL4h7)
 
 ### Make a copy of the script
 
