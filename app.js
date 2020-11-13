@@ -176,17 +176,26 @@ class App{
         
         const form = this.getForm()
         
-        const headers = form.sheet.getDataRange().getValues()[0].slice(columnStart - 1, columnEnd)
+        const headers = form.sheet.getDataRange().getValues()[0].slice(columnStart - 1)
+        
+        if (headers[headers.length - 1] !== this.uuidHeader) {
+          form.sheet.getRange(1, headers.length + 1).setValue(this.uuidHeader)
+          headers.push(this.uuidHeader)
+        }
+        
+        
         const { parentTitle, childTitle, count } = this.getDropdownTitles()
         const childValue = namedValues[childTitle].filter(item => item !== "").join(", ")
         const firstChildIndex = headers.indexOf(childTitle)
         const uuid = Utilities.getUuid()
-        form.sheet.getRange(1, columnEnd + 1).setValue(this.uuidHeader)
-        form.sheet.getRange(rowEnd, columnEnd + 1).setValue(uuid)
         
-        const newHeaders = [...headers.slice(0, firstChildIndex), ...headers.slice(firstChildIndex + count - 1), this.uuidHeader]
-        const newValues = [...values.slice(0, firstChildIndex), ...values.slice(firstChildIndex + count - 1), uuid]
+        form.sheet.getRange(rowEnd, headers.length).setValue(uuid)
+        
+        const newHeaders = [...headers.slice(0, firstChildIndex), ...headers.slice(firstChildIndex + count - 1)]
+        
+        const newValues = [...values.slice(0, firstChildIndex), ...values.slice(firstChildIndex + count - 1)]
         newValues[firstChildIndex] = childValue
+        newValues[newHeaders.length - 1] = uuid
         
         sheet.getRange(1, 1, 1, newHeaders.length).setValues([newHeaders])
         sheet.appendRow(newValues)
