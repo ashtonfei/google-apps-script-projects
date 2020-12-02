@@ -6,7 +6,7 @@ Convert Zoom meeting transcript to data in Google sheet.
 
 ### Make a copy of the script
 
-[Make a copy](https://docs.google.com/spreadsheets/d/1NH-lkiS0EGUlDy7fjx4UPNQPfdousbAn4MVa-HxL0HQ/copy)
+[Make a copy](https://docs.google.com/spreadsheets/d/1_ozqsuFXoFMw_KcTUDuKK14SWNPStEZWeKXpN9EAye8/copy)
 
 ### If you prefer to use clasp
 
@@ -19,7 +19,7 @@ Google Sheet
 ### Configuration
 
 - Create a new folder on Google Drive.
-- Make a copy of my spreadsheet to the new folder.
+- [Make a copy](https://docs.google.com/spreadsheets/d/1_ozqsuFXoFMw_KcTUDuKK14SWNPStEZWeKXpN9EAye8/copy) of my spreadsheet to the new folder.
 - Create a folder named "Transcripts" in the new folder.
 - Put the ZOOM transcript files in the "Transcripts" folder, file extension must be ".rtf".
 
