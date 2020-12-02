@@ -1,12 +1,8 @@
-# GAS-071 Create Google Form with Multiple Dependent Dropdowns
+# GAS-072 Zoom Transcript App
 
 ### Description
 
-This is a tool to create a Google Form with multiple dependent dropdowns.
-
-### Try this form
-
-[Demo Form](https://forms.gle/KfydEgDpc6ZPiL4h7)
+Convert Zoom meeting transcript to data in Google sheet.
 
 ### Make a copy of the script
 
