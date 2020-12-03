@@ -36,5 +36,5 @@ Transcript details
 
 ### YouTube
 
-- Check on YouTube [GAS-072 Zoom Transcript App](https://youtu.be/-DoyVUhvATk)
+- Check on YouTube [GAS-072 Zoom Transcript App](https://youtu.be/XRUNTyyJeQA)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
