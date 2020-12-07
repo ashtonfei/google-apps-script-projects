@@ -1,4 +1,4 @@
-# GAS-072 Zoom Transcript App
+# GAS-073 Submit Google Form from Sheet
 
 ### Description
 
@@ -16,23 +16,11 @@ Convert Zoom meeting transcript to data in Google sheet.
 
 Google Sheet
 
-### Configuration
-
-- Create a new folder on Google Drive.
-- [Make a copy](https://docs.google.com/spreadsheets/d/1_ozqsuFXoFMw_KcTUDuKK14SWNPStEZWeKXpN9EAye8/copy) of my spreadsheet to the new folder.
-- Create a folder named "Transcripts" in the new folder.
-- Put the ZOOM transcript files in the "Transcripts" folder, file extension must be ".rtf".
-
 ### Screenshots
 
-Transcripts folder
-![image](https://user-images.githubusercontent.com/16481229/100873681-7da0b400-34de-11eb-9d38-d17222690c38.png)
-Transcript files
-![image](https://user-images.githubusercontent.com/16481229/100873732-914c1a80-34de-11eb-8307-72a03debb18a.png)
-Transcript summary
-![image](https://user-images.githubusercontent.com/16481229/100873836-ade85280-34de-11eb-944c-49e2e30fc773.png)
-Transcript details
-![image](https://user-images.githubusercontent.com/16481229/100873914-c5bfd680-34de-11eb-9acf-aa62bab7efd4.png)
+Get Google Form Request URL
+
+Get Google Form Entry IDs.
 
 ### YouTube
 
