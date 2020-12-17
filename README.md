@@ -27,5 +27,5 @@ Dashboard
 
 ### YouTube
 
-- Check on YouTube [GAS-074 Dashboard with ChartJS & GAS](https://youtu.be/K5GO4QN0XQA)
+- Check on YouTube [GAS-074 Dashboard with ChartJS & GAS](https://youtu.be/Qj94QzjPb04)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
