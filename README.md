@@ -2,7 +2,7 @@
 
 ### Description
 
-This is a demo dashboard web app built with chartjs, apps script, and google sheet.
+This is a demo dashboard web app built with [chartjs](https://www.chartjs.org/), apps script, and google sheet.
 
 ### Dashboard
 
