@@ -1,16 +1,12 @@
-# GAS-074 Dashboard with ChartJS & GAS
+# GAS-074 Apply Rich Text to Selection
 
 ### Description
 
-This is a demo dashboard web app built with [chartjs](https://www.chartjs.org/), apps script, and google sheet.
-
-### Dashboard
-
-[Dashboard](https://script.google.com/macros/s/AKfycby4hYw-II8yFoWdYozeWgsT8cDwZ6-KqbOvHZPanJ1kKVQX2sMG/exec)
+This is a demo script to apply rich text style in Spreadsheet.
 
 ### Make a copy of the script
 
-[Make a copy](https://docs.google.com/spreadsheets/d/1P7J9WUJcz1Ub6AAHvziZ68ACHAzwzrCtinnt1LYSkwQ/copy)
+[Make a copy](https://docs.google.com/spreadsheets/d/1JNNC_bCAdPfvB2U_6i_tH_axKngJuhNMy1Zuyw7XYgc/copy)
 
 ### If you prefer to use clasp
 
@@ -20,10 +16,28 @@ This is a demo dashboard web app built with [chartjs](https://www.chartjs.org/),
 
 Google Sheet
 
+### Configuration
+
+\*\*\* javascript
+{
+color: ["#4285F4", "#EA4335", "#FBBC05", "#4285F4", "#34A853", "#EA4335"],
+size: 48,
+family: "Roboto",
+bold: true,
+italic: false,
+strikethrough: false,
+underline: false,
+}
+
+---
+
 ### Screenshots
 
-Dashboard
-![image](https://user-images.githubusercontent.com/16481229/102494952-6c47d200-40b0-11eb-8d5c-938c231db118.png)
+Rich Text Style Configuration
+![image](https://user-images.githubusercontent.com/16481229/105712006-3d950500-5f54-11eb-9355-ca3fc3f533c7.png)
+
+Result
+![image](https://user-images.githubusercontent.com/16481229/105712086-556c8900-5f54-11eb-9449-081ce561858b.png)
 
 ### YouTube
 

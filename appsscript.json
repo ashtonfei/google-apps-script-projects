@@ -1,10 +1,6 @@
 {
-  "timeZone": "Asia/Hong_Kong",
+  "timeZone": "America/New_York",
   "dependencies": {
-  },
-  "webapp": {
-    "access": "ANYONE_ANONYMOUS",
-    "executeAs": "USER_DEPLOYING"
   },
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8"
