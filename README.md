@@ -18,7 +18,7 @@ Google Sheet
 
 ### Configuration
 
-\*\*\* javascript
+```javascript
 {
 color: ["#4285F4", "#EA4335", "#FBBC05", "#4285F4", "#34A853", "#EA4335"],
 size: 48,
@@ -29,7 +29,7 @@ strikethrough: false,
 underline: false,
 }
 
----
+```
 
 ### Screenshots
 
