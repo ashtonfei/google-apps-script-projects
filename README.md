@@ -1,4 +1,4 @@
-# GAS-074 Apply Rich Text to Selection
+# GAS-075 Apply Rich Text to Selection
 
 ### Description
 
@@ -41,5 +41,5 @@ Result
 
 ### YouTube
 
-- Check on YouTube [GAS-074 Dashboard with ChartJS & GAS](https://youtu.be/Qj94QzjPb04)
+- Check on YouTube [GAS-075 Apply Rich Text to Selection](https://youtu.be/49popuunyUE)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
