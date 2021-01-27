@@ -137,6 +137,14 @@ const styleSelection = () => {
     })
 }
 
+const styleTest = () => {
+    const app = new App()
+    const styles = app.getStyles()
+    const range = SpreadsheetApp.getActive().getSheetByName("Home").getRange("A1:B3")
+    range.clearFormat()
+    app.applyStyles(range, styles)
+}
+
 function setTextStyleJSON() {
     const textStyle = {
         color: ["#4285F4", "#EA4335", "#FBBC05", "#4285F4", "#34A853", "#EA4335"],
