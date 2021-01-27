@@ -6,6 +6,7 @@ My Google Apps Script projects shared on [YouTube](https://www.youtube.com/ashto
 
 ### All projects
 
+- [GAS-075 Apply Rich Text to Selection](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-075) - [YouTube](https://youtu.be/49popuunyUE)
 - [GAS-074 Dashboard with ChartJS & GAS](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-074) - [YouTube](https://youtu.be/Qj94QzjPb04)
 - [GAS-073 Submit Google Form from Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-073) - [YouTube](https://youtu.be/K5GO4QN0XQA)
 - [GAS-072 Zoom Transcript App](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-072) - [YouTube](https://youtu.be/XRUNTyyJeQA)
