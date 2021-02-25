@@ -24,5 +24,5 @@ scriptId: 12mhyd_0XXerEnnPfbCa-hAuw9mZpC8AECIxZtYjjSLZFhfyeeNxrBa2a
 
 ### YouTube
 
-- Check on YouTube [GAS-076 Build Your Own Library](https://youtu.be/49popuunyUE)
+- Check on YouTube [GAS-076 Build Your Own Library](https://youtu.be/0NW6yW-FgXs)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
