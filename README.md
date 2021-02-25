@@ -8,6 +8,7 @@ Build your own Google Apps Script library.
 
 [Make a copy of the demo file](https://docs.google.com/spreadsheets/d/1FKvso8jQeOuw6zYSHsiU5u8QPOMiO-rfwSMdIklJjfw/copy)
 [Library File](https://script.google.com/d/12mhyd_0XXerEnnPfbCa-hAuw9mZpC8AECIxZtYjjSLZFhfyeeNxrBa2a/edit?usp=sharing)
+[Library Repo](https://github.com/ashtonfei/afei-gas-lib)
 
 ### If you prefer to use clasp
 
