@@ -1,12 +1,13 @@
-# GAS-075 Apply Rich Text to Selection
+# GAS-076 Build Your Own Library
 
 ### Description
 
-This is a demo script to apply rich text style in Spreadsheet.
+Build your own Google Apps Script library.
 
 ### Make a copy of the script
 
-[Make a copy](https://docs.google.com/spreadsheets/d/1JNNC_bCAdPfvB2U_6i_tH_axKngJuhNMy1Zuyw7XYgc/copy)
+[Make a copy of the demo file](https://docs.google.com/spreadsheets/d/1FKvso8jQeOuw6zYSHsiU5u8QPOMiO-rfwSMdIklJjfw/copy)
+[Library File](https://script.google.com/d/12mhyd_0XXerEnnPfbCa-hAuw9mZpC8AECIxZtYjjSLZFhfyeeNxrBa2a/edit?usp=sharing)
 
 ### If you prefer to use clasp
 
@@ -14,32 +15,13 @@ This is a demo script to apply rich text style in Spreadsheet.
 
 ### Script Type
 
-Google Sheet
+Google Sheet, Standalone
 
 ### Configuration
 
-```javascript
-{
-color: ["#4285F4", "#EA4335", "#FBBC05", "#4285F4", "#34A853", "#EA4335"],
-size: 48,
-family: "Roboto",
-bold: true,
-italic: false,
-strikethrough: false,
-underline: false,
-}
-
-```
-
-### Screenshots
-
-Rich Text Style Configuration
-![image](https://user-images.githubusercontent.com/16481229/105712006-3d950500-5f54-11eb-9355-ca3fc3f533c7.png)
-
-Result
-![image](https://user-images.githubusercontent.com/16481229/105712086-556c8900-5f54-11eb-9449-081ce561858b.png)
+scriptId: 12mhyd_0XXerEnnPfbCa-hAuw9mZpC8AECIxZtYjjSLZFhfyeeNxrBa2a
 
 ### YouTube
 
-- Check on YouTube [GAS-075 Apply Rich Text to Selection](https://youtu.be/49popuunyUE)
+- Check on YouTube [GAS-076 Build Your Own Library](https://youtu.be/49popuunyUE)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
