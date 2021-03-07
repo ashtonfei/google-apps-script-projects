@@ -1,0 +1,56 @@
+<script>
+    const DATA = {
+        loadingError: null,
+        selectedItem: null,
+        selectedItems: [],
+    }
+    function addSelectedItem(i){
+      console.log({selectedItem: this.selectedItem})
+      this.selectedItems = [
+        ...this.selectedItems.slice(0, i + 1),
+        JSON.parse(JSON.stringify(this.selectedItem)),
+        ...this.selectedItems.slice(i + 1)
+      ]
+    }
+
+    function removeSelectedItem(i){
+      this.selectedItems = this.selectedItems.filter((_,index) => index !== i)
+    }
+
+    window.onload = () => {
+        google.script.run
+            .withSuccessHandler((response) => {
+                const appData = JSON.parse(response)
+                console.log(appData)
+                const selectedItem = {}
+                appData.repeatFormItems.forEach(item => {
+                  selectedItem[item.key] = item
+                })
+                DATA.selectedItem = JSON.parse(JSON.stringify(selectedItem))
+                DATA.selectedItems = [JSON.parse(JSON.stringify(selectedItem))]
+                new Vue({
+                    el: '#app',
+                    data: () => ({
+                        ...DATA,
+                        ...appData,
+                    }),
+                    methods: {
+                      addSelectedItem,
+                      removeSelectedItem,
+                    },
+                    vuetify: new Vuetify(),
+                })
+            })
+            .withFailureHandler((e) => {
+                DATA.loadingError = e.message
+                new Vue({
+                    el: '#app',
+                    data: () => ({
+                        ...DATA
+                    }),
+                    vuetify: new Vuetify(),
+                })
+            })
+            .getAppData()
+    }
+</script>
