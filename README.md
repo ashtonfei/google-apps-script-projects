@@ -28,5 +28,5 @@ Google Sheet
 
 ### YouTube
 
-- Check on YouTube [GAS-077 Shopping Cart](https://youtu.be/PtIo_oPoAtk)
+- Check on YouTube [GAS-077 Shopping Cart](https://youtu.be/sKUpe6XCXRk)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
