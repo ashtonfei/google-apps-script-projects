@@ -6,6 +6,7 @@ My Google Apps Script projects shared on [YouTube](https://www.youtube.com/ashto
 
 ### All projects
 
+- [GAS-077 Shopping Cart](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-077) - [YouTube](https://youtu.be/sKUpe6XCXRk)
 - [GAS-076 Build Your Own Library](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-076) - [YouTube](https://youtu.be/0NW6yW-FgXs)
 - [GAS-075 Apply Rich Text to Selection](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-075) - [YouTube](https://youtu.be/49popuunyUE)
 - [GAS-074 Dashboard with ChartJS & GAS](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-074) - [YouTube](https://youtu.be/Qj94QzjPb04)
