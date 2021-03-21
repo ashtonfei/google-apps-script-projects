@@ -1,16 +1,12 @@
-# GAS-077 Shopping Cart
+# GAS-078 Mail Merge Google Sheet
 
 ### Description
 
-A shopping cart application build with vuetify and google apps script.
-
-### Try this form
-
-[Shopping Cart](https://script.google.com/macros/s/AKfycbxvUs1O2zcTnQ2Rc6Us-GLW4V0r05r5YWjHG9TWh2eujNcCUbcesIwMKQtDrrAmNdXH/exec)
+A mail merge application with data in a google sheet.
 
 ### Make a copy of the script
 
-[Make a copy](https://docs.google.com/spreadsheets/d/18txzTKTjKBA7J1RD_qNjI8sstAL-dIiDqFDR__TPLuc/copy)
+[Make a copy](https://docs.google.com/spreadsheets/d/1cWfIfMAIbmx5F8J8_3H6tHATqcDqMrv4oJVtllhIJyI/copy)
 
 ### If you prefer to use clasp
 
@@ -21,12 +17,35 @@ A shopping cart application build with vuetify and google apps script.
 Google Sheet
 
 ### Configuration
+```javascirpt
+const APP_NAME = "📬 Mail Merge" // app name and title name
+const APP_NAME_ERROR = "🔴 Mail Merge" // title name when there is an error
+const APP_NAME_GOOD = "🟢 Mail Merge" // title name when there is no error
 
+const SN_BODY = "Email Body" // sheet name of the email body template
+const SN_SETTINGS = "Email Settings" // sheet name of the email settings
+const TIS_TOAST = 20 // time in seconds for the toast message
+const FONT_SIZE_SCALE = 1.3 // font size scale (actual font size in email = size in sheet * FONT_SIZE_SCALE)
+
+const BORDER_STYLES = {
+  default: "1px solid",
+  DOTTED: "1px dotted",
+  DASHED: "1px dashed",
+  SOLID: "1px solid",
+  SOLID_MEDIUM: "2px solid",
+  SOLID_THICK: "3px solid",
+  DOUBLE: "3px double"
+}
+```
 ### Screenshots
 
-![image](https://user-images.githubusercontent.com/16481229/110321292-71cc0d00-804c-11eb-9144-3d7b892dddf2.png)
+Email settings
+![image](https://user-images.githubusercontent.com/16481229/111897065-b4341780-8a58-11eb-9061-a2b6445b7a73.png)
+Email body
+![image](https://user-images.githubusercontent.com/16481229/111897096-df1e6b80-8a58-11eb-9acd-97836c254cdd.png)
+
 
 ### YouTube
 
-- Check on YouTube [GAS-077 Shopping Cart](https://youtu.be/sKUpe6XCXRk)
+- Check on YouTube [GAS-078 Mail Merge Google Sheet](https://youtu.be/sKUpe6XCXRk)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
