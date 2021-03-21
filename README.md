@@ -6,7 +6,7 @@ My Google Apps Script projects shared on [YouTube](https://www.youtube.com/ashto
 
 ### All projects
 
-- [GAS-078 Mail Merge Google Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-078) - [YouTube](https://youtu.be/CU7aPnEevqE)
+- [GAS-078 Mail Merge Google Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-078) - [YouTube](https://youtu.be/C5Wv3zI2RF4)
 - [GAS-077 Shopping Cart](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-077) - [YouTube](https://youtu.be/sKUpe6XCXRk)
 - [GAS-076 Build Your Own Library](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-076) - [YouTube](https://youtu.be/0NW6yW-FgXs)
 - [GAS-075 Apply Rich Text to Selection](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-075) - [YouTube](https://youtu.be/49popuunyUE)
