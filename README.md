@@ -43,9 +43,10 @@ Email settings
 ![image](https://user-images.githubusercontent.com/16481229/111897065-b4341780-8a58-11eb-9061-a2b6445b7a73.png)
 Email body
 ![image](https://user-images.githubusercontent.com/16481229/111897096-df1e6b80-8a58-11eb-9acd-97836c254cdd.png)
-
+Email
+![image](https://user-images.githubusercontent.com/16481229/111900044-31688800-8a6b-11eb-8eae-35ff39fd3631.png)
 
 ### YouTube
 
-- Check on YouTube [GAS-078 Mail Merge Google Sheet](https://youtu.be/sKUpe6XCXRk)
+- Check on YouTube [GAS-078 Mail Merge Google Sheet](https://youtu.be/CU7aPnEevqE)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
