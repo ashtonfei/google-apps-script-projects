@@ -17,6 +17,7 @@ A mail merge application with data in a google sheet.
 Google Sheet
 
 ### Configuration
+
 ```javascirpt
 const APP_NAME = "📬 Mail Merge" // app name and title name
 const APP_NAME_ERROR = "🔴 Mail Merge" // title name when there is an error
@@ -37,6 +38,7 @@ const BORDER_STYLES = {
   DOUBLE: "3px double"
 }
 ```
+
 ### Screenshots
 
 Email settings
@@ -48,5 +50,5 @@ Email
 
 ### YouTube
 
-- Check on YouTube [GAS-078 Mail Merge Google Sheet](https://youtu.be/CU7aPnEevqE)
+- Check on YouTube [GAS-078 Mail Merge Google Sheet](https://youtu.be/C5Wv3zI2RF4)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
