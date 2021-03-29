@@ -1,4 +1,4 @@
-# GAS-078 Mail Merge Google Sheet
+# GAS-079 Approval Flow by Replying with Email
 
 ### Description
 
@@ -50,5 +50,5 @@ Email
 
 ### YouTube
 
-- Check on YouTube [GAS-078 Mail Merge Google Sheet](https://youtu.be/C5Wv3zI2RF4)
+- Check on YouTube [GAS-079 Approval Flow by Replying with Email](https://youtu.be/C5Wv3zI2RF4)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
