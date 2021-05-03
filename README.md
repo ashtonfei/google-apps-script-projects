@@ -1,12 +1,14 @@
-# GAS-079 Approval Flow by Replying with Email
+# GAS-079 Questionnaire with Data from Sheet
 
 ### Description
 
-A mail merge application with data in a google sheet.
+Create a Google Doc questionnaire with data in a Google Sheet.
+[Check the demo questionnaire here](https://docs.google.com/document/d/10ZgZMQFnyX6yF9jaMLTZBRKfQTkTNkyeFG0xn07KT2Y/edit?usp=sharing)
 
 ### Make a copy of the script
 
-[Make a copy](https://docs.google.com/spreadsheets/d/1cWfIfMAIbmx5F8J8_3H6tHATqcDqMrv4oJVtllhIJyI/copy)
+[Make a copy](https://docs.google.com/spreadsheets/d/1-aJ-JmrOLC7haOPxvaNMyoPwjC6qBmseOG3OTql-UXQ/copy)
+[Make a copy of doc template](https://docs.google.com/document/d/1sLCpZ-5laROLuC4tpouPanhlrXjO0fkzmsKq33BoCCk/copy)
 
 ### If you prefer to use clasp
 
@@ -19,36 +21,19 @@ Google Sheet
 ### Configuration
 
 ```javascirpt
-const APP_NAME = "📬 Mail Merge" // app name and title name
-const APP_NAME_ERROR = "🔴 Mail Merge" // title name when there is an error
-const APP_NAME_GOOD = "🟢 Mail Merge" // title name when there is no error
-
-const SN_BODY = "Email Body" // sheet name of the email body template
-const SN_SETTINGS = "Email Settings" // sheet name of the email settings
-const TIS_TOAST = 20 // time in seconds for the toast message
-const FONT_SIZE_SCALE = 1.3 // font size scale (actual font size in email = size in sheet * FONT_SIZE_SCALE)
-
-const BORDER_STYLES = {
-  default: "1px solid",
-  DOTTED: "1px dotted",
-  DASHED: "1px dashed",
-  SOLID: "1px solid",
-  SOLID_MEDIUM: "2px solid",
-  SOLID_THICK: "3px solid",
-  DOUBLE: "3px double"
+const CONFIGS = {
+  sheet_name_questions: "Questions",
+  sheet_name_settings: "Settings",
+  folder_name_output: "Questionnarie",
+  app_name: "Questionnarie",
 }
 ```
 
 ### Screenshots
 
-Email settings
-![image](https://user-images.githubusercontent.com/16481229/111897065-b4341780-8a58-11eb-9061-a2b6445b7a73.png)
-Email body
-![image](https://user-images.githubusercontent.com/16481229/111897096-df1e6b80-8a58-11eb-9acd-97836c254cdd.png)
-Email
-![image](https://user-images.githubusercontent.com/16481229/111900044-31688800-8a6b-11eb-8eae-35ff39fd3631.png)
+![image](https://user-images.githubusercontent.com/16481229/116899083-ba2d3300-ac69-11eb-84a3-2a6ab1703956.png)
 
 ### YouTube
 
-- Check on YouTube [GAS-079 Approval Flow by Replying with Email](https://youtu.be/C5Wv3zI2RF4)
+- Check on YouTube [GAS-079 Questionnaire with Data from Sheet](https://youtu.be/SAgCqxlPCRE)
 - More videos about [Google Apps Script](https://www.youtube.com/playlist?list=PLQhwjnEjYj8Bf_EZDrrcmkB9vcB9Sk3x0)
