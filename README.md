@@ -7,6 +7,7 @@ My Google Apps Script projects shared on [YouTube](https://www.youtube.com/ashto
 
 ### All projects
 
+- [GAS-081 Vue GAS Web App Template](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-081) - [YouTube](https://youtu.be/bYmDyGc5vds)
 - [GAS-080 Google Form with UID in Confirmation](https://github.com/ashtonfei/google-apps-script-projects/tree/gas-080) - [YouTube](https://youtu.be/AQoCKA4yM_w)
 - [GAS-079 Questionnaire with Data from Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-079) - [YouTube](https://youtu.be/SAgCqxlPCRE)
 - [GAS-078 Mail Merge Google Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-078) - [YouTube](https://youtu.be/C5Wv3zI2RF4)
