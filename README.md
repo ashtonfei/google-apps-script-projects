@@ -1,7 +1,7 @@
 # GAS-081 Vue GAS Web App Template
 
-> Start a vue js web app project in Google Apps Script.
-> [![GAS-081 Vue GAS Web App Template](https://user-images.githubusercontent.com/16481229/126747435-8d06a85a-57f5-43bf-9e26-794857b58936.png)](https://youtube.com/ashtonfei)
+Start a vue js web app project in Google Apps Script.
+[![GAS-081 Vue GAS Web App Template](https://user-images.githubusercontent.com/16481229/126747435-8d06a85a-57f5-43bf-9e26-794857b58936.png)](https://youtube.com/ashtonfei)
 
 ## Web App
 
