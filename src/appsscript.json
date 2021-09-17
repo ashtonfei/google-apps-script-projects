@@ -1,0 +1,15 @@
+{
+  "timeZone": "Asia/Shanghai",
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "GFC",
+        "version": "0",
+        "libraryId": "1cBqlDtJNXBbx4PBldiCN0NvjrGu6lciHSHUs43G5S0O0xSlR5Wbbk1W0",
+        "developmentMode": true
+      }
+    ]
+  }
+}
