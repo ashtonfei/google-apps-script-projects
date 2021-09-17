@@ -4,6 +4,10 @@ A tiny project to concatenate multiple Google Form responses into one single Goo
 [![GAS-083 Google Form Concatenator](https://user-images.githubusercontent.com/16481229/133769302-6b921ab9-767a-4df6-967f-49cc9b5a0d7a.png)
 ](https://youtu.be/tEEc3Tcu2LI)
 
+## Demo Script
+
+[Make a copy](https://docs.google.com/spreadsheets/d/118zCasXQRR5NjitXjf2RXpkVcJsokfvC7jwkgxkcASA/copy)
+
 ## Library Used
 
 ```bash
