@@ -1,6 +1,6 @@
 # GAS-084 Google Doc Automation with DocPro
 
-A demo proejct to create Google Doc automatically with library [DocPro](https://github.com/ashtonfei/gas-libs/tree/DocPro). [:tv: YouTube](https://youtu.be/gXJkpByChTo)
+A demo proejct to create Google Doc automatically with library [DocPro](https://github.com/ashtonfei/gas-libs/tree/DocPro). [:tv: YouTube](https://youtu.be/gXJkpByChTo) [:tv: Live Coding Demo](https://youtu.be/uwD91dKRw2w)
 [![Google Doc Automation with DocPro](https://user-images.githubusercontent.com/16481229/135825699-f7482d15-ef34-4580-8751-1580917bc8ef.png)
 ](https://youtu.be/r6RUa86aGk4)
 
