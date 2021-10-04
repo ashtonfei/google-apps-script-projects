@@ -8,6 +8,10 @@ A demo proejct to create Google Doc automatically with library [DocPro](https://
 
 [Make a copy](https://docs.google.com/spreadsheets/d/1HoNV3Z5Ds52hG1P-3aNrXeav0fiMZS6qopj6-ddhnXg/copy)
 
+## Example
+
+![Google Doc Automation with DocPro Example](https://user-images.githubusercontent.com/16481229/135828263-419952fe-9a9f-4bd2-bec1-3b5628824df9.png)
+
 ## Library Used
 
 ```bash
