@@ -10,7 +10,7 @@ My Google Apps Script projects shared on [:tv: YouTube](https://www.youtube.com/
 - [GAS-083 Google Form Concatenator](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-083) - [:tv: YouTube](https://youtu.be/r6RUa86aGk4)
 - [GAS-082 Gmail Reminder](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-082) - [:tv: YouTube](https://youtu.be/tEEc3Tcu2LI)
 - [GAS-081 Vue GAS Web App Template](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-081) - [:tv: YouTube](https://youtu.be/bYmDyGc5vds)
-- [GAS-080 Google Form with UID in Confirmation](https://github.com/ashtonfei/google-apps-script-projects/tree/gas-080) - [:tv: YouTube](https://youtu.be/AQoCKA4yM_w)
+- [GAS-080 Google Form with UID in Confirmation](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-080) - [:tv: YouTube](https://youtu.be/AQoCKA4yM_w)
 - [GAS-079 Questionnaire with Data from Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-079) - [:tv: YouTube](https://youtu.be/SAgCqxlPCRE)
 - [GAS-078 Mail Merge Google Sheet](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-078) - [:tv: YouTube](https://youtu.be/C5Wv3zI2RF4)
 - [GAS-077 Shopping Cart](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-077) - [:tv: YouTube](https://youtu.be/sKUpe6XCXRk)
