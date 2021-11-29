@@ -1,6 +1,6 @@
 # GAS-085 Google Slide Automation with SlidePro
 
-A demo proejct to create Google Slide Report automatically with library [SlidePro](https://github.com/ashtonfei/gas-libs/tree/SlidePro)[YouTube](https://youtu.be/r6RUa86aGk4)
+A demo proejct to create Google Slide Report automatically with library [SlidePro](https://github.com/ashtonfei/gas-libs/tree/SlidePro)[YouTube](https://youtu.be/tMruEzRCJD4)
 
 ## Demo Script
 

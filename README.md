@@ -7,7 +7,7 @@ My Google Apps Script projects shared on [:tv: YouTube](https://www.youtube.com/
 
 ### All projects
 
-- [GAS-085 Google Slide Automation with SlidePro](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS085) - [:tv: YouTube](https://youtu.be/gXJkpByChTo)
+- [GAS-085 Google Slide Automation with SlidePro](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS085) - [:tv: YouTube](https://youtu.be/tMruEzRCJD4)
 - [GAS-084 Google Doc Automation with DocPro](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-084) - [:tv: YouTube](https://youtu.be/gXJkpByChTo)
 - [GAS-083 Google Form Concatenator](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-083) - [:tv: YouTube](https://youtu.be/r6RUa86aGk4)
 - [GAS-082 Gmail Reminder](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-082) - [:tv: YouTube](https://youtu.be/tEEc3Tcu2LI)
