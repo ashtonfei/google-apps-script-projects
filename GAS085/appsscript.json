@@ -1,0 +1,15 @@
+{
+  "timeZone": "Asia/Shanghai",
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "SlidePro",
+        "version": "0",
+        "libraryId": "1md6joupTQYKLYQhR4jUGJKIiup2udOGvMi20wLk-rLndpzLn_iNvWWTV",
+        "developmentMode": true
+      }
+    ]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8"
+}
