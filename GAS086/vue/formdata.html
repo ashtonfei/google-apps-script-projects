@@ -1,0 +1,165 @@
+<script>
+  const FormData = {}
+  FormData.Search = {
+    label: null,
+    value: null,
+    type: "text",
+    icon: "mdi-magnify",
+    placeholder: "Search ...",
+    hideDetails: true,
+  }
+
+  FormData.Request = {
+    id: {
+      label: "ID",
+      value: null,
+      icon: "mdi-numeric",
+      disabled: true,
+      rules: [],
+    },
+    assignedTo: {
+      type: "autocomplete",
+      label: "Assigned To",
+      value: [],
+      icon: "mdi-account",
+      rules: [
+        v => !!v || "This is a required filed",
+      ],
+      multiple: true,
+      items: [],
+    },
+    request: {
+      label: "Request",
+      value: null,
+      icon: "mdi-note-text",
+      rules: [
+        v => !!v || "This is a required filed",
+      ]
+    },
+    requestedBy: {
+      label: "Request By",
+      value: null,
+      icon: "mdi-account",
+      disabled: true,
+      rules: [],
+    },
+    status: {
+      label: "Status",
+      value: "Open",
+      icon: "mdi-cog",
+      disabled: true,
+      rules: [],
+    },
+    completed: {
+      label: "Completed",
+      value: null,
+      icon: "mdi-calendar-check",
+      disabled: true,
+      rules: [],
+    },
+    pendingOn: {
+      label: "Pending On",
+      value: null,
+      icon: "mdi-account-alert",
+      disabled: true,
+      rules: [],
+    },
+    data: {
+      label: "Data",
+      value: null,
+      icon: "mdi-script-text",
+      disabled: true,
+      rules: [],
+    },
+    createdOn: {
+      label: "Created On",
+      value: null,
+      icon: "mdi-calendar-today",
+      disabled: true,
+      rules: [],
+    },
+    modifiedOn: {
+      label: "Modified On",
+      value: null,
+      icon: "mdi-calendar-edit",
+      disabled: true,
+      rules: [],
+    },
+  }
+
+  FormData.Login = {
+    email: {
+      label: "Email",
+      value: null,
+      type: "email",
+      icon: "mdi-email",
+      outlined: true,
+      rules: [
+        v => !!v || "This is a required filed",
+      ]
+    },
+    password: {
+      label: "Password",
+      value: null,
+      type: "password",
+      icon: "mdi-lock",
+      outlined: true,
+      rules: [
+        v => !!v || "This is a required filed",
+      ]
+    },
+  }
+
+  FormData.User = {
+    id: {
+      label: "ID",
+      value: null,
+      icon: "mdi-numeric",
+      disabled: true,
+      rules: [],
+    },
+    role: {
+      label: "Role",
+      type: "select",
+      value: null,
+      icon: "mdi-security",
+      rules: [
+        v => !!v || "This is a required filed",
+      ],
+      items: [],
+    },
+    name: {
+      label: "Name",
+      value: null,
+      icon: "mdi-account",
+      rules: [
+        v => !!v || "This is a required filed",
+      ]
+    },
+    title: {
+      label: "Title",
+      type: "select",
+      value: null,
+      icon: "mdi-card-text",
+      rules: [
+        v => !!v || "This is a required filed",
+      ],
+      items: [],
+    },
+    email: {
+      label: "Email",
+      value: null,
+      type: "email",
+      icon: "mdi-email",
+      rules: [
+        v => !!v || "This is a required filed",
+      ]
+    },
+    phone: {
+      label: "Phone",
+      value: null,
+      type: "tel",
+      icon: "mdi-phone",
+    },
+  }
+</script>

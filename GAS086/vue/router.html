@@ -1,0 +1,477 @@
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script>
+  const HomeView = {
+    data: ()=>({
+      form: Utils.copyObject(FormData.Request, true),
+      dialog: {},
+    }),
+    computed:{
+      ...Vuex.mapState({
+        loading: 'loading',
+        user: 'user',
+        statusColor: 'statusColor',
+      }),
+      ...Vuex.mapGetters({
+        sentQty: 'sentApprovalsQty',
+        receivedQty: 'receivedApprovalsQty',
+        historyQty: 'historyApprovalsQty',
+        assignedToItems: "assignedToItems",
+      }),
+    },
+    methods: {
+      async onPageLoad(){
+        this.$store.dispatch("getItems", {
+          sheetName: "approvals", 
+          page: this.page, 
+          pageSize: this.pageSize, 
+          filters: {
+            pendingOn: this.user.email,
+            requestedBy: this.user.email,
+            status: "Open",  
+          },
+        })
+      },
+      async submit(){
+        if (!this.$refs.form.validate()) return
+        const item = Utils.getFormValues(this.form)
+        item.requestedBy = this.user.email
+        item.pendingOn = item.assignedTo[0]
+        item.status = "Open"
+        item.data = JSON.stringify(item.assignedTo.map(email => ({email, status: "Open", comments: '', timestamp: ''})))
+        item.assignedTo = JSON.stringify(item.assignedTo)
+        const success = await this.$store.dispatch("createItem", {sheetName: "approvals", item})
+        if (success) this.dialog.show = false
+        await this.onPageLoad()
+      },
+      showCreateForm(item){
+        this.form = Utils.copyObject(FormData.Request, true)
+        this.form.assignedTo.items = this.assignedToItems
+        this.$refs.form && this.$refs.form.resetValidation()
+        this.dialog = {
+          show: true,
+          type: "Create",
+          title: "Create Request",
+          color: "primary",
+          icon: "mdi-plus",
+        }
+      },
+    },
+    created(){
+      this.onPageLoad()
+    },
+    template: `<?!= include_('vue/view/dashboard.html'); ?>`
+  }
+
+  const ReceivedView = {
+    data: ()=>({
+      page: 1,
+      pageSize: 15,
+      headers: [
+        {text: "ID", value: "id"},
+        {text: "Request", value: "request"},
+        {text: "Requested By", value: "requestedBy"},
+        {text: "Status", value: "status"},
+        {text: "CreatedOn", value: "createdOn"},
+        {text: "Actions", value: "actions"},
+      ],
+      form: Utils.copyObject(FormData.Request, true),
+      search: Utils.copyObject(FormData.Search),
+      dialog: {},
+      comments: {
+        label: "Comments",
+        value: null,
+        type: "textarea",
+        icon: "mdi-comment-text",
+      },
+    }),
+    computed:{
+      ...Vuex.mapState({
+        loading: 'loading',
+        user: 'user',
+        statusColor: 'statusColor',
+      }),
+      ...Vuex.mapGetters({
+        items: 'receivedApprovals',
+        assignedToItems: 'assignedToItems',
+      }),
+    },
+    methods: {
+      async onPageLoad(){
+        this.$store.dispatch("getItems", {
+          sheetName: "approvals", 
+          page: this.page, 
+          pageSize: this.pageSize, 
+          filters: {
+            pendingOn: this.user.email,
+            status: "Open",  
+          },
+        })
+      },
+      async submit(){
+        if (!this.$refs.form.validate()) return
+        const item = {
+          id: this.form.id.value,
+          comments: this.comments.value,
+          assignedTo: this.form.assignedTo.value,
+          type: this.dialog.type,
+        }
+        const success = await this.$store.dispatch("updateApproval", {item})
+        if (success) this.dialog.show = false
+        await this.onPageLoad()
+      },
+      showApproveForm(item){
+        this.form = Utils.copyObject(FormData.Request, true)
+        this.form.assignedTo.items = this.assignedToItems
+        Utils.updateFormValues(this.form, item, true)
+        this.$refs.form && this.$refs.form.resetValidation()
+        this.comments.value = null
+        this.dialog = {
+          show: true,
+          type: "Approve",
+          title: "Approve",
+          color: "success",
+          icon: "mdi-check",
+        }
+      },
+      showRejectForm(item){
+        this.form = Utils.copyObject(FormData.Request, true)
+        this.form.assignedTo.items = this.assignedToItems
+        Utils.updateFormValues(this.form, item, true)
+        this.$refs.form && this.$refs.form.resetValidation()
+        this.comments.value = null
+        this.dialog = {
+          show: true,
+          type: "Reject",
+          title: "Reject",
+          color: "error",
+          icon: "mdi-close",
+        }
+      },
+      showForwardForm(item){
+        this.form = Utils.copyObject(FormData.Request, true)
+        this.form.assignedTo.items = this.assignedToItems.filter(v => !item.assignedTo.includes(v) && item.requestedBy !== v)
+        Utils.updateFormValues(this.form, item)
+        this.form.assignedTo.value = null
+        this.form.assignedTo.multiple = false
+        this.form.request.disabled = true
+        this.$refs.form && this.$refs.form.resetValidation()
+        this.comments.value = null
+        this.dialog = {
+          show: true,
+          type: "Forward",
+          title: "Forward",
+          color: "secondary",
+          icon: "mdi-arrow-right",
+        }
+      },
+    },
+    created(){
+      this.onPageLoad()
+    },
+    template: `<?!= include_('vue/view/received.html'); ?>`
+  }
+
+  const SentView = {
+    data: ()=>({
+      page: 1,
+      pageSize: 15,
+      headers: [
+        {text: "ID", value: "id"},
+        {text: "Request", value: "request"},
+        {text: "Pending On", value: "pendingOn"},
+        {text: "Status", value: "status"},
+        {text: "Details", value: "data", width: "500"},
+        {text: "Modified On", value: "modifiedOn"},
+        {text: "Created On", value: "createdOn"},
+      ],
+    }),
+    computed:{
+      ...Vuex.mapState({
+        loading: 'loading',
+        user: 'user',
+        statusColor: 'statusColor',
+      }),
+      ...Vuex.mapGetters({
+        items: 'sentApprovals',
+      }),
+    },
+    methods: {
+      async onPageLoad(){
+        this.$store.dispatch("getItems", {
+          sheetName: "approvals", 
+          page: this.page, 
+          pageSize: this.pageSize, 
+          filters: {
+            requestedBy: this.user.email,
+            status: "Open",  
+          },
+        })
+      },
+    },
+    created(){
+      this.onPageLoad()
+    },
+    template: `<?!= include_('vue/view/sent'); ?>`
+  }
+
+  const HistoryView = {
+    data: ()=>({
+      page: 1,
+      pageSize: 15,
+      headers: [
+        {text: "ID", value: "id"},
+        {text: "Request", value: "request"},
+        {text: "Request By", value: "requestedBy"},
+        {text: "Pending On", value: "pendingOn"},
+        {text: "Status", value: "status"},
+        {text: "Details", value: "data", width: "500"},
+        {text: "Modified On", value: "modifiedOn"},
+        {text: "Created On", value: "createdOn"},
+        // {text: "Actions", value: "actions"},
+      ],
+    }),
+    computed:{
+      ...Vuex.mapState({
+        loading: 'loading',
+        user: 'user',
+        statusColor: 'statusColor',
+      }),
+      ...Vuex.mapGetters({
+        items: 'historyApprovals',
+      }),
+    },
+    methods: {
+      async onPageLoad(){
+        this.$store.dispatch("getItems", {
+          sheetName: "approvals", 
+          page: this.page, 
+          pageSize: this.pageSize, 
+          filters: {
+            requestedBy: this.user.email,
+            status: "Open",  
+          },
+        })
+      },
+    },
+    created(){
+      this.onPageLoad()
+    },
+    template: `<?!= include_('vue/view/history'); ?>`
+  }
+
+  const UsersView = {
+    data: () => ({
+      page: 1,
+      pageSize: 15,
+      headers: [
+        {text: "ID", value: "id"},
+        {text: "Name", value: "name"},
+        {text: "Role", value: "role"},
+        {text: "Title", value: "title"},
+        {text: "Email", value: "email"},
+        {text: "Phone", value: "phone"},
+        // {text: "Password", value: "password"},
+        {text: "Actions", value: "actions"},
+      ],
+      form: Utils.copyObject(FormData.User, true),
+      search: Utils.copyObject(FormData.Search),
+      dialog: {},
+    }),
+    computed: {
+      ...Vuex.mapState({
+        loading: "loading",
+        users: "users",
+        user: "user",
+        statusColor: 'statusColor',
+        roles: "roles",
+        titles: "titles",
+      })
+    },
+    methods: {
+      async onPageLoad(){
+        this.$store.dispatch("getItems", {sheetName: "users", page: this.page, pageSize: this.pageSize})
+      },
+      onSearch(){
+        if (!this.search.value){
+          this.$store.dispatch("getItems", {sheetName: "users", page: this.page, pageSize: this.pageSize})
+        }else{
+          const filters = {
+            id: this.search.value,
+            name: this.search.value,
+            email: this.search.value,
+            phone: this.search.value,
+          }
+          this.$store.dispatch("getItems", {sheetName: "users", page: this.page, pageSize: this.pageSize, filters})
+        }
+      },
+      submit(){
+        if (this.dialog.type === "Create") {
+          this.createItem()
+        } else if (this.dialog.type === "Update"){
+          this.updateItem()
+        } else if (this.dialog.type === "Delete"){
+          this.deleteItem()
+        }
+      },
+      async createItem(){
+        if (!this.$refs.user.validate()) return
+        const item = Utils.getFormValues(this.form)
+        const success = await this.$store.dispatch("createItem", {sheetName: "users", item})
+        if (success) this.dialog.show = false
+        await this.onPageLoad()
+      },
+      async updateItem(){
+        if (!this.$refs.user.validate()) return
+        const item = Utils.getFormValues(this.form)
+        const success = await this.$store.dispatch("updateItem", {sheetName: "users", item})
+        if (success) this.dialog.show = false
+        await this.onPageLoad()
+      },
+      async deleteItem(){
+        const item = Utils.getFormValues(this.form)
+        const success = await this.$store.dispatch("deleteItem", {sheetName: "users", item})
+        if (success) this.dialog.show = false
+        await this.onPageLoad()
+      },
+      showCreateForm(){
+        this.form = Utils.copyObject(FormData.User, true)
+        this.form.role.items = this.roles
+        this.form.title.items = this.titles
+        this.$refs.user && this.$refs.user.resetValidation()
+
+        this.dialog = {
+          show: true,
+          type: "Create",
+          title: "Create User",
+          color: "primary",
+          icon: "mdi-plus",
+        }
+      },
+      showEditForm(item){
+        this.form = Utils.copyObject(FormData.User, true)
+        this.form.role.items = this.roles
+        this.form.title.items = this.titles
+        Utils.updateFormValues(this.form, item)
+        this.$refs.user && this.$refs.user.resetValidation()
+
+        this.dialog = {
+          show: true,
+          type: "Update",
+          title: "Update User",
+          color: "secondary",
+          icon: "mdi-pencil",
+        }
+      },
+      showDeleteForm(item){
+        this.form = Utils.copyObject(FormData.User, true)
+        this.form.role.items = this.roles
+        this.form.title.items = this.titles
+        Utils.updateFormValues(this.form, item, true)
+        this.$refs.user && this.$refs.user.resetValidation()
+
+        this.dialog = {
+          show: true,
+          type: "Delete",
+          title: "Delete User",
+          color: "error",
+          icon: "mdi-delete",
+        }
+      },
+    },
+    watch:{
+      page: function(){
+        this.onPageLoad()
+      },
+    },
+    created(){
+      this.onPageLoad()
+    },
+    template: `<?!= include_('vue/view/users.html'); ?>`
+  }
+
+  const LoginView = {
+    data: () =>({
+      form: Utils.copyObject(FormData.Login, true),
+    }),
+    computed: {
+      ...Vuex.mapState({
+        loading: "loading",
+        app: "app",
+        statusColor: 'statusColor',
+      })
+    },
+    methods: {
+      login(){
+        const isFormValid = this.$refs.form.validate()
+        if (!isFormValid) return
+        this.$store.dispatch("login", {email: this.form.email.value, password: this.form.password.value})
+      },
+    },
+    template: `
+      <div>
+        <v-progress-linear
+            :active="loading"
+            :indeterminate="loading"
+            absolute
+            top
+            color="primary"
+          ></v-progress-linear>
+        <v-row>
+          <v-spacer></v-spacer>
+          <v-col cols="12" sm="8" md="6" lg="4">
+            <h1 class="primary--text font-weight-black my-6">{{ app.name }}</h1>
+            <v-img
+              class="logo rounded mb-6"
+              :aspect-ratio="4/3"
+            ></v-img>
+            <v-form ref="form" @submit.prevent="login">
+              <my-input :item="form.email"></my-input>
+              <my-input :item="form.password"></my-input>
+              <v-btn type="submit" color="primary" :disabled="loading" depressed block large>
+                <v-icon left>mdi-login</v-icon>
+                Login
+              </v-btn>
+            </v-form>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+      </div>
+    `
+  }
+
+  const routes = [
+    { path: '/', component: HomeView, meta: {icon: "mdi-view-dashboard-outline", title: "Dashboard"} },
+    { path: '/received', component: ReceivedView, meta: {icon: "mdi-timer-sand", title: "Received"} },
+    { path: '/sent', component: SentView, meta: {icon: "mdi-send", title: "Sent"} },
+    { path: '/history', component: HistoryView, meta: {icon: "mdi-history", title: "History"} },
+    { path: '/users', component: UsersView, meta: {icon: "mdi-account", title: "Users", authorize: ["Admin"]} },
+    { path: '/login', component: LoginView, meta: {icon: "mdi-login", title: "Login"}},
+  ]
+
+  const router = new VueRouter({
+    routes
+  })
+
+  router.beforeEach((to, from, next) => {
+    const isAuthenticated = store.getters.isAuthenticated
+    const role = store.state.user ? store.state.user.role : null
+    const {authorize} = to.meta
+    if (to.path !== '/login' && !isAuthenticated) {
+      const token = Utils.getStorageItem(Utils.Key.Token)
+      if (!token) return next(`/login`)
+      return store.dispatch("login", {token})
+    }
+    if (authorize){
+      if (authorize.length && !authorize.includes(role)) {
+          return next({ path: '/' });
+      }
+    }
+    return next()
+  })
+
+
+  router.afterEach((to, from) => {
+    Utils.setStorageItem(Utils.Key.Path, to.path)
+    google.script.history.push(null, null, to.path)
+  })
+</script>

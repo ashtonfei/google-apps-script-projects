@@ -1,0 +1,84 @@
+<div>
+  <!-- <div class="d-flex align-center">
+    <v-btn depressed color="primary" :disabled="loading" @click="showCreateForm">
+      <v-icon left>mdi-plus</v-icon>Create
+    </v-btn>
+    <v-spacer></v-spacer>
+    <v-form ref="search" @submit.prevent="onSearch">
+      <my-input :item="search"></my-input>
+    </v-form>
+  </div> -->
+  <v-data-table :headers="headers" :items="items" :items-per-page="pageSize">
+    <template v-slot:item.createdOn="{ item }">
+      {{ item.createdOn ? new Date(item.createdOn).toLocaleString() : item.createdOn}}
+    </template>
+    <template v-slot:item.modifiedOn="{ item }">
+      {{ item.createdOn ? new Date(item.createdOn).toLocaleString() : item.createdOn}}
+    </template>
+    <template v-slot:item.status="{ item }">
+      <v-chip :color="statusColor[item.status]" label>{{ item.status }}</v-chip>
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <v-icon small class="mr-2" @click="showApproveForm(item)" color="success">
+        mdi-check
+      </v-icon>
+      <v-icon small class="mr-2" @click="showRejectForm(item)" color="error">
+        mdi-close
+      </v-icon>
+      <v-icon small @click="showForwardForm(item)" color="secondary">
+        mdi-arrow-right
+      </v-icon>
+    </template>
+  </v-data-table>
+  <!-- <div class="caption text-end" v-if="!search.value">
+    * Only the latest {{ pageSize }} records are shown here, use the search to find old records.
+  </div> -->
+  <!-- <div class="text-center pt-3">
+    <v-pagination :disabled="loading" v-model="page" :length="users.pages"></v-pagination>
+  </div> -->
+  <v-dialog v-model="dialog.show" :width="dialog.width || 500">
+    <v-form ref="form" @submit.prevent="submit">
+      <v-card>
+        <v-card-title class="text-h5 white--text" v-html="dialog.title" :class=" dialog.color || 'primary' ">
+        </v-card-title>
+        <v-card-text class="mt-6 pb-0">
+          <my-input :item="form.id" v-if="form.id.value"></my-input>
+          <my-input :item="form.assignedTo"></my-input>
+          <my-input :item="form.request"></my-input>
+          <my-input :item="form.status"></my-input>
+          <v-timeline align-top dense>
+            <v-timeline-item v-for="(item, index) in form.data.value" :key="index"
+              :color="statusColor[item.status]" small>
+              <v-row class="pt-1">
+                <v-col cols="3">
+                  <strong>{{item.status}}</strong>
+                </v-col>
+                <v-col>
+                  <strong>{{item.email}}</strong>
+                  <div class="text-caption">
+                    {{item.comments}}
+                  </div>
+                  <div class="text-caption">
+                    {{item.timestamp}}
+                  </div>
+                </v-col>
+              </v-row>
+            </v-timeline-item>
+          </v-timeline>
+          <my-input :item="comments" v-if="dialog.type !== 'Forward'"></my-input>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn type="submit" text :color="dialog.color || 'primary' " :disabled="loading">
+            <v-icon left>{{ dialog.icon }}</v-icon>
+            {{ dialog.type }}
+          </v-btn>
+          <v-btn color=" grey " text @click="dialog.show = false" :disabled="loading">
+            <v-icon left>mdi-cancel</v-icon>
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-form>
+  </v-dialog>
+</div>

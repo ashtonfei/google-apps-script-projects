@@ -1,0 +1,57 @@
+<div>
+  <v-row>
+    <v-col cols="12" sm="6" md="4">
+      <v-btn color="primary" depressed large @click="showCreateForm" :disabled="loading">
+        <v-icon left >mdi-plus</v-icon>
+        Create
+        </v-btn>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col cols="12" sm="6" md="4">
+      <v-card flat color="warning" to="/received" dark>
+        <v-card-text>
+          <h1 class="text-h2 text-center">{{ receivedQty }} Received</h1>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col cols="12" sm="6" md="4">
+      <v-card flat color="primary" to="/sent" dark>
+        <v-card-text>
+          <h1 class="text-h2 text-center">{{ sentQty }} Sent</h1>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col cols="12" sm="6" md="4">
+      <v-card flat color="secondary" to="/history" dark>
+        <v-card-text>
+          <h1 class="text-h2 text-center">{{ historyQty }} History</h1>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
+  <v-dialog v-model="dialog.show" :width="dialog.width || 500">
+    <v-form ref="form" @submit.prevent="submit">
+      <v-card>
+        <v-card-title class="text-h5 white--text" v-html="dialog.title" :class=" dialog.color || 'primary' ">
+        </v-card-title>
+        <v-card-text class="mt-6 pb-0">
+          <my-input :item="form.id" v-if="form.id.value"></my-input>
+          <my-input :item="form.assignedTo"></my-input>
+          <my-input :item="form.request"></my-input>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn type="submit" text :color="dialog.color || 'primary' " :disabled="loading">
+            <v-icon left>{{ dialog.icon }}</v-icon>
+            {{ dialog.type }}
+          </v-btn>
+          <v-btn color=" grey " text @click="dialog.show = false" :disabled="loading">
+            <v-icon left>mdi-cancel</v-icon>
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-form>
+  </v-dialog>
+</div>

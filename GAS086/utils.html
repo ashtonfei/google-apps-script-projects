@@ -1,0 +1,67 @@
+<script>
+  const Utils = {
+    Key: {
+      Token: "_token",
+      Path: "_path",
+      Dark: "_dark",
+    },
+  }
+
+  Utils.getFormValues = (formData) => {
+    const values = {}
+    Object.entries(formData).forEach(([key, item]) => values[key] = item.value)
+    return values
+  }
+
+  Utils.updateFormValues = (formData, item, disableAll=false) => {
+    Object.keys(formData).forEach(key => {
+      if (disableAll) formData[key].disabled = true
+      if (item.hasOwnProperty(key)) {
+        try{
+          formData[key].value = JSON.parse(item[key])
+        }catch(err){
+          formData[key].value = item[key]
+        }
+      }
+    })
+  }
+
+  Utils.copyObject = (obj, hasRules=false) => {
+    const item = JSON.parse(JSON.stringify(obj))
+    if (!hasRules) return item
+    Object.entries(obj).forEach(([key, value]) => item[key]["rules"] = value["rules"])
+    return item
+  }
+
+  Utils.request = async function(functionName, params={}) {
+    return new Promise((resolve, reject) => {
+      google.script.run
+        .withSuccessHandler(response => resolve(JSON.parse(response)))
+        .withFailureHandler(err => reject(err))
+        [functionName](JSON.stringify(params))
+    })
+  }
+
+  Utils.getLocation = async function(){
+    return new Promise((resolve, reject) => {
+      google.script.url.getLocation(location => resolve(location))
+    })
+  }
+
+  Utils.getStorageItem = (key) => {
+    try{
+      return localStorage.getItem(key)
+    }catch(err){
+      return null
+    }
+  }
+
+  Utils.setStorageItem = (key, value) => {
+    try{
+      localStorage.setItem(key, value)
+    }catch(err){
+      // pass
+      console.log(err)
+    }
+  }
+</script>

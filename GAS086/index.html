@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <?!= include_("css.html"); ?>
+  </head>
+  <body>
+    <div id="app" v-cloak>
+      <v-app>
+        <my-navbar></my-navbar>
+        <v-main>
+          <v-container fluid>
+            <router-view></router-view>
+          </v-container>
+        </v-main>
+        <v-footer app>
+          <div class="text-center caption">Ashton Fei &copy {{new Date().getFullYear()}}</div>
+        </v-footer>
+        <my-snackbar></my-snackbar>
+        <my-dialog></my-dialog>
+      </v-app>
+    </div>
+
+    <?!= include_("vue/index.html"); ?>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+<div>
+  <v-data-table :headers="headers" :items="items" :items-per-page="pageSize">
+    <template v-slot:item.createdOn="{ item }">
+      {{ item.createdOn ? new Date(item.createdOn).toLocaleString() : item.createdOn}}
+    </template>
+    <template v-slot:item.modifiedOn="{ item }">
+      {{ item.createdOn ? new Date(item.createdOn).toLocaleString() : item.createdOn}}
+    </template>
+    <template v-slot:item.status="{ item }">
+      <v-chip :color="statusColor[item.status]" label>{{ item.status }}</v-chip>
+    </template>
+
+    <template v-slot:item.data="{ item }">
+      <v-expansion-panels accordion flat>
+        <v-expansion-panel>
+          <v-expansion-panel-header>Approval Details</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-timeline align-top dense>
+              <v-timeline-item v-for="(subitem, index) in JSON.parse(item.data)" :key="index"
+                :color="statusColor[subitem.status]" small>
+                <v-row class="pt-1">
+                  <v-col cols="3">
+                    <strong>{{subitem.status}}</strong>
+                  </v-col>
+                  <v-col>
+                    <strong>{{subitem.email}}</strong>
+                    <div class="text-caption">
+                      {{subitem.comments}}
+                    </div>
+                    <div class="text-caption">
+                      {{subitem.timestamp}}
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-timeline-item>
+            </v-timeline>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </template>
+  </v-data-table>
+</div>

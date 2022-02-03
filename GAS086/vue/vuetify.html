@@ -1,0 +1,30 @@
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script>
+  const lgith = {
+    primary: '#1976D2',
+    secondary: '#424242',
+    accent: '#82B1FF',
+    error: '#FF5252',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FFC107',
+  }
+  const dark = {
+    primary: '#1976D2',
+    secondary: '#424242',
+    accent: '#82B1FF',
+    error: '#FF5252',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FFC107',
+  }
+  const vuetify = new Vuetify({
+    theme: {
+      dark: false,
+      themes: {
+        lgith,
+        dark,
+      }
+    }
+  })
+</script>

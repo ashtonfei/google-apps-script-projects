@@ -1,0 +1,203 @@
+<script src="https://unpkg.com/vuex/dist/vuex.js"></script>
+<script>
+  const store = new Vuex.Store({
+    state: {
+      loading: false,
+      app: {
+        name: "Approvals",
+        title: "Automate everything",
+      },
+      statusColor: {
+        Open: "warning",
+        Approved: "success",
+        Rejected: "error",
+        Closed: "grey",
+        Cancelled: "grey",
+      },
+      snackbar: {},
+      dialog: {},
+      user: null,
+      users: {items: [], pages: 1},
+      approvals: {items: [], pages: 1},
+      roles: ["Admin", "User", "Manager", "Planner"],
+      titles: ["Manager", "Engineer", "Planner", "Sales"],
+    },
+    mutations: {
+      startLoading(state){
+        state.loading = true
+      },
+      stopLoading(state){
+        state.loading = false
+      },
+      updateState(state, {key, value}){
+        state[key] = value
+      },
+      showDialog(state, dialog){
+        state.loading = false
+        dialog.show = true
+        state.dialog = dialog
+      },
+      closeDialog(state){
+        state.dialog.show = false
+      },
+      showSnackbar(state, snackbar){
+        state.loading = false
+        snackbar.show = true
+        state.snackbar = snackbar
+      },
+      closeSnackbar(state){
+        state.snackbar.show = false
+      },
+    },
+    getters: {
+      isAuthenticated: function(state){
+        return state.user ? true : false
+      },
+      isAdmin: function(state){
+        return state.user ? state.user.role === "Admin" : false
+      },
+      assignedToItems: function(state){
+        return state.users.items.filter(item => item.id !== state.user.id).map(item => item.email)
+      },
+      sentApprovals: function(state){
+        return state.approvals.items.filter(item => item.requestedBy == state.user.email && item.status === "Open")
+      },
+      sentApprovalsQty: function(state){
+        return state.approvals.items.filter(item => item.requestedBy == state.user.email && item.status === "Open").length
+      },
+      receivedApprovals: function(state){
+        return state.approvals.items.filter(item => item.pendingOn == state.user.email)
+      },
+      receivedApprovalsQty: function(state){
+        return state.approvals.items.filter(item => item.pendingOn == state.user.email).length
+      },
+      historyApprovals: function(state){
+        return state.approvals.items.filter(item => item.status !== "Open" && item.requestedBy == state.user.email)
+      },
+      historyApprovalsQty: function(state){
+        return state.approvals.items.filter(item => item.status !== "Open" && item.requestedBy == state.user.email).length
+      },
+    },
+    actions: {
+      async getAppData({commit}){
+        commit("startLoading")
+        try {
+          const data = await Utils.request("getAppData")
+          commit("updateState", {key: "app", value: data})
+          commit("stopLoading")
+        }catch(err){
+          commit("showSnackbar", {color: "error", message: err.message})
+        }
+      },
+      async getItems({commit}, params){
+        commit("startLoading")
+        try {
+          const data = await Utils.request("getItems", params)
+          commit("updateState", {key: params.sheetName, value: data})
+          commit("stopLoading")
+        }catch(err){
+          commit("showSnackbar", {color: "error", message: err.message})
+        }
+      },
+      async createItem({commit}, params){
+        commit("startLoading")
+        try {
+          const {success, message} = await Utils.request("createItem", params)
+          if (!success){
+            commit("showSnackbar", {color: "error", message})
+          }else{
+            commit("showSnackbar", {color: "success", message})
+            return true
+          }
+        }catch(err){
+          commit("showSnackbar", {color: "error", message: err.message})
+        }
+      },
+      async updateItem({commit}, params){
+        commit("startLoading")
+        try {
+          const {success, message} = await Utils.request("updateItem", params)
+          if (!success){
+            commit("showSnackbar", {color: "error", message})
+          }else{
+            commit("showSnackbar", {color: "success", message})
+            return true
+          }
+        }catch(err){
+          commit("showSnackbar", {color: "error", message: err.message})
+        }
+      },
+      async updateApproval({commit}, params){
+        commit("startLoading")
+        try {
+          const {success, message} = await Utils.request("updateApproval", params)
+          if (!success){
+            commit("showSnackbar", {color: "error", message})
+          }else{
+            commit("showSnackbar", {color: "success", message})
+            return true
+          }
+        }catch(err){
+          commit("showSnackbar", {color: "error", message: err.message})
+        }
+      },
+      async deleteItem({commit}, params){
+        commit("startLoading")
+        try {
+          const {success, message} = await Utils.request("deleteItem", params)
+          if (!success){
+            commit("showSnackbar", {color: "error", message})
+          }else{
+            commit("showSnackbar", {color: "success", message})
+            return true
+          }
+        }catch(err){
+          commit("showSnackbar", {color: "error", message: err.message})
+        }
+      },
+      async login({commit}, params){
+        commit("startLoading")
+        try {
+          const location = await Utils.getLocation()
+          const path = location.path || "/"
+          const {success, message, user, app} = await Utils.request("login", params)
+          if (!success) {
+            if (path !== "/login")  {
+              router.push("/login")
+            }
+            commit("showSnackbar", {color: "error", message})
+            return
+          }
+          const data = await Utils.request("getItems", {sheetName: "users", page: 1, pageSize: -1})
+          
+          commit("updateState", {key: "users", value: data})
+          commit("updateState", {key: "user", value: user})
+          commit("updateState", {key: "app", value: app})
+          Utils.setStorageItem(Utils.Key.Token, user.token)  
+
+          if (path !== "/login") {
+            router.push(path)
+          } else{
+            router.push("/")
+          }
+          commit("stopLoading")
+        }catch(err){
+          commit("showSnackbar", {color: "error", message: err.message})
+        }
+      },
+      async logout({commit, state}, params){
+        commit("startLoading")
+        try {
+          const {success, message} = await Utils.request("logout", params)
+          if (!success) return commit("showSnackbar", {color: "error", message})
+          commit("updateState", {key: "user", value: null})
+          Utils.setStorageItem(Utils.Key.Token, "")
+          router.push(`/login`)
+          commit("showSnackbar", {color: "success", message})
+        }catch(err){
+          commit("showSnackbar", {color: "error", message: err.message})
+        }
+      },
+    },
+  })
+</script>
