@@ -1,4 +1,4 @@
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x"></script>
 
 <?!= include_("utils.html"); ?>
 <?!= include_("vue/formdata.html"); ?>
@@ -15,10 +15,7 @@
     router,
     async created(){
       const path = Utils.getStorageItem(Utils.Key.Path)
-      // if (path) this.$router.push(path)
       const token = Utils.getStorageItem(Utils.Key.Token)
-      console.log({token})
-      // if (token) await this.$store.dispatch("login", {token})
     }
   })
 </script>
