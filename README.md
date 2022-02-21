@@ -7,7 +7,7 @@ My Google Apps Script projects shared on [:tv: YouTube](https://www.youtube.com/
 
 ### All projects
 
-- [GAS-087 Custom Form with Signature](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS087) - [:tv: YouTube](https://youtu.be/hctEeYD6URg)
+- [GAS-087 Custom Form with Signature](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS087) - [:tv: YouTube](https://youtu.be/istqhP0IFKk)
 - [GAS-086 Approval Application](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS086) - [:tv: YouTube](https://youtu.be/hctEeYD6URg)
 - [GAS-085 Google Slide Automation with SlidePro](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS085) - [:tv: YouTube](https://youtu.be/tMruEzRCJD4)
 - [GAS-084 Google Doc Automation with DocPro](https://github.com/ashtonfei/google-apps-script-projects/tree/GAS-084) - [:tv: YouTube](https://youtu.be/gXJkpByChTo)
