@@ -1,0 +1,265 @@
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script>
+  const apiCall = function (functionName, params = {}) {
+  params = JSON.stringify(params);
+  return new Promise((resolve, reject) => {
+    google.script.run
+      .withSuccessHandler((response) => resolve(JSON.parse(response)))
+      .withFailureHandler((error) => reject(error))
+      [functionName](params);
+  });
+};
+
+const getFormData = (form) => {
+  const data = {};
+  Object.entries(form).forEach(([key, item]) => {
+    data[key] = item.value;
+  });
+  return data
+};
+
+const form = {
+  name: {
+    label: "Name",
+    type: "text",
+    value: "",
+    disabled: false,
+    placeholder: "",
+    rules: [(v) => !!v || "This is required!"],
+  },
+  email: {
+    label: "Email",
+    type: "email",
+    value: "",
+    disabled: false,
+    placeholder: "",
+    rules: [(v) => !!v || "This is required!"],
+  },
+  phone: {
+    label: "Phone",
+    type: "tel",
+    value: "",
+    disabled: false,
+    placeholder: "",
+    rules: [(v) => !!v || "This is required!"],
+  },
+  gender: {
+    label: "Gender",
+    type: "select",
+    value: "",
+    items: ["Male", "Female", "Other"],
+    disabled: false,
+    placeholder: "",
+    rules: [(v) => !!v || "This is required!"],
+  },
+  city: {
+    label: "City",
+    type: "select",
+    value: "",
+    items: ["Shenzhen", "New York", "Tokyo", "Paris", "Bangkok"],
+    disabled: false,
+    placeholder: "",
+    rules: [(v) => !!v || "This is required!"],
+  },
+  date: {
+    label: "Date",
+    type: "date",
+    value: "",
+    disabled: false,
+    placeholder: "",
+    rules: [(v) => !!v || "This is required!"],
+  },
+  signature: {
+    label: "Signature",
+    type: "signature",
+    value: "",
+    disabled: false,
+    placeholder: "Click to open the signature pad",
+    items: [],
+    rules: [(v) => !!v || "This is required!"],
+  },
+};
+
+const MySnackbar = Vue.component("my-snackbar", {
+  template: `
+    
+  `,
+  props: {
+    show: true,
+    message: "",
+    color: "",
+  },
+  data: () => ({
+    snackbar: this.show,
+    timeout: 5000,
+  })
+})
+
+const MySignature = Vue.component("my-signature", {
+  template: `
+    <div>
+      <v-select
+        v-model="item.value"
+        :label="item.label"
+        :placeholder="item.placeholder"
+        :rules="item.rules"
+        :type="item.type"
+        :items="item.items"
+        @click="openPad"
+        small-chips
+        filled
+        ></v-select>
+      <v-dialog
+        v-model="dialog"
+        width="400"
+        eager
+      >
+        <v-card>
+          <v-card-title class="text-h5 primary white--text">
+            {{item.label}} Pad
+          </v-card-title>
+          <v-card-text class="pa-0">
+            <canvas :ref="item.label" width="400" height="140"/>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              text
+              @click="savePad"
+            >
+              Done
+            </v-btn>
+            <v-btn
+              color="error"
+              text
+              @click="clearPad"
+            >
+              Clear
+            </v-btn>
+            <v-btn
+              color="grey"
+              text
+              @click="closePad"
+            >
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  `,
+  props: {
+    item: Object,
+  },
+  data: () => ({
+    dialog: false,
+    show: false,
+    signaturePad: null,
+  }),
+  methods: {
+    openPad: function(){
+      this.dialog = true
+      const label = this.item.label
+      this.signaturePad = new SignaturePad(this.$refs[label])
+      if (this.item.value) this.signaturePad.fromDataURL(this.item.value)
+    },
+    closePad: function(){
+      this.dialog = false
+    },
+    clearPad(){
+      this.signaturePad.clear()
+    },
+    savePad(){
+      if (this.signaturePad.isEmpty()) {
+        this.item.value = null
+        this.item.items = []
+      } else {
+        this.item.value = this.signaturePad.toDataURL()
+        this.item.items = [{
+          text: `Signed at ${new Date().toLocaleString()}`,
+          value: this.item.value
+        }]
+      }
+      this.signaturePad.clear() 
+      this.dialog = false
+    }
+  }
+})
+
+const MyInput = Vue.component("my-input", {
+  components: {MySignature},
+  template: `
+    <my-signature v-if="item.type === 'signature' ":item="item"></my-signature>
+    <v-autocomplete
+      v-else-if="item.type === 'select'"
+      v-model="item.value"
+      :label="item.label"
+      :placeholder="item.placeholder"
+      :rules="item.rules"
+      :type="item.type"
+      :items="item.items"
+      :multiple="item.multiple"
+      small-chips
+      filled
+      ></v-autocomplete>
+    <v-text-field
+      v-else
+      v-model="item.value"
+      :label="item.label"
+      :placeholder="item.placeholder"
+      :rules="item.rules"
+      :type="item.type"
+      filled
+      ></v-text-field>
+    `,
+  props: {
+    item: Object,
+  },
+});
+
+
+
+new Vue({
+  el: "#app",
+  vuetify: new Vuetify(),
+  data: () => ({
+    loading: false,
+    title: "GAS-087 Custom Form with Signature",
+    subtitle: "Automate everything in daily life.",
+    form,
+    snackbar: {
+      show: false,
+      message: "",
+      color: "",
+      timeout: 5000,
+    },
+  }),
+  methods: {
+    showSnackbar: function({message, color}){
+      this.snackbar.message = message
+      this.snackbar.color = color
+      this.snackbar.show = true
+    },
+    submit: async function () {
+      if (!this.$refs.form.validate()) {
+        return this.showSnackbar({message: "Form is invalid", color: "warning"})
+      } 
+      this.loading = true;
+      const data = getFormData(this.form);
+      try {
+        const result = await apiCall("submit", data);
+        this.loading = false;
+        this.$refs.form.reset()
+        this.showSnackbar({message: result.message, color: "success"})
+      } catch (error) {
+        this.loading = false;
+        this.showSnackbar({message: error.message, color: "error"})
+      }
+    },
+  },
+});
+</script>

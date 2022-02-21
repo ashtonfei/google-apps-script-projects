@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <v-main>
+        <v-container>
+          <v-form ref="form" @submit.prevent="submit" :disabled="loading">
+            <v-card :loading="loading" outlined>
+              <v-img class="white--text align-end" height="200px" src="https://source.unsplash.com/random">
+                <v-card-title>{{ title }}</v-card-title>
+                <v-card-subtitle v-if="subtitle">{{ subtitle }}</v-card-subtitle>
+              </v-img>
+              <v-card-text>
+                <v-row>
+                  <v-col cols="12" sm="12" md="6" lg="4" xl="3">
+                    <my-input :item="form.name"></my-input>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="6" lg="4" xl="3">
+                    <my-input :item="form.email"></my-input>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="6" lg="4" xl="3">
+                    <my-input :item="form.phone"></my-input>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="6" lg="4" xl="3">
+                    <my-input :item="form.gender"></my-input>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="6" lg="4" xl="3">
+                    <my-input :item="form.city"></my-input>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="6" lg="4" xl="3">
+                    <my-input :item="form.date"></my-input>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="6" lg="4" xl="3">
+                    <my-input :item="form.signature"></my-input>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-btn type="submit" color="primary" :disabled="loading" large depressed>Submit</v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+          </v-form>
+          <v-snackbar v-model="snackbar.show" :color="snackbar.color" bottom>
+            {{ snackbar.message }}
+            <template v-slot:action="{ attrs }">
+              <v-btn color="white" text v-bind="attrs" :timeout="snackbar.timeout" @click="snackbar.show = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </template>
+          </v-snackbar>
+        </v-container>
+      </v-main>
+    </v-app>
+  </div>
+
+  <?!= link("vuejs.html"); ?>
+</body>
+
+</html>
