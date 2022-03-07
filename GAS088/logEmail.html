@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <p>Here is a list the logs from <strong><?= appName ?></strong>:</p>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <th style="padding: 3px 6px; border: 1px solid #444444;">Timestamp</th>
+        <th style="padding: 3px 6px; border: 1px solid #444444;">Subject</th>
+        <th style="padding: 3px 6px; border: 1px solid #444444;">Status</th>
+        <th style="padding: 3px 6px; border: 1px solid #444444;">Links</th>
+      </tr>
+      <? for (let i = 0; i < logs.length; i ++) { ?>
+        <tr>
+          <td style="padding: 3px 6px; border: 1px solid #444444;"><?= logs[i][0].toLocaleString() ?></td>
+          <td style="padding: 3px 6px; border: 1px solid #444444;"><a href="<?= logs[i][2] ?>"><?= logs[i][1] ?></a></td>
+          <td style="padding: 3px 6px; border: 1px solid #444444;"><?= logs[i][3] ?></td>
+          <td style="padding: 3px 6px; border: 1px solid #444444;"><?= logs[i][4] ?></td>
+        </tr>
+      <? } ?>
+    </table>
+    <p><small>Created by <a href="https://youtube.com/ashtonfei/">Ashton Fei</a>.</small></p>
+  </body>
+</html>
