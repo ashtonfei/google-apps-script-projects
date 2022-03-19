@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <style>
+      input[type="date"],
+      input[type="datetime"],
+      input[type="datetime-local"],
+      input[type="email"],
+      input[type="month"],
+      input[type="number"],
+      input[type="password"],
+      input[type="search"],
+      input[type="tel"],
+      input[type="text"],
+      input[type="time"],
+      input[type="url"],
+      input[type="week"],
+      textarea {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <form class="sidebar">
+      <div class="form-group block">
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" required />
+      </div>
+      <div class="form-group block">
+        <label for="email">To</label>
+        <input type="email" id="email" required />
+      </div>
+      <div class="form-group block">
+        <label for="body">Body</label>
+        <textarea id="body" rows="8" required></textarea>
+      </div>
+      <div class="form-group block">
+        <button type="submit" class="action">Send</button>
+      </div>
+      <div class="form-group block" id="message">
+      </div>
+    </form>
+
+    <script>
+      let form = null
+      
+
+      window.onload = function(){
+        form = document.forms[0]
+        form.addEventListener("submit", submit)
+      }
+
+      function showMessage(message, type){
+        document.getElementById("message").innerHTML = `<div class="${type}">${message}</div>`
+      }
+
+      function submit(e){
+        e.preventDefault()
+        showMessage("Sending...")
+        const payload = {
+          subject: form.subject.value,
+          to: form.email.value,
+          body: form.body.value
+        }
+        console.log(payload)
+        google.script.run
+          .withSuccessHandler((res) => {
+            showMessage("New tracking email has been sent successfully!", 'success')
+            form.subject.value = ""
+            form.email.value = ""
+            form.body.value = ""
+          })
+          .withFailureHandler((error) => {
+            showMessage(error.message, "error")
+          })
+          .sendEmail(JSON.stringify(payload))
+      }
+    </script>
+  </body>
+</html>
