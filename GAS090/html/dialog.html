@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+
+    <style>
+      html {
+        overflow: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <v-app>
+        <v-main>
+          <v-container fulid class="pa-0 pa-sm-0 pa-md-4">
+            <v-row>
+              <v-spacer></v-spacer>
+              <v-col cols="12" sm="12" md="8" lg="6" xl="4">
+                <v-form
+                  @submit.prevent="submit"
+                  :disabled="loading"
+                  ref="form"
+                  form-data="<?= JSON.stringify(formData); ?>"
+                  name="<?= name ?>"
+                  user="<?= user ?>"
+                >
+                  <v-alert :type="alert.type" v-model="alert.show" dense text>
+                    {{alert.message}}
+                  </v-alert>
+                  <v-card v-if="formData" :loading="loading" elevation="0">
+                    <v-card-title> {{name}} </v-card-title>
+                    <v-card-subtitle> {{user}} </v-card-subtitle>
+                    <v-card-text>
+                      <v-row>
+                        <v-col
+                          cols="12"
+                          v-for="(item, index) in formData"
+                          :key="index"
+                          class="py-0"
+                        >
+                          <v-autocomplete
+                            v-if="item.type === 'autocomplete'"
+                            v-model="item.default"
+                            :label="item.label"
+                            :placeholder="item.placeholder"
+                            :items="item.options"
+                            :rules="item.rules"
+                            :multiple="item.multiple"
+                            :prepend-icon="item.icon"
+                            dense
+                            outlined
+                          ></v-autocomplete>
+                          <v-select
+                            v-else-if="item.type === 'select'"
+                            v-model="item.default"
+                            :label="item.label"
+                            :placeholder="item.placeholder"
+                            :items="item.options"
+                            :rules="item.rules"
+                            :multiple="item.multiple"
+                            :prepend-icon="item.icon"
+                            dense
+                            outlined
+                          ></v-select>
+                          <v-file-input
+                            v-else-if="item.type === 'file'"
+                            v-model="item.default"
+                            :label="item.label"
+                            :accept="item.accept"
+                            :multiple="item.multiple"
+                            :rules="item.rules"
+                            :prepend-icon="item.icon"
+                            @change="handleFiles($event, item)"
+                            dense
+                            outlined
+                          ></v-file-input>
+                          <v-textarea
+                            v-else-if="item.type === 'textarea'"
+                            :label="item.label"
+                            v-model="item.default"
+                            :placeholder="item.placeholder"
+                            :rules="item.rules"
+                            :prepend-icon="item.icon"
+                            rows="2"
+                            auto-grow
+                            dense
+                            outlined
+                          >
+                          </v-textarea>
+                          <v-text-field
+                            v-else
+                            :type="item.type"
+                            :label="item.label"
+                            v-model="item.default"
+                            :placeholder="item.placeholder"
+                            :prepend-icon="item.icon"
+                            :rules="item.rules"
+                            dense
+                            outlined
+                          >
+                          </v-text-field>
+                        </v-col>
+
+                        <v-col cols="12">
+                          <v-btn
+                            type="submit"
+                            color="primary"
+                            :loading="loading"
+                            :disabled="loading"
+                            block
+                            depressed
+                          >
+                            <v-icon left>mdi-send</v-icon>
+                            Submit
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-form>
+              </v-col>
+              <v-spacer></v-spacer>
+            </v-row>
+          </v-container>
+        </v-main>
+      </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data: () => ({
+          name: null,
+          user: null,
+          formData: null,
+          loading: false,
+          alert: {
+            show: false,
+            message: null,
+            type: "info",
+          },
+        }),
+        methods: {
+          showAlert(message, type = "info") {
+            this.alert.message = message;
+            this.alert.type = type;
+            this.alert.show = true;
+            this.loading = false;
+          },
+          closeAlert() {
+            this.alert.show = false;
+          },
+          handleFiles(files, item) {
+            if (!files) return (item["files"] = []);
+            if (!Array.isArray(files)) files = [files];
+            if (files.length === 0) return (item["files"] = []);
+            item["files"] = [];
+            files.forEach((file) => {
+              const reader = new FileReader();
+              reader.file = file;
+              reader.addEventListener("load", function () {
+                item["files"].push({
+                  data: reader.result,
+                  name: reader.file.name,
+                  type: reader.file.type,
+                });
+              });
+              reader.readAsDataURL(file);
+            });
+          },
+          submit() {
+            if (!this.$refs.form.validate()) return;
+            this.loading = true;
+            window.scroll({ top: 0 });
+            google.script.run
+              .withSuccessHandler((res) => {
+                this.showAlert(res, "success");
+                try {
+                  this.$refs.form.reset();
+                } catch (error) {
+                  //pass
+                }
+              })
+              .withFailureHandler((error) =>
+                this.showAlert(error.message, "error")
+              )
+              .submit(JSON.stringify(this.formData));
+          },
+        },
+        mounted() {
+          document.addEventListener("click", () => {
+            this.closeAlert();
+          });
+          const form = document.forms[0];
+          this.user = form.getAttribute("user");
+          this.name = form.getAttribute("name");
+          const formData = JSON.parse(form.getAttribute("form-data"));
+          formData.forEach((item) => {
+            if (item.options)
+              item.options = item.options
+                .split(/\s*,\s*/)
+                .filter((v) => v !== "");
+            if (item.rules) {
+              item.rules = item.rules
+                .split("\n")
+                .filter((v) => v.trim() !== "")
+                .map((v) => eval(`v=>${v}`));
+            } else {
+              item.rules = [];
+            }
+            if (item.multiple) {
+              if (item.default) {
+                item.default = item.default
+                  .split(/\s*,\s*/)
+                  .filter((v) => v !== "");
+              } else {
+                item.default = [];
+              }
+            }
+          });
+          this.formData = formData;
+        },
+      });
+    </script>
+  </body>
+</html>
