@@ -94,7 +94,6 @@ class App {
     this.ss = SpreadsheetApp.getActive();
     this.name = APP.NAME;
     this.user = Session.getActiveUser().getEmail();
-    this.currentFolder = _utils.getCurrentFolder();
   }
 
   /**
@@ -133,7 +132,8 @@ class App {
     try {
       folder = DriveApp.getFolderById(folderId);
     } catch (error) {
-      folder = _utils.getFolderByName(this.currentFolder, APP.FN.DEFAULT);
+      const currentFolder = _utils.getCurrentFolder();
+      folder = _utils.getFolderByName(currentFolder, APP.FN.DEFAULT);
     }
     return files.map(({ data, name, type }) => {
       const decodedData = Utilities.base64Decode(data.split("base64,")[1]);
