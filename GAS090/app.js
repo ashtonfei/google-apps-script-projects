@@ -2,7 +2,7 @@
  * APP CONFIGURATION
  */
 this.APP = {
-  NAME: "Product Scan Tool",
+  NAME: "Product Entry Form",
   SN: {
     FORM_DATA: "Product",
     RESPONSE: "Products",

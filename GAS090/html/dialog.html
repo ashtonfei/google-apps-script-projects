@@ -63,7 +63,7 @@
                             :items="item.options"
                             :rules="item.rules"
                             :multiple="item.multiple"
-                            :prepend-icon="item.icon"
+                            :prepend-inner-icon="item.icon"
                             dense
                             outlined
                           ></v-autocomplete>
@@ -75,7 +75,7 @@
                             :items="item.options"
                             :rules="item.rules"
                             :multiple="item.multiple"
-                            :prepend-icon="item.icon"
+                            :prepend-inner-icon="item.icon"
                             dense
                             outlined
                           ></v-select>
@@ -86,7 +86,8 @@
                             :accept="item.accept"
                             :multiple="item.multiple"
                             :rules="item.rules"
-                            :prepend-icon="item.icon"
+                            :prepend-inner-icon="item.icon"
+                            prepend-icon=""
                             @change="handleFiles($event, item)"
                             dense
                             outlined
@@ -97,8 +98,8 @@
                             v-model="item.default"
                             :placeholder="item.placeholder"
                             :rules="item.rules"
-                            :prepend-icon="item.icon"
-                            rows="2"
+                            :prepend-inner-icon="item.icon"
+                            rows="1"
                             auto-grow
                             dense
                             outlined
@@ -110,7 +111,7 @@
                             :label="item.label"
                             v-model="item.default"
                             :placeholder="item.placeholder"
-                            :prepend-icon="item.icon"
+                            :prepend-inner-icon="item.icon"
                             :rules="item.rules"
                             dense
                             outlined
