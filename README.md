@@ -7,6 +7,7 @@ My Google Apps Script projects shared on [:tv: YouTube](https://www.youtube.com/
 
 ### All projects
 
+- [GAS-093 Google Calendar Watcher](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS093) - [:tv: YouTube](https://youtu.be/0-8aWeGDDq8)
 - [GAS-092 Send Google Tasks](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS092) - [:tv: YouTube](https://youtu.be/I3xQzMr6U-A)
 - [GAS-091 File Share Automation](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS091) - [:tv: YouTube](https://youtu.be/KpWNqPXi50E)
 - [GAS-090 Product Entry Form](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS090) - [:tv: YouTube](https://www.youtube.com/watch?v=2z5oDj_-lEg)
