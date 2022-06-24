@@ -82,23 +82,22 @@ class Form {
         ? [item[settings.mailman.title]]
         : item[settings.mailman.title]
       : [];
-    const subject = this.replacePlaceholders(settings.subject, item);
-    const body = this.replacePlaceholders(settings.body, item).replace(
-      /\n/g,
-      "<br>"
-    );
     const cc = settings.cc;
     const bcc = settings.bcc;
 
     recipientNames.forEach((name) => {
       const recipient = emails[name];
+      item[settings.mailman.title] = name;
+      const subject = this.replacePlaceholders(settings.subject, item);
+      const body = this.replacePlaceholders(settings.body, item).replace(
+        /\n/g,
+        "<br>"
+      );
       const options = {
         htmlBody: `<div>${body}</div>`,
         cc,
         bcc,
       };
-      console.log(recipient);
-      console.log(options);
       if (recipient) {
         GmailApp.sendEmail(recipient, subject, "", options);
       }
