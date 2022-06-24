@@ -17,6 +17,7 @@ class Form {
     this.triggerFunctionName = "onSubmit";
     this.form = FormApp.getActiveForm();
     this.props = PropertiesService.getUserProperties();
+    this.user = Session.getActiveUser().getEmail();
   }
 
   getUi() {
@@ -42,7 +43,8 @@ class Form {
     );
     ScriptApp.newTrigger(this.triggerFunctionName)
       .forForm(this.form)
-      .onFormSubmit();
+      .onFormSubmit()
+      .create();
   }
 
   /**
@@ -64,6 +66,44 @@ class Form {
     return item;
   }
 
+  replacePlaceholders(text, placeholders) {
+    Object.entries(placeholders).forEach(([key, value]) => {
+      if (Array.isArray(value)) value = value.join(", ");
+      text = text.replace(new RegExp(`\{\{${key}\}\}`, "gi"), value);
+    });
+    return text;
+  }
+
+  sendEmails(item) {
+    const settings = this.getSettings();
+    const emails = this.getEmails();
+    const recipientNames = item[settings.mailman.title]
+      ? typeof item[settings.mailman.title] == "string"
+        ? [item[settings.mailman.title]]
+        : item[settings.mailman.title]
+      : [];
+    const subject = this.replacePlaceholders(settings.subject, item);
+    const body = this.replacePlaceholders(settings.body, item).replace(
+      /\n/g,
+      "<br>"
+    );
+    const cc = settings.cc;
+    const bcc = settings.bcc;
+
+    recipientNames.forEach((name) => {
+      const recipient = emails[name];
+      const options = {
+        htmlBody: `<div>${body}</div>`,
+        cc,
+        bcc,
+      };
+      console.log(recipient);
+      console.log(options);
+      if (recipient) {
+        GmailApp.sendEmail(recipient, subject, "", options);
+      }
+    });
+  }
   /**
    * @param {Object} e
    * @param {FormApp.FormResponse} e.response
@@ -72,35 +112,7 @@ class Form {
     const response = e.response;
     if (!response) return;
     const item = this.getResponseItem(response);
-    const to = item["To"];
-    const name = item["Name"];
-    const comments = item["Comments"];
-
-    const recipient = EMAILS[to] || DEFAULT_EMAIL;
-    const subject = `${to}, you have a new response from ${name}!`;
-    const emailBody = `
-      <p>Hi ${to},</p>
-
-      <p>You've got a new response!</p>
-
-      <p>
-      <span><small>Name:</small></span><br>
-      <span>${name}</span><br>
-      <span><small>Comments:</small></span><br>
-      <span>${comments}</span>
-      </p>
-
-      <p>
-      <span>Google Form Mailman</span><br>
-      <a href="${item.url_}">New</a>
-      <a href="${item.editUrl_}">Edit URL</a>
-      <a href="${item.prefilledUrl_}">Prefilled URL</a>
-      </p>
-    `;
-    const options = {
-      htmlBody: emailBody,
-    };
-    GmailApp.sendEmail(recipient, subject, "", options);
+    this.sendEmails(item);
   }
 
   getFormItems() {
@@ -133,6 +145,7 @@ class Form {
           id: item.getId(),
           type,
           items,
+          title: item.getTitle(),
         },
       };
       return data;
@@ -158,6 +171,14 @@ class Form {
     return JSON.parse(emails);
   }
 
+  isMailmanEnabled() {
+    const triggers = ScriptApp.getProjectTriggers();
+    const trigger = triggers.find(
+      (trigger) => trigger.getHandlerFunction() == this.triggerFunctionName
+    );
+    return trigger ? true : false;
+  }
+
   saveSettings({ settings, emails }) {
     this.props.setProperty(KEY.SETTINGS, JSON.stringify(settings));
     this.props.setProperty(KEY.EMAILS, JSON.stringify(emails));
@@ -165,7 +186,7 @@ class Form {
   }
 
   openSettings() {
-    const name = `${this.name} - Settings`;
+    const name = `Settings`;
     const settings = this.getSettings();
     const emails = this.getEmails();
     const formItems = this.getFormItems();
@@ -174,6 +195,7 @@ class Form {
       settings,
       emails,
       formItems,
+      enabled: this.isMailmanEnabled(),
     });
     const ui = this.getUi();
     const userInterface = template
@@ -182,6 +204,25 @@ class Form {
       .setHeight(800)
       .setWidth(600);
     ui.showDialog(userInterface);
+  }
+
+  toggleMailman({ toggle }) {
+    if (toggle) {
+      this.createTrigger();
+    } else {
+      ScriptApp.getProjectTriggers().forEach((trigger) =>
+        ScriptApp.deleteTrigger(trigger)
+      );
+    }
+  }
+
+  sendTestEmail({ settings }) {
+    const options = {
+      htmlBody: settings.body,
+      cc: settings.cc,
+      bcc: settings.bcc,
+    };
+    GmailApp.sendEmail(this.user, settings.subject, "", options);
   }
 
   openHelp() {
@@ -194,7 +235,9 @@ const onSubmit = (e) => new Form().onSubmit(e);
 const openSettings = () => new Form().openSettings();
 const saveSettings = (payload) =>
   JSON.stringify(new Form().saveSettings(JSON.parse(payload)));
+const sendTestEmail = (payload) =>
+  new Form().sendTestEmail(JSON.parse(payload));
 const openHelp = () => new Form().openHelp();
-const test = () => {
-  console.log(new Form().getFormItems()[0].value.items);
-};
+
+const toggleMailman = (payload) =>
+  new Form().toggleMailman(JSON.parse(payload));
