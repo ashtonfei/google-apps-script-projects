@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <style>
+      html {
+        overflow: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="d-none" id="app-data" app-data="<?= appData ?>"></div>
+    <div id="app">
+      <v-app>
+        <v-main>
+          <v-container>
+            <v-form ref="form">
+              <v-row>
+                <v-col cols="12" class="py-0">
+                  <v-autocomplete
+                    v-model="formData.mailman.value"
+                    :label="formData.mailman.label"
+                    :items="formData.mailman.items"
+                    :rules="formData.mailman.rules"
+                    @change="onMailmanChange"
+                    dense
+                    filled
+                    small-chips
+                    background-color="grey lighten-5"
+                    :prepend-inner-icon="formData.mailman.icon"
+                  ></v-autocomplete>
+                </v-col>
+                <template v-if="formData.mailman.value">
+                  <v-col
+                    cols="6"
+                    class="py-0"
+                    v-for="(item, index) in mailmanItems"
+                    :key="index"
+                  >
+                    <v-text-field
+                      v-model="item.value"
+                      :label="item.label"
+                      :rules="[v => !!v || 'This is required']"
+                      dense
+                      filled
+                      background-color="primary lighten-5"
+                    >
+                    </v-text-field>
+                  </v-col>
+                </template>
+                <v-col cols="12" class="py-0">
+                  <v-text-field
+                    v-model="formData.subject.value"
+                    :label="formData.subject.label"
+                    :rules="formData.subject.rules"
+                    :hint="formData.subject.hint"
+                    dense
+                    filled
+                    :hint="formData.subject.hint"
+                    background-color="grey lighten-5"
+                    :prepend-inner-icon="formData.subject.icon"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="py-0">
+                  <v-text-field
+                    v-model="formData.cc.value"
+                    :label="formData.cc.label"
+                    :rules="formData.cc.rules"
+                    :hint="formData.cc.hint"
+                    dense
+                    filled
+                    background-color="grey lighten-5"
+                    :prepend-inner-icon="formData.cc.icon"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="py-0">
+                  <v-text-field
+                    v-model="formData.bcc.value"
+                    :label="formData.bcc.label"
+                    :rules="formData.bcc.rules"
+                    :hint="formData.bcc.hint"
+                    dense
+                    filled
+                    background-color="grey lighten-5"
+                    :prepend-inner-icon="formData.bcc.icon"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="py-0">
+                  <v-textarea
+                    v-model="formData.body.value"
+                    :label="formData.body.label"
+                    :rules="formData.body.rules"
+                    :hint="formData.body.hint"
+                    rows="3"
+                    auto-grow
+                    dense
+                    filled
+                    background-color="grey lighten-5"
+                    :prepend-inner-icon="formData.body.icon"
+                  ></v-textarea>
+                </v-col>
+
+                <v-col cols="12" class="py-0">
+                  <v-btn @click="saveSettings" color="primary" depressed>
+                    <v-icon left>mdi-content-save</v-icon>
+                    Save
+                  </v-btn>
+                  <v-btn @click="saveSettings" color="secondary" depressed>
+                    <v-icon left>mdi-email-send</v-icon>
+                    Test
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+        </v-main>
+        <v-snackbar
+          v-model="snackbar.show"
+          :timeout="snackbar.timeout"
+          :color="snackbar.color"
+          dark
+        >
+          {{ snackbar.message }}
+          <template v-slot:action="{ attrs }">
+            <v-btn
+              text
+              v-bind="attrs"
+              @click="snackbar.show = false"
+              icon
+              small
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+      const FORM_DATA = {
+        mailman: {
+          value: null,
+          label: "Mailman Field",
+          items: [],
+          rules: [(v) => !!v || "This is required"],
+          icon: "",
+        },
+        subject: {
+          value: null,
+          label: "Subject",
+          rules: [(v) => !!v || "This is required"],
+          icon: "",
+        },
+        body: {
+          value: null,
+          label: "Body",
+          rules: [(v) => !!v || "This is required"],
+          icon: "",
+        },
+        cc: {
+          value: null,
+          label: "CC",
+          hint: "Comman separated email addresses",
+          icon: "",
+        },
+        bcc: {
+          value: null,
+          label: "BCC",
+          hint: "Comman separated email addresses",
+          icon: "",
+        },
+      };
+
+      function copyFormData(formData) {
+        const data = JSON.parse(JSON.stringify(formData));
+        Object.keys(formData).forEach((key) => {
+          if (formData[key].rules) data[key].rules = formData[key].rules;
+        });
+        return data;
+      }
+
+      function getFormData(formData) {
+        const data = {};
+        Object.entries(formData).forEach(
+          ([key, value]) => (data[key] = value.value)
+        );
+        return data;
+      }
+
+      function request(api, payload = {}) {
+        payload = JSON.stringify(payload);
+        return new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler((res) => resolve(JSON.parse(res)))
+            .withFailureHandler((err) => reject(err))
+            [api](payload);
+        });
+      }
+    </script>
+    <script>
+      const vuetify = new Vuetify({
+        theme: {
+          themes: {
+            light: {
+              primary: "#613CB0",
+              secondary: "#424242",
+              accent: "#82B1FF",
+              error: "#FF5252",
+              info: "#2196F3",
+              success: "#4CAF50",
+              warning: "#FFC107",
+            },
+          },
+        },
+      });
+      new Vue({
+        el: "#app",
+        vuetify,
+        data: () => ({
+          loading: false,
+          snackbar: {
+            message: "This is a demo message",
+            show: true,
+            color: "primary",
+            timeout: 5000,
+          },
+          settings: {},
+          emails: {},
+          formItems: [],
+          mailmanItems: [],
+          formData: copyFormData(FORM_DATA),
+        }),
+        computed: {},
+        methods: {
+          startLoading() {
+            this.loading = true;
+          },
+          showSnackbar(message, color = "error", timeout = 5000) {
+            this.snackbar = {
+              message,
+              color,
+              timeout,
+              show: true,
+            };
+            this.loading = false;
+          },
+          onMailmanChange() {
+            this.mailmanItems = this.formData.mailman.value.items
+              .sort()
+              .map((item) => ({ label: item, value: this.emails[item] }));
+          },
+          async saveSettings() {
+            if (!this.$refs.form.validate())
+              return this.showSnackbar("Form is invalid to submit!", "warning");
+            this.startLoading();
+            const settings = getFormData(this.formData);
+            const emails = {};
+            this.mailmanItems.forEach(
+              (item) => (emails[item.label] = item.value)
+            );
+            const payload = { settings, emails };
+            console.log(payload);
+            try {
+              await request("saveSettings", payload);
+              this.showSnackbar("Settings have been saved!", "success");
+            } catch (err) {
+              this.showSnackbar(err.message);
+            }
+          },
+        },
+        mounted() {
+          const divAppData = document.getElementById("app-data");
+          const appData = JSON.parse(divAppData.getAttribute("app-data"));
+          this.settings = appData.settings;
+          this.emails = appData.emails;
+          this.formItems = appData.formItems;
+
+          this.formData.mailman.items = this.formItems.filter(
+            (v) => v.value.items
+          );
+          this.formData.mailman.value = this.formItems.find(
+            (item) => item.value.id == this.settings.mailman.id
+          );
+          this.formData.subject.value = this.settings.subject;
+          this.formData.body.value = this.settings.body;
+          this.formData.cc.value = this.settings.cc;
+          this.formData.bcc.value = this.settings.bcc;
+          const placeholders = this.formItems.map((v) => `{{${v.text}}}`);
+
+          this.formData.subject.hint = `Available placeholders ${placeholders.join(
+            ", "
+          )}`;
+          this.formData.body.hint = `Available placeholders ${placeholders.join(
+            ", "
+          )}`;
+
+          this.onMailmanChange();
+        },
+      });
+    </script>
+  </body>
+</html>
