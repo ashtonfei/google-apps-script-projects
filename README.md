@@ -3,7 +3,7 @@
 ### Description
 
 My Google Apps Script projects shared on [:tv: YouTube](https://www.youtube.com/ashtonfei/), each branch is a project about the video. You can find the source code about the projects there, branch name is in the video title.
-[![GAS Cover](https://user-images.githubusercontent.com/16481229/135790079-39664e01-b878-4f2c-8f95-26ff1bb9cce8.png)](https://www.youtube.com/ashtonfei/)
+[![apps script projects](https://user-images.githubusercontent.com/16481229/175765202-28144ec2-dcf6-4a1a-a78f-8602be486dfd.jpeg)](https://www.youtube.com/ashtonfei/)
 
 ### All projects
 
