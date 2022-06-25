@@ -347,9 +347,11 @@
             this.formData.mailman.items = this.formItems.filter(
               (v) => v.value.items
             );
-            const mailman = appData.formItems.find(
-              (item) => item.value.id == appData.settings.mailman.id
-            );
+            const mailman = appData.settings.mailman
+              ? appData.formItems.find(
+                  (item) => item.value.id == appData.settings.mailman.id
+                )
+              : null;
             this.formData.mailman.value = mailman ? mailman.value : null;
             this.formData.subject.value = this.settings.subject;
             this.formData.body.value = this.settings.body;
