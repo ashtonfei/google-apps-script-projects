@@ -1,8 +1,3 @@
-const KEY = {
-  SETTINGS: "mailman.settings",
-  EMAILS: "mailman.emails",
-};
-
 class Form {
   constructor() {
     this.name = "💌 Mailman";
