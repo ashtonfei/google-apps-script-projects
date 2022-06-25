@@ -28,32 +28,42 @@
     <div class="d-none" id="app-data" app-data="<?= appData ?>"></div>
     <div id="app">
       <v-app>
+        <v-app-bar flat app class="mx-3" color="grey lighten-3">
+          <v-toolbar-title class="primary--text"> Mailman </v-toolbar-title>
+          <v-progress-linear
+            :active="loading"
+            :indeterminate="loading"
+            absolute
+            top
+            color="primary accent-1"
+          ></v-progress-linear>
+          <v-spacer></v-spacer>
+          <v-switch
+            v-model="enabled"
+            :label="enabled ? 'ON' : 'OFF'"
+            @change="toggleMailman"
+            dense
+            class="mt-0 px-3"
+            :color="enabled ? 'primary' : 'grey'"
+            :disabled="loading"
+            hide-details
+          ></v-switch>
+          <v-btn @click="saveSettings" color="primary" text :disabled="loading">
+            <v-icon left>mdi-content-save</v-icon>
+            Save
+          </v-btn>
+          <v-btn @click="sendTestEmail" color="error" text :disabled="loading">
+            <v-icon left>mdi-email-send</v-icon>
+            Test
+          </v-btn>
+          <v-btn color="primary" @click="refresh" text :disabled="loading">
+            <v-icon left>mdi-refresh</v-icon>
+            Refresh
+          </v-btn>
+        </v-app-bar>
         <v-main>
-          <v-container>
-            <v-progress-linear
-              indeterminate
-              color="primary darken-1"
-              v-if="loading"
-              app
-              class="mb-4"
-            ></v-progress-linear>
-            <v-form ref="toggle" :disabled="loading">
-              <v-row>
-                <v-col class="py-0" cols="4">
-                  <v-switch
-                    v-model="enabled"
-                    :label="enabled ? 'Mailman is on' : 'Mailman is off'"
-                    @change="toggleMailman"
-                    dense
-                    inset
-                    class="mt-1 mb-3"
-                    :color="enabled ? 'primary' : 'grey'"
-                    :disabled="loading"
-                  ></v-switch>
-                </v-col>
-              </v-row>
-            </v-form>
-            <v-form ref="form" :disabled="loading">
+          <v-container fluid>
+            <v-form ref="form" :disabled="loading" class="my-4">
               <v-row>
                 <v-col cols="12" class="py-0">
                   <v-autocomplete
@@ -71,20 +81,22 @@
                     persistent-hint
                   ></v-autocomplete>
                 </v-col>
-                <template v-if="formData.mailman.value && showEmails">
+                <template v-show="formData.mailman.value && showEmails">
                   <v-col
                     cols="6"
                     class="py-0"
                     v-for="(item, index) in mailmanItems"
                     :key="index"
+                    v-show="showEmails"
                   >
                     <v-text-field
                       v-model="item.value"
                       :label="item.label"
-                      :rules="[v => !!v || 'This is required']"
+                      :rules="[v => !!v || 'This is required', v => /^(\s?[^\s,]+@[^\s,]+\.[^\s,]+\s?,)*(\s?[^\s,]+@[^\s,]+\.[^\s,]+)$/g.test(v) || 'Invalid email address']"
                       dense
                       outlined
-                      background-color="primary lighten-5"
+                      background-color="warning lighten-5"
+                      hint="Comma separated email addresses"
                     >
                     </v-text-field>
                   </v-col>
@@ -103,7 +115,7 @@
                     @focus="showEmails=false"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" class="py-0">
+                <v-col cols="6" class="py-0">
                   <v-text-field
                     v-model="formData.cc.value"
                     :label="formData.cc.label"
@@ -116,7 +128,7 @@
                     @focus="showEmails=false"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" class="py-0">
+                <v-col cols="6" class="py-0">
                   <v-text-field
                     v-model="formData.bcc.value"
                     :label="formData.bcc.label"
@@ -144,27 +156,6 @@
                     @focus="showEmails=false"
                   ></v-textarea>
                 </v-col>
-
-                <v-col cols="12" class="py-0">
-                  <v-btn
-                    @click="saveSettings"
-                    color="primary"
-                    depressed
-                    :disabled="loading"
-                  >
-                    <v-icon left>mdi-content-save</v-icon>
-                    Save
-                  </v-btn>
-                  <v-btn
-                    @click="sendTestEmail"
-                    color="secondary"
-                    depressed
-                    :disabled="loading"
-                  >
-                    <v-icon left>mdi-email-send</v-icon>
-                    Test
-                  </v-btn>
-                </v-col>
               </v-row>
             </v-form>
           </v-container>
@@ -177,17 +168,43 @@
         >
           {{ snackbar.message }}
           <template v-slot:action="{ attrs }">
-            <v-btn
-              text
-              v-bind="attrs"
-              @click="snackbar.show = false"
-              icon
-              small
-            >
+            <v-btn text v-bind="attrs" @click="snackbar.show = false" icon>
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </template>
         </v-snackbar>
+        <v-footer app class="mx-3" color="grey lighten-3">
+          <small>
+            Copyright &copy; Ashton Fei {{new Date().getFullYear()}}
+          </small>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="red"
+            text
+            small
+            href="https://youtube.com/ashtonfei/"
+            target="_blank"
+            >YouTube</v-btn
+          >
+          <v-btn
+            color="blue"
+            text
+            small
+            href="https://twitter.com/ashton_fei/"
+            target="_blank"
+          >
+            Twitter
+          </v-btn>
+          <v-btn
+            color="primary"
+            text
+            small
+            href="https://youtube.com/ashtonfei/"
+            target="_blank"
+          >
+            HELP
+          </v-btn>
+        </v-footer>
       </v-app>
     </div>
 
@@ -217,13 +234,31 @@
         cc: {
           value: null,
           label: "CC",
-          hint: "Comman separated email addresses",
+          hint: "Comma separated email addresses",
+          rules: [
+            (v) =>
+              !v ||
+              (v &&
+                /^(\s?[^\s,]+@[^\s,]+\.[^\s,]+\s?,)*(\s?[^\s,]+@[^\s,]+\.[^\s,]+)$/.test(
+                  v
+                )) ||
+              "Invalid email address",
+          ],
           icon: "",
         },
         bcc: {
           value: null,
           label: "BCC",
-          hint: "Comman separated email addresses",
+          hint: "Comma separated email addresses",
+          rules: [
+            (v) =>
+              !v ||
+              (v &&
+                /^(\s?[^\s,]+@[^\s,]+\.[^\s,]+\s?,)*(\s?[^\s,]+@[^\s,]+\.[^\s,]+)$/.test(
+                  v
+                )) ||
+              "Invalid email address",
+          ],
           icon: "",
         },
       };
@@ -259,12 +294,12 @@
         theme: {
           themes: {
             light: {
-              primary: "#613CB0",
+              primary: "#479F2D",
               secondary: "#424242",
               accent: "#82B1FF",
               error: "#FF5252",
               info: "#2196F3",
-              success: "#4CAF50",
+              success: "#479F2D",
               warning: "#FFC107",
             },
           },
@@ -304,15 +339,45 @@
             };
             this.loading = false;
           },
+          loadAppData(appData) {
+            this.settings = appData.settings;
+            this.emails = appData.emails;
+            this.formItems = appData.formItems;
+            this.enabled = appData.enabled;
+            this.formData.mailman.items = this.formItems.filter(
+              (v) => v.value.items
+            );
+            const mailman = appData.formItems.find(
+              (item) => item.value.id == appData.settings.mailman.id
+            );
+            this.formData.mailman.value = mailman ? mailman.value : null;
+            this.formData.subject.value = this.settings.subject;
+            this.formData.body.value = this.settings.body;
+            this.formData.cc.value = this.settings.cc;
+            this.formData.bcc.value = this.settings.bcc;
+            const placeholders = this.formItems.map((v) => `{{${v.text}}}`);
+            this.formData.subject.hint = `Available placeholders ${placeholders.join(
+              ", "
+            )}`;
+            this.formData.body.hint = `Available placeholders ${placeholders.join(
+              ", "
+            )}`;
+            this.onMailmanChange();
+            this.showSnackbar("Settings have been loaded!", "primary");
+          },
           onMailmanChange() {
             this.mailmanItems = this.formData.mailman.value.items
               .sort()
               .map((item) => ({ label: item, value: this.emails[item] }));
             this.showEmails = true;
+            this.$refs.form.resetValidation();
           },
           async saveSettings() {
-            if (!this.$refs.form.validate())
-              return this.showSnackbar("Form is invalid to submit!", "warning");
+            this.showEmails = true;
+            const isFormValid = await this.$refs.form.validate();
+            if (!isFormValid) {
+              return this.showSnackbar("Form is invalid to submit!", "error");
+            }
             this.startLoading();
             const settings = getFormData(this.formData);
             const emails = {};
@@ -328,8 +393,11 @@
             }
           },
           async sendTestEmail() {
-            if (!this.$refs.form.validate())
-              return this.showSnackbar("Form is invalid to submit!", "warning");
+            this.showEmails = true;
+            const isFormValid = await this.$refs.form.validate();
+            if (!isFormValid) {
+              return this.showSnackbar("Form is invalid to submit!", "error");
+            }
             this.startLoading();
             const settings = getFormData(this.formData);
             const emails = {};
@@ -357,34 +425,21 @@
               this.showSnackbar(err.message, "error");
             }
           },
+          async refresh() {
+            this.startLoading();
+            try {
+              const appData = await request("getAppData");
+              this.loadAppData(appData);
+              this.showSnackbar("Settings have been refreshed!", "success");
+            } catch (err) {
+              this.showSnackbar(err.message, "error");
+            }
+          },
         },
         mounted() {
           const divAppData = document.getElementById("app-data");
           const appData = JSON.parse(divAppData.getAttribute("app-data"));
-          this.settings = appData.settings;
-          this.emails = appData.emails;
-          this.formItems = appData.formItems;
-          this.enabled = appData.enabled;
-          this.formData.mailman.items = this.formItems.filter(
-            (v) => v.value.items
-          );
-          const mailman = appData.formItems.find(
-            (item) => item.value.id == appData.settings.mailman.id
-          );
-          this.formData.mailman.value = mailman ? mailman.value : null;
-          this.formData.subject.value = this.settings.subject;
-          this.formData.body.value = this.settings.body;
-          this.formData.cc.value = this.settings.cc;
-          this.formData.bcc.value = this.settings.bcc;
-          const placeholders = this.formItems.map((v) => `{{${v.text}}}`);
-          this.formData.subject.hint = `Available placeholders ${placeholders.join(
-            ", "
-          )}`;
-          this.formData.body.hint = `Available placeholders ${placeholders.join(
-            ", "
-          )}`;
-          this.onMailmanChange();
-          this.showSnackbar("Settings have been loaded!", "primary");
+          this.loadAppData(appData);
         },
       });
     </script>

@@ -1,11 +1,3 @@
-const EMAILS = {
-  Abby: "yunjia.fei@gmail.com",
-  Boris: "gas.test.fei@gmail.com",
-  Chris: "yunjia.fei@gmail.com",
-  Dob: "gas.test.fei@gmail.com",
-  Ella: "yunjia.fei@gmail.com",
-};
-const DEFAULT_EMAIL = "yunjia.fei@gmail.com";
 const KEY = {
   SETTINGS: "mailman.settings",
   EMAILS: "mailman.emails",
@@ -18,6 +10,10 @@ class Form {
     this.form = FormApp.getActiveForm();
     this.props = PropertiesService.getUserProperties();
     this.user = Session.getActiveUser().getEmail();
+    this.key = {
+      settings: "mailman.settings",
+      emails: "mailman.emails",
+    };
   }
 
   getUi() {
@@ -152,7 +148,7 @@ class Form {
   }
 
   getSettings() {
-    const settings = this.props.getProperty(KEY.SETTINGS);
+    const settings = this.props.getProperty(this.key.settings);
     if (!settings)
       return {
         mailman: null,
@@ -165,7 +161,7 @@ class Form {
   }
 
   getEmails() {
-    const emails = this.props.getProperty(KEY.EMAILS);
+    const emails = this.props.getProperty(this.key.emails);
     if (!emails) return {};
     return JSON.parse(emails);
   }
@@ -179,28 +175,30 @@ class Form {
   }
 
   saveSettings({ settings, emails }) {
-    this.props.setProperty(KEY.SETTINGS, JSON.stringify(settings));
-    this.props.setProperty(KEY.EMAILS, JSON.stringify(emails));
+    this.props.setProperty(this.key.settings, JSON.stringify(settings));
+    this.props.setProperty(this.key.emails, JSON.stringify(emails));
     return { settings: this.getSettings(), emails: this.getEmails() };
+  }
+
+  getAppData() {
+    const appData = {
+      settings: this.getSettings(),
+      emails: this.getEmails(),
+      formItems: this.getFormItems(),
+      enabled: this.isMailmanEnabled(),
+    };
+    return appData;
   }
 
   openSettings() {
     const name = `Settings`;
-    const settings = this.getSettings();
-    const emails = this.getEmails();
-    const formItems = this.getFormItems();
     const template = HtmlService.createTemplateFromFile("settings.html");
-    template.appData = JSON.stringify({
-      settings,
-      emails,
-      formItems,
-      enabled: this.isMailmanEnabled(),
-    });
+    template.appData = JSON.stringify(this.getAppData());
     const ui = this.getUi();
     const userInterface = template
       .evaluate()
       .setTitle(name)
-      .setHeight(800)
+      .setHeight(700)
       .setWidth(600);
     ui.showDialog(userInterface);
   }
@@ -240,3 +238,4 @@ const openHelp = () => new Form().openHelp();
 
 const toggleMailman = (payload) =>
   new Form().toggleMailman(JSON.parse(payload));
+const getAppData = () => JSON.stringify(new Form().getAppData());
