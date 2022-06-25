@@ -24,7 +24,6 @@ class Form {
     const ui = FormApp.getUi();
     const menu = ui.createMenu(this.name);
     menu.addItem("Settings", "openSettings");
-    menu.addItem("Help", "openHelp");
     menu.addToUi();
   }
 
