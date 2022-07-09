@@ -7,6 +7,7 @@ My Google Apps Script projects shared on [:tv: YouTube](https://www.youtube.com/
 
 ### All projects
 
+- [GAS-095 Reservation System](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS095) - [:tv: YouTube](https://youtu.be/shy8W5Q4K38)
 - [GAS-094 Google Form Mailman](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS094) - [:tv: YouTube](https://youtu.be/Wqovh6QT77I)
 - [GAS-093 Google Calendar Watcher](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS093) - [:tv: YouTube](https://youtu.be/0-8aWeGDDq8)
 - [GAS-092 Send Google Tasks](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS092) - [:tv: YouTube](https://youtu.be/I3xQzMr6U-A)
