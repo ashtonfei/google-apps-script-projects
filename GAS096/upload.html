@@ -454,6 +454,7 @@
             const payload = {
               fileData: this.fileData,
               link: this.appData.link,
+              email: this.appData.email,
             };
             try {
               const { link } = await REQUEST("uploadFiles", payload);

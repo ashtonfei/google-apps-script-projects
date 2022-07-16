@@ -149,6 +149,7 @@
                         :items="formData.password.items"
                         :rules="formData.password.rules"
                         :hint="formData.password.hint"
+                        @input="formData.password.value = formData.password.value.replace(/\s+/g, '')"
                         persistent-hint
                         small-chips
                         filled

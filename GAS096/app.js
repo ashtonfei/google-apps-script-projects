@@ -111,6 +111,7 @@ utils.sendSharingLinks = function (payload) {
           : payload.validTo;
       payload.size =
         payload.size !== CONFIG.UNLIMITED ? `${payload.size} MB` : payload.size;
+      payload.password = payload.password || "NOT REQUIRED";
       Object.entries(payload).forEach(([key, value]) => {
         htmlBody = htmlBody.replace(new RegExp(`\{${key}\}`, "gi"), value);
       });
@@ -213,6 +214,7 @@ function createUploadPage_(id, email) {
     link,
     folder,
     errorMessage,
+    email,
   };
   return utils.createPage("upload.html", `Upload - ${CONFIG.NAME}`, appData);
 }
@@ -349,15 +351,20 @@ function updateSharingLinkTimesOfUploads_(id) {
 }
 
 function uploadFiles(payload) {
-  const { fileData, link } = JSON.parse(payload);
+  let { fileData, link, email } = JSON.parse(payload);
+  link = getSharingLinkDataById_(link.id, email);
+  let errorMessage = checkSharingLink_(link);
+  if (errorMessage) throw new Error(errorMessage);
   fileData.map(({ data, file }) => {
     return utils.createFile(data, file, link.folder);
   });
-  const updatedLink = updateSharingLinkTimesOfUploads_(link.id);
-  if (updatedLink.password) {
+  if (link.timesOfUploads !== CONFIG.UNLIMITED) {
+    link = updateSharingLinkTimesOfUploads_(link.id);
+  }
+  if (link.password) {
     delete updatedLink.password;
   }
   return JSON.stringify({
-    link: updatedLink,
+    link,
   });
 }
