@@ -328,11 +328,19 @@
             console.log(payload);
             try {
               const { link } = await REQUEST("createSharingLink", payload);
-              this.showAlert(
-                `Done! Here is the sharing <a href="${link}" target="_blank">link</a>.`,
-                "Success",
-                "success"
-              );
+              if (payload.emails.length) {
+                this.showAlert(
+                  `Sharing links have been created and sent to users!`,
+                  "Success",
+                  "success"
+                );
+              } else {
+                this.showAlert(
+                  `Sharing link has been created, click this <a href="${link}" target="_blank">link</a> to test!`,
+                  "Success",
+                  "success"
+                );
+              }
             } catch (err) {
               this.showAlert(err.message, "Error");
             }

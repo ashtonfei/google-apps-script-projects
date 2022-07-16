@@ -93,20 +93,30 @@ utils.createFile = function (data, file, folderId) {
 };
 
 utils.sendSharingLinks = function (payload) {
-  const { link, emails, folder, createdBy } = payload;
+  payload = JSON.parse(JSON.stringify(payload));
+  const { link, emails, folder } = payload;
   const shareFolder = DriveApp.getFolderById(folder);
   emails.forEach((email) => {
     const url = `${link}&email=${email}`;
+    const shareFolderName = shareFolder.getName();
     try {
-      const subject = `You've been Shared to Folder "${shareFolder.getName()}" - ${
-        CONFIG.NAME
-      }`;
-      const htmlBody = `
-        <p>${createdBy} is sharing the folder ${shareFolder.getName()} with you.</p>
-        <p><a href="${url}" target="_blank">Upload Link</a></p>
-      `;
+      const subject = `You've been Shared to Folder "${shareFolderName}" - ${CONFIG.NAME}`;
+      let htmlBody =
+        HtmlService.createHtmlOutputFromFile("email.html").getContent();
+      payload.url = url;
+      payload.shareFolderName = shareFolderName;
+      payload.validTo =
+        payload.validTo !== CONFIG.UNLIMITED
+          ? new Date(payload.validTo).toLocaleString()
+          : payload.validTo;
+      payload.size =
+        payload.size !== CONFIG.UNLIMITED ? `${payload.size}MB` : payload.size;
+      Object.entries(payload).forEach(([key, value]) => {
+        htmlBody = htmlBody.replace(new RegExp(`\{${key}\}`, "gi"), value);
+      });
       GmailApp.sendEmail(email, subject, "", { htmlBody });
     } catch (err) {
+      console.log(err);
       //pass
     }
   });
