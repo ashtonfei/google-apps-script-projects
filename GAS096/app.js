@@ -110,7 +110,7 @@ utils.sendSharingLinks = function (payload) {
           ? new Date(payload.validTo).toLocaleString()
           : payload.validTo;
       payload.size =
-        payload.size !== CONFIG.UNLIMITED ? `${payload.size}MB` : payload.size;
+        payload.size !== CONFIG.UNLIMITED ? `${payload.size} MB` : payload.size;
       Object.entries(payload).forEach(([key, value]) => {
         htmlBody = htmlBody.replace(new RegExp(`\{${key}\}`, "gi"), value);
       });
