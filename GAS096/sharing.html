@@ -325,6 +325,7 @@
             if (!this.$refs.form.validate()) return;
             this.startLoading();
             const payload = GET_FORM_DATA_VALUES(this.formData);
+            payload.emails = payload.emails ? payload.emails : [];
             payload.folder = payload.folder.id;
             console.log(payload);
             try {
