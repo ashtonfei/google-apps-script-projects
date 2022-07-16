@@ -108,6 +108,7 @@
                           <v-sheet
                             :color="`grey lighten-5`"
                             class="pa-3 d-flex justify-center"
+                            type="button"
                             @click="openFileDialog"
                             @dragover="dragover"
                             @dragleave="dragleave"
@@ -303,13 +304,14 @@
               requirePassword: false,
               size: 20,
               timesOfUploads: 10,
-              validTo: new Date("2021-01-01").toISOString(),
+              validTo: new Date("2023-01-01").toISOString(),
             },
             errorMessage: false,
             folder: {
               name: "Share Folder Demo",
               lastUpdated: new Date().toISOString(),
             },
+            email: "ashton.fei@test.com",
           },
           password: null,
           files: [],
@@ -456,6 +458,7 @@
               link: this.appData.link,
               email: this.appData.email,
             };
+            console.log(payload);
             try {
               const { link } = await REQUEST("uploadFiles", payload);
               this.appData.link = link;

@@ -267,6 +267,7 @@ function createSharingLink(payload) {
       : payload.validTo;
   utils.sendSharingLinks(payload);
   payload.emails = payload.emails.join(",");
+  payload.status = `=IF(R[0]C[-4]<NOW(),"Inactive",IF(R[0]C[-2]<=0,"Inactive","Active"))`;
   const ss = SpreadsheetApp.getActive();
   const ws = ss.getSheetByName(CONFIG.SHEET_NAME.SHARING_LINKS);
   const headers = ws.getDataRange().getValues()[0];
@@ -352,8 +353,8 @@ function updateSharingLinkTimesOfUploads_(id) {
 
 function uploadFiles(payload) {
   let { fileData, link, email } = JSON.parse(payload);
-  link = getSharingLinkDataById_(link.id, email);
-  let errorMessage = checkSharingLink_(link);
+  link = getSharingLinkDataById_(link.id);
+  let errorMessage = checkSharingLink_(link, email);
   if (errorMessage) throw new Error(errorMessage);
   fileData.map(({ data, file }) => {
     return utils.createFile(data, file, link.folder);
@@ -362,7 +363,7 @@ function uploadFiles(payload) {
     link = updateSharingLinkTimesOfUploads_(link.id);
   }
   if (link.password) {
-    delete updatedLink.password;
+    delete link.password;
   }
   return JSON.stringify({
     link,
