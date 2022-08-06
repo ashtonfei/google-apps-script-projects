@@ -7,6 +7,8 @@ My Google Apps Script projects shared on [:tv: YouTube](https://www.youtube.com/
 
 ### All projects
 
+- [GAS-097 Multiple Select in Google Sheets](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS097) - [:tv: YouTube](https://youtu.be/et_yAekJDf0)
+- [GAS-096 Drive Folder Sharing App](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS096) - [:tv: YouTube](https://youtu.be/UUdiIwLR5ZE)
 - [GAS-095 Reservation System](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS095) - [:tv: YouTube](https://youtu.be/9W_Y79sN1s0)
 - [GAS-094 Google Form Mailman](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS094) - [:tv: YouTube](https://youtu.be/Wqovh6QT77I)
 - [GAS-093 Google Calendar Watcher](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS093) - [:tv: YouTube](https://youtu.be/0-8aWeGDDq8)
