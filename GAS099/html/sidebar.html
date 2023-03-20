@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <style>
+      html {
+        overflow: auto;
+      }
+      .scroll-container-app {
+        overflow-y: auto;
+        height: calc(100vh - 32px) !important;
+      }
+
+      .scroll-container-home {
+        overflow-y: auto;
+        max-height: calc(100vh - 128px) !important;
+      }
+
+      .scroll-container {
+        overflow-y: auto;
+        max-height: calc(100vh - 80px) !important;
+      }
+
+      .menu-left {
+        left: 15px !important;
+      }
+
+      .menu-center {
+        left: 80px !important;
+      }
+
+      .menu-right {
+        right: 10px !important;
+      }
+
+      .v-tooltip__content {
+        padding: 2px 2px;
+        max-width: 80px;
+        text-align: center;
+        font-size: 0.7rem;
+        line-height: 1rem;
+      }
+
+      iframe {
+        display: block;
+        border: none;
+        height: 100%;
+        width: 100%;
+      }
+
+      [v-cloak] {
+        display: block;
+        padding: 50px 0;
+      }
+
+      @keyframes spinner {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      [v-cloak]:before {
+        content: "";
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        margin-top: -25px;
+        margin-left: -25px;
+        border-radius: 50%;
+        border: 5px solid #ffffff;
+        border-top-color: #ffffff;
+        animation: spinner 0.8s linear infinite;
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      [v-cloak] > * {
+        display: none;
+      }
+      .v-toolbar__content {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app" v-cloak>
+      <v-app v-if="created">
+        <v-container>
+          <v-row
+            class="pt-2 scroll-container-app"
+            align-content="center"
+            justify="center"
+          >
+            <v-col cols="10" class="text-center">
+              <v-progress-circular
+                color="primary"
+                indeterminate
+                :width="5"
+                :size="50"
+              ></v-progress-circular>
+            </v-col>
+            <v-col
+              class="font-weight-bold caption py-0 text-center primary--text"
+              cols="11"
+            >
+              Loading
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-app>
+      <v-app v-else>
+        <v-app-bar v-if="created === false" dark flat app class="primary" dense>
+          <v-progress-linear
+            v-if="loading"
+            indeterminate
+            absolute
+            bottom
+            color="primary lighten-4"
+          ></v-progress-linear>
+          <v-appbar-title>
+            <v-icon left>mdi-radar</v-icon>
+            {{appData.name}}
+          </v-appbar-title>
+          <v-spacer></v-spacer>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                small
+                icon
+                v-bind="attrs"
+                v-on="on"
+                class="mx-1"
+                @click="onRefresh"
+              >
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
+            </template>
+            <span>Refresh Sidebar</span>
+          </v-tooltip>
+        </v-app-bar>
+        <v-main>
+          <v-container>
+            <v-row>
+              <v-col cols="12" class="caption pb-0">
+                You can turn on the switch for the calendar that you want to use
+                for your personal time track.
+              </v-col>
+              <v-col
+                cols="12"
+                v-for="calendar in appData.calendars"
+                :key="calendar.id"
+                class="py-0"
+              >
+                <v-switch
+                  dense
+                  inset
+                  v-model="calendar.on"
+                  :label="calendar.name"
+                  :disabled="loading"
+                  hide-details
+                  :color="calendar.color"
+                  @change="onAddToTracker"
+                >
+                </v-switch>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-main>
+        <v-footer app class="caption" v-if="created === false">
+          Ashton Fei | {{ new Date().getFullYear() }}
+          <v-spacer></v-spacer>
+          <a target="_blank" href="https://youtube.com/@ashtonfei" class="mx-1">
+            YouTube
+          </a>
+          <a target="_blank" href="https://youtube.com/@ashtonfei"> Twitter </a>
+        </v-footer>
+        <v-snackbar
+          v-model="snackbar.show"
+          :timeout="snackbar.timeout || 5000"
+          :color="snackbar.color || 'primary'"
+          min-width="290px"
+          class="mb-7"
+          tile
+        >
+          {{ snackbar.message }}
+          <template v-slot:action="{ attrs }">
+            <v-btn
+              v-bind="attrs"
+              @click="snackbar.show = false"
+              v-show="snackbar.timeout !== -1"
+              small
+              icon
+            >
+              <v-icon small> mdi-close </v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
+    <script>
+      const DEBUG = typeof google === "undefined" ? true : false;
+      const apiCall = function (api, payload = null) {
+        if (typeof payload === "object" && payload) {
+          payload = JSON.stringify(payload);
+        }
+        return new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler((res) => resolve(JSON.parse(res)))
+            .withFailureHandler((err) => reject(err))
+            [api](payload);
+        });
+      };
+
+      const debounce = (fn, delay) => {
+        let timeoutID = null;
+        return function () {
+          clearTimeout(timeoutID);
+          var args = arguments;
+          var that = this;
+          timeoutID = setTimeout(function () {
+            fn.apply(that, args);
+          }, delay);
+        };
+      };
+
+      const opts = {
+        theme: {
+          themes: {
+            light: {
+              primary: "#4DA953",
+              greyish: "#F5F5F5",
+              secondary: "#424242",
+              accent: "#82B1FF",
+              error: "#FF5252",
+              info: "#2196F3",
+              success: "#4CAF50",
+              warning: "#FFC107",
+            },
+          },
+        },
+      };
+      const vuetify = new Vuetify(opts);
+
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data: () => ({
+          created: true,
+          loading: false,
+          dialog: {
+            show: false,
+            title: "Dialog",
+            conetnt: "Dialog Content",
+            color: "primary",
+            btnYes: null,
+            btnNo: null,
+          },
+          snackbar: {
+            show: false,
+            content: "Sanckbar",
+            color: "primary",
+            timeout: 5000,
+          },
+          rules: {
+            required: (v) => !!v || "This is required",
+            isSpreadsheetUrl: (v) =>
+              v.startsWith("https://docs.google.com/spreadsheets/d/") ||
+              "Invalid Spreadsheet URL",
+          },
+          appData: DEBUG
+            ? {
+                name: "Tracker",
+                calendars: [
+                  {
+                    id: 1,
+                    name: "Calendar A",
+                    color: "#22F222",
+                    on: true,
+                    triggerId: 123,
+                  },
+                  { id: 2, name: "Calendar B", color: "#FF2222", on: false },
+                  { id: 3, name: "Calendar C", color: "#2222FF", on: false },
+                ],
+              }
+            : {},
+        }),
+        computed: {},
+        methods: {
+          startLoading() {
+            this.loading = true;
+          },
+          stopLoading() {
+            this.loading = false;
+          },
+          showDialog(
+            content,
+            title,
+            color = "primary",
+            btnYes = null,
+            btnNo = null
+          ) {
+            this.dialog = {
+              show: true,
+              title,
+              content,
+              color,
+              btnYes,
+              btnNo,
+            };
+            this.loading = false;
+          },
+          closeDialog() {
+            this.dialog.show = false;
+          },
+          showSnackbar(message, color = "primary", timeout = 5000) {
+            if (color === "error" && message.includes(":")) {
+              message = message.split(/\:\s*/).slice(1).join("");
+            }
+            this.snackbar = {
+              show: true,
+              message,
+              color,
+              timeout,
+            };
+            this.loading = false;
+          },
+          closeSnackbar() {
+            this.snackbar.show = false;
+          },
+          getPayload() {
+            const payload = {};
+            Object.keys(this.formData).forEach((key) => {
+              payload[key] = this.formData[key].value;
+            });
+            return payload;
+          },
+          isAnyCalendarOn() {
+            return this.appData.calendars.some((v) => v.on);
+          },
+          isAnyTriggerOn() {
+            return this.appData.calendars.some((v) => v.triggerId);
+          },
+          async onAddToTracker() {
+            const payload = {
+              calendars: this.appData.calendars
+                .filter((v) => v.on)
+                .map((v) => v.id),
+            };
+            this.startLoading();
+            try {
+              this.appData = await apiCall("apiAddToTracker", payload);
+              this.stopLoading();
+            } catch (error) {
+              this.showSnackbar(error.message, "error");
+            }
+          },
+          async onRefresh() {
+            this.startLoading();
+            try {
+              this.appData = await apiCall("apiGetAppData");
+              this.stopLoading();
+            } catch (error) {
+              this.showSnackbar(error.message, "error");
+            }
+          },
+        },
+        async created() {
+          try {
+            this.startLoading();
+            this.appData = await apiCall("apiGetAppData");
+            this.created = false;
+            this.stopLoading();
+          } catch (err) {
+            this.created = false;
+            this.showSnackbar(err.message, "error");
+          }
+        },
+      });
+    </script>
+  </body>
+</html>
