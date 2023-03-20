@@ -23,12 +23,12 @@ const CONFIG = {
     { text: "ID", key: "id" },
     { text: "Title", key: "summary" },
     { text: "Status", key: "status" },
-    { text: "Organizer", key: "organizer.displayName" },
+    { text: "Calendar", key: "calendarName" },
     { text: "Creator", key: "creator.email" },
     { text: "Updated", key: "updated", format: (v) => new Date(v) },
     { text: "Start Time", key: "start.dateTime", format: (v) => new Date(v) },
     { text: "End Time", key: "end.dateTime", format: (v) => new Date(v) },
-    { text: "Days", key: "days", formula: "=(RC[-2]-RC[-1])" },
+    { text: "Days", key: "days", formula: "=RC[-1]-RC[-2]" },
     { text: "Hours", key: "hours", formula: "=RC[-1]*24" },
     { text: "Minutes", key: "minutes", formula: "=RC[-1]*60" },
     { text: "Link", key: "htmlLink" },
@@ -36,6 +36,7 @@ const CONFIG = {
 };
 
 const saveEventToSheet_ = (event) => {
+  console.log(event);
   if (!event) return console.info(`No event ${event}`);
   const sheet = _getSheetById_(CONFIG.GID.EVENTS);
   if (!sheet) {
@@ -47,7 +48,7 @@ const saveEventToSheet_ = (event) => {
   const formulas = CONFIG.HEADERS.map((v) => v.formula);
 
   const values = keys.map((key, index) => {
-    const formula = formulas[i];
+    const formula = formulas[index];
     if (formula) return formula;
     const value = _getNestedValueFromObject_(event, key);
     const format = formats[index];
@@ -73,15 +74,21 @@ const onCalendarUpdate_ = (e) => {
   }
   const res = _getLastestEvent_(calendarId, syncToken);
   const metaData = {
-    tirggerId: triggerUid,
+    triggerId: triggerUid,
     syncToken: res.nextSyncToken,
   };
   props.setProperty(calendarId, JSON.stringify(metaData));
+  if (res.event) {
+    res.event.calendarName = CalendarApp.getCalendarById(calendarId).getName();
+  }
   saveEventToSheet_(res.event);
 };
 
 const getMyCalendars_ = () => {
   const props = PropertiesService.getUserProperties();
+  const triggerIds = ScriptApp.getProjectTriggers().map((trigger) =>
+    trigger.getUniqueId()
+  );
   return CalendarApp.getAllOwnedCalendars().map((calendar) => {
     const id = calendar.getId();
     let data = props.getProperty(id);
@@ -90,7 +97,9 @@ const getMyCalendars_ = () => {
     } else {
       data = {};
     }
-    const triggerId = data.triggerId;
+    const triggerId = triggerIds.includes(data.triggerId)
+      ? data.triggerId
+      : null;
     return {
       id,
       name: calendar.getName(),
