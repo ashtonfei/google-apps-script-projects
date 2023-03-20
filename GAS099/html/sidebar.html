@@ -161,7 +161,7 @@
         </v-app-bar>
         <v-main>
           <v-container>
-            <v-row>
+            <v-row class="scroll-container">
               <v-col cols="12" class="caption pb-0">
                 You can turn on the switch for the calendar that you want to use
                 for your personal time track.
@@ -180,9 +180,33 @@
                   :disabled="loading"
                   hide-details
                   :color="calendar.color"
-                  @change="onAddToTracker"
                 >
                 </v-switch>
+              </v-col>
+              <v-col cols="12" class="py-4">
+                <v-btn
+                  text
+                  small
+                  block
+                  :disabled="loading"
+                  v-if="isAnyCalendarOn()"
+                  @click="onAddToTracker"
+                  color="primary"
+                >
+                  <v-icon small left>mdi-clock-plus</v-icon>
+                  Add To Tracker
+                </v-btn>
+                <v-btn
+                  text
+                  small
+                  block
+                  :disabled="loading"
+                  v-if="isAnyTriggerOn()"
+                  @click="onDisableAllCalendars"
+                >
+                  <v-icon small left>mdi-clock-remove</v-icon>
+                  Disable All Calendars
+                </v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -373,6 +397,20 @@
             this.startLoading();
             try {
               this.appData = await apiCall("apiAddToTracker", payload);
+              this.stopLoading();
+            } catch (error) {
+              this.showSnackbar(error.message, "error");
+            }
+          },
+          async onDisableAllCalendars() {
+            const payload = {
+              calendars: this.appData.calendars
+                .filter((v) => v.triggerId)
+                .map((v) => v.id),
+            };
+            this.startLoading();
+            try {
+              this.appData = await apiCall("apiDisableAllCalendars", payload);
               this.stopLoading();
             } catch (error) {
               this.showSnackbar(error.message, "error");

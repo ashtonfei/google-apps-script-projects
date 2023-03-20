@@ -16,24 +16,81 @@ const CONFIG = {
     SETTINGS: 0,
     EVENTS: 1198467070,
   },
+  PREFIX: {
+    CALENDAR: "CAL",
+  },
+  HEADERS: [
+    { text: "ID", key: "id" },
+    { text: "Title", key: "summary" },
+    { text: "Status", key: "status" },
+    { text: "Organizer", key: "organizer.displayName" },
+    { text: "Creator", key: "creator.email" },
+    { text: "Updated", key: "updated", format: (v) => new Date(v) },
+    { text: "Start Time", key: "start.dateTime", format: (v) => new Date(v) },
+    { text: "End Time", key: "end.dateTime", format: (v) => new Date(v) },
+    { text: "Days", key: "days", formula: "=(RC[-2]-RC[-1])" },
+    { text: "Hours", key: "hours", formula: "=RC[-1]*24" },
+    { text: "Minutes", key: "minutes", formula: "=RC[-1]*60" },
+    { text: "Link", key: "htmlLink" },
+  ],
+};
+
+const saveEventToSheet_ = (event) => {
+  if (!event) return console.info(`No event ${event}`);
+  const sheet = _getSheetById_(CONFIG.GID.EVENTS);
+  if (!sheet) {
+    return console.info(`Sheet with GID ${CONFIG.GID.EVENTS} was not found.`);
+  }
+  const headers = CONFIG.HEADERS.map((v) => v.text);
+  const keys = CONFIG.HEADERS.map((v) => v.key);
+  const formats = CONFIG.HEADERS.map((v) => v.format);
+  const formulas = CONFIG.HEADERS.map((v) => v.formula);
+
+  const values = keys.map((key, index) => {
+    const formula = formulas[i];
+    if (formula) return formula;
+    const value = _getNestedValueFromObject_(event, key);
+    const format = formats[index];
+    if (!format) return value;
+    return format(value);
+  });
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  sheet.insertRowBefore(2);
+  sheet.getRange(2, 1, 1, values.length).setValues([values]);
+  sheet.getDataRange().removeDuplicates([1]);
 };
 
 const onCalendarUpdate_ = (e) => {
-  console.log(e);
+  const { calendarId, triggerUid } = e;
+  const props = PropertiesService.getUserProperties();
+  const data = props.getProperty(calendarId);
+  if (!data) {
+    return console.info(`No data for calendar ${calendarId}`);
+  }
+  const { syncToken } = JSON.parse(data);
+  if (!syncToken) {
+    return console.info(`No sync token for calendar ${calendarId}`);
+  }
+  const res = _getLastestEvent_(calendarId, syncToken);
+  const metaData = {
+    tirggerId: triggerUid,
+    syncToken: res.nextSyncToken,
+  };
+  props.setProperty(calendarId, JSON.stringify(metaData));
+  saveEventToSheet_(res.event);
 };
 
 const getMyCalendars_ = () => {
   const props = PropertiesService.getUserProperties();
-  let appData = props.getProperty(CONFIG.KEY.APP_DATA);
-  if (appData) {
-    appData = JSON.parse(appData);
-  } else {
-    appData = {};
-  }
-
   return CalendarApp.getAllOwnedCalendars().map((calendar) => {
     const id = calendar.getId();
-    const triggerId = appData[id]?.triggerId;
+    let data = props.getProperty(id);
+    if (data) {
+      data = JSON.parse(data);
+    } else {
+      data = {};
+    }
+    const triggerId = data.triggerId;
     return {
       id,
       name: calendar.getName(),
@@ -88,16 +145,26 @@ const apiAddToTracker = (payload) => {
     throw new Error("No calendars in the request.");
   }
   deleteAllTriggers_();
-  const data = {};
+  const props = PropertiesService.getUserProperties();
   const functionName = CONFIG.TRIGGER.CALENDAR;
-  calendars.forEach((id) => {
+  calendars.forEach((calendarId) => {
     const trigger = ScriptApp.newTrigger(functionName)
-      .forUserCalendar(id)
+      .forUserCalendar(calendarId)
       .onEventUpdated()
       .create();
-    data[id] = { triggerId: trigger.getUniqueId() };
+    const data = {
+      triggerId: trigger.getUniqueId(),
+      syncToken: _getNextSyncToken_(calendarId),
+    };
+    props.setProperty(calendarId, JSON.stringify(data));
   });
+  return apiGetAppData();
+};
+
+const apiDisableAllCalendars = (payload) => {
+  const { calendars } = JSON.parse(payload);
+  deleteAllTriggers_();
   const props = PropertiesService.getUserProperties();
-  props.setProperty(CONFIG.KEY.APP_DATA, JSON.stringify(data));
+  calendars.forEach((calendar) => props.deleteProperty(calendar));
   return apiGetAppData();
 };

@@ -41,3 +41,20 @@ function _getSettings_(sheetId = 0) {
     });
   return settings;
 }
+
+function _getNestedValueFromObject_(item, path) {
+  path.split(".").forEach((k) => (item = item?.[k]));
+  return item;
+}
+
+function _getNextSyncToken_(id) {
+  return Calendar.Events.list(id, { maxResult: 1 }).nextSyncToken;
+}
+
+function _getLastestEvent_(id, syncToken) {
+  const res = Calendar.Events.list(id, { syncToken });
+  return {
+    nextSyncToken: res.nextSyncToken,
+    event: res.items[0],
+  };
+}
