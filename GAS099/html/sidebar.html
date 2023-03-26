@@ -159,9 +159,9 @@
             <span>Refresh Sidebar</span>
           </v-tooltip>
         </v-app-bar>
-        <v-main>
-          <v-container>
-            <v-row class="scroll-container">
+        <v-main app>
+          <v-container class="">
+            <v-row>
               <v-col cols="12" class="caption pb-0">
                 You can turn on the switch for the calendar that you want to use
                 for your personal time track.
@@ -183,48 +183,95 @@
                 >
                 </v-switch>
               </v-col>
-              <v-col cols="12" class="py-4">
-                <v-btn
-                  text
-                  small
-                  block
+              <v-col cols="12" class="caption pb-0">
+                You can turn on the switch for sending the dashboard report
+                automatically.
+              </v-col>
+              <v-col cols="12" class="py-0">
+                <v-switch
+                  dense
+                  inset
+                  v-model="appData.isWeeklyOn"
+                  label="Weekly"
                   :disabled="loading"
-                  v-if="isAnyCalendarOn()"
-                  @click="onAddToTracker"
-                  color="primary"
+                  hide-details
                 >
-                  <v-icon small left>mdi-clock-plus</v-icon>
-                  Add To Tracker
-                </v-btn>
-                <v-btn
-                  text
-                  small
-                  block
+                </v-switch>
+              </v-col>
+              <v-col cols="12" class="py-0">
+                <v-switch
+                  dense
+                  inset
+                  v-model="appData.isMonthlyOn"
+                  label="Monthly"
                   :disabled="loading"
-                  v-if="isAnyTriggerOn()"
-                  @click="onDisableAllCalendars"
+                  hide-details
                 >
-                  <v-icon small left>mdi-clock-remove</v-icon>
-                  Disable All Calendars
-                </v-btn>
+                </v-switch>
+              </v-col>
+              <v-col cols="12" class="py-0">
+                <v-switch
+                  dense
+                  inset
+                  v-model="appData.isYearlyOn"
+                  label="Yearly"
+                  :disabled="loading"
+                  hide-details
+                >
+                </v-switch>
               </v-col>
             </v-row>
           </v-container>
         </v-main>
-        <v-footer app class="caption" v-if="created === false">
-          Ashton Fei | {{ new Date().getFullYear() }}
-          <v-spacer></v-spacer>
-          <a target="_blank" href="https://youtube.com/@ashtonfei" class="mx-1">
-            YouTube
-          </a>
-          <a target="_blank" href="https://youtube.com/@ashtonfei"> Twitter </a>
+        <v-footer app class="caption d-block" v-if="created === false" padless>
+          <v-row class="white lighten-2 mx-0 d-block">
+            <v-col cols="12">
+              <v-btn
+                block
+                text
+                :disabled="loading"
+                v-show="isAnyCalendarOn()"
+                @click="onAddToTracker"
+                color="primary"
+                class="mb-2"
+              >
+                <v-icon small left>mdi-content-save</v-icon>
+                Save Changes
+              </v-btn>
+              <v-btn
+                block
+                text
+                :disabled="loading"
+                v-show="isAnyTriggerOn()"
+                @click="onDisableAllCalendars"
+              >
+                <v-icon small left>mdi-restore</v-icon>
+                Reset
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row class="pa-2 pt-0">
+            <v-col cols="12" class="d-flex">
+              Ashton Fei | {{ new Date().getFullYear() }}
+              <v-spacer></v-spacer>
+              <a
+                target="_blank"
+                href="https://youtube.com/@ashtonfei"
+                class="mx-1"
+              >
+                YouTube
+              </a>
+              <a target="_blank" href="https://youtube.com/@ashtonfei">
+                Twitter
+              </a>
+            </v-col>
+          </v-row>
         </v-footer>
         <v-snackbar
           v-model="snackbar.show"
           :timeout="snackbar.timeout || 5000"
           :color="snackbar.color || 'primary'"
           min-width="290px"
-          class="mb-7"
           tile
         >
           {{ snackbar.message }}
@@ -329,6 +376,9 @@
                   { id: 2, name: "Calendar B", color: "#FF2222", on: false },
                   { id: 3, name: "Calendar C", color: "#2222FF", on: false },
                 ],
+                isWeeklyOn: true,
+                isMonthlyOn: true,
+                isYearlyOn: true,
               }
             : {},
         }),
@@ -383,16 +433,29 @@
             return payload;
           },
           isAnyCalendarOn() {
-            return this.appData.calendars.some((v) => v.on);
+            return (
+              this.appData.isWeeklyOn ||
+              this.appData.isMonthlyOn ||
+              this.appData.isYearlyOn ||
+              this.appData.calendars.some((v) => v.on)
+            );
           },
           isAnyTriggerOn() {
-            return this.appData.calendars.some((v) => v.triggerId);
+            return (
+              this.appData.isWeeklyOn ||
+              this.appData.isMonthlyOn ||
+              this.appData.isYearlyOn ||
+              this.appData.calendars.some((v) => v.triggerId)
+            );
           },
           async onAddToTracker() {
             const payload = {
               calendars: this.appData.calendars
                 .filter((v) => v.on)
                 .map((v) => v.id),
+              isWeeklyOn: this.appData.isWeeklyOn,
+              isMonthlyOn: this.appData.isMonthlyOn,
+              isYearlyOn: this.appData.isYearlyOn,
             };
             this.startLoading();
             try {

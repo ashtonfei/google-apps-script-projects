@@ -1,13 +1,20 @@
 const CONFIG = {
   NAME: "GAS099",
   MENU: {
-    OPEN_SIDEBAR: {
-      CAPTION: "Open sidebar",
-      ACTION: "openSidebar",
+    LANCH_SIDEBAR: {
+      CAPTION: "Launch",
+      ACTION: "actionLanchSidebar",
+    },
+    SEND_REPORT: {
+      CAPTION: "Send report",
+      ACTION: "actionSendReport",
     },
   },
   TRIGGER: {
     CALENDAR: "triggerCalendarUpdate",
+    WEEKLY: "triggerWeeklyReport",
+    MONTHLY: "triggerMonthlyReport",
+    YEAERLY: "triggerYearlyReport",
   },
   KEY: {
     APP_DATA: "app-data-gas-ashtonfei",
@@ -36,11 +43,11 @@ const CONFIG = {
 };
 
 const saveEventToSheet_ = (event) => {
-  console.log(event);
+  const { gidEvents } = _getSettings_();
   if (!event) return console.info(`No event ${event}`);
-  const sheet = _getSheetById_(CONFIG.GID.EVENTS);
+  const sheet = _getSheetById_(gidEvents);
   if (!sheet) {
-    return console.info(`Sheet with GID ${CONFIG.GID.EVENTS} was not found.`);
+    return console.info(`Sheet with GID ${gidEvents} was not found.`);
   }
   const headers = CONFIG.HEADERS.map((v) => v.text);
   const keys = CONFIG.HEADERS.map((v) => v.key);
@@ -112,68 +119,172 @@ const getMyCalendars_ = () => {
 };
 
 const deleteAllTriggers_ = () => {
+  const functions = [
+    CONFIG.TRIGGER.CALENDAR,
+    CONFIG.TRIGGER.WEEKLY,
+    CONFIG.TRIGGER.MONTHLY,
+    CONFIG.TRIGGER.YEAERLY,
+  ];
   ScriptApp.getProjectTriggers().forEach((trigger) => {
-    if (trigger.getHandlerFunction() !== CONFIG.TRIGGER.CALENDAR) {
-      return;
+    const triggerName = trigger.getHandlerFunction();
+    if (functions.includes(triggerName)) {
+      ScriptApp.deleteTrigger(trigger);
     }
-    ScriptApp.deleteTrigger(trigger);
   });
 };
 
-const onOpen = () => {
-  const name = _getSettings_()?.name || CONFIG.NAME;
-  const ui = _getUi_();
-  const menu = ui.createMenu(name);
-  menu.addItem(
-    CONFIG.MENU.OPEN_SIDEBAR.CAPTION,
-    CONFIG.MENU.OPEN_SIDEBAR.ACTION
-  );
-  menu.addToUi();
-};
-
-const openSidebar = () => {
-  const settings = _getSettings_();
-  const title = settings.name || CONFIG.NAME;
+const openSidebar_ = () => {
+  const { appName } = _getSettings_();
+  const title = appName || CONFIG.NAME;
   const template = HtmlService.createTemplateFromFile("html/sidebar.html");
   const sidebar = template.evaluate().setTitle(title);
   SpreadsheetApp.getUi().showSidebar(sidebar);
 };
-const triggerCalendarUpdate = (e) => onCalendarUpdate_(e);
 
-const apiGetAppData = () => {
-  const data = {
-    ..._getSettings_(),
-    calendars: getMyCalendars_(),
-  };
-  return JSON.stringify(data);
-};
-
-const apiAddToTracker = (payload) => {
-  const { calendars } = JSON.parse(payload);
-  if (!calendars) {
-    throw new Error("No calendars in the request.");
-  }
-  deleteAllTriggers_();
-  const props = PropertiesService.getUserProperties();
-  const functionName = CONFIG.TRIGGER.CALENDAR;
-  calendars.forEach((calendarId) => {
-    const trigger = ScriptApp.newTrigger(functionName)
-      .forUserCalendar(calendarId)
-      .onEventUpdated()
-      .create();
-    const data = {
-      triggerId: trigger.getUniqueId(),
-      syncToken: _getNextSyncToken_(calendarId),
-    };
-    props.setProperty(calendarId, JSON.stringify(data));
+/**
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet
+ */
+const getChartsFromSheet_ = (sheet) => {
+  const inlineImages = {};
+  const htmlCharts = [];
+  sheet.getCharts().forEach((chart) => {
+    const id = chart.getChartId();
+    const blob = chart.getAs("image/png");
+    inlineImages[id] = blob;
+    htmlCharts.push(`<img src="cid:${id}" />`);
   });
-  return apiGetAppData();
+  return { inlineImages, htmlCharts };
 };
 
-const apiDisableAllCalendars = (payload) => {
-  const { calendars } = JSON.parse(payload);
-  deleteAllTriggers_();
-  const props = PropertiesService.getUserProperties();
-  calendars.forEach((calendar) => props.deleteProperty(calendar));
-  return apiGetAppData();
+const createTableCharts_ = (charts, columns = 1) => {
+  const htmlRows = [];
+  const rows = Math.ceil(charts.length / columns);
+  let i = 0;
+  for (let r = 0; r < rows; r++) {
+    const htmlColumns = ["<tr>"];
+    for (let c = 0; c < columns; c++) {
+      const chart = charts[i];
+      htmlColumns.push(`<td>${chart || ""}</td>`);
+      i++;
+    }
+    htmlColumns.push("</tr>");
+    htmlRows.push(htmlColumns.join(""));
+  }
+  return ["<table width='100%;'>", ...htmlRows, "</table>"].join("");
 };
+
+const sendReport_ = () => {
+  const title = CONFIG.MENU.SEND_REPORT.CAPTION;
+  const {
+    gidDashboard,
+    subject,
+    fromName,
+    to,
+    cc,
+    bcc,
+    body,
+    attachedAsPdf,
+    columns,
+    filename,
+    size,
+    portrait,
+  } = _getSettings_();
+  const sheetDashboard = _getSheetById_(gidDashboard);
+  if (!sheetDashboard) {
+    throw new Error(
+      `No dashboard with GID "${gidDashboard}" found in the spreadsheet.`
+    );
+  }
+  if (!subject) {
+    throw new Error('No "Subject" in the email configuration');
+  }
+  if (!to) {
+    throw new Error('No "To" in the email configuration');
+  }
+  if (!body) {
+    throw new Error('No "body" in the email configuration');
+  }
+
+  const { inlineImages, htmlCharts } = getChartsFromSheet_(sheetDashboard);
+  const tableCharts = createTableCharts_(htmlCharts, columns);
+
+  let htmlBody = body.startsWith("<")
+    ? body.replace(/\n/g, "<br/>")
+    : `<div>${body}</div>`;
+  htmlBody = body.replace("{{dashboard}}", tableCharts);
+
+  const options = {
+    name: fromName,
+    cc,
+    bcc,
+    htmlBody,
+    inlineImages,
+  };
+  if (attachedAsPdf) {
+    const pdf = _exportSheetAsPdf_(
+      gidDashboard,
+      SpreadsheetApp.getActive().getId(),
+      {
+        size,
+        portrait,
+      }
+    );
+    pdf.setName(filename);
+    options.attachments = [pdf];
+  }
+  GmailApp.sendEmail(to, subject, "", options);
+  _toast_("Completed", title);
+};
+
+const createReportTriggers_ = ({ isWeeklyOn, isMonthlyOn, isYearlyOn }) => {
+  if (isWeeklyOn) {
+    ScriptApp.newTrigger(CONFIG.TRIGGER.WEEKLY)
+      .timeBased()
+      .everyWeeks(1)
+      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+      .atHour(8)
+      .create();
+  }
+  if (isMonthlyOn) {
+    ScriptApp.newTrigger(CONFIG.TRIGGER.MONTHLY)
+      .timeBased()
+      .onMonthDay(1)
+      .atHour(8)
+      .create();
+  }
+  if (isYearlyOn) {
+    ScriptApp.newTrigger(CONFIG.TRIGGER.YEAERLY)
+      .timeBased()
+      .onMonthDay(1)
+      .atHour(8)
+      .create();
+  }
+};
+
+const onOpen = () => {
+  const { appName } = _getSettings_();
+  const title = appName || CONFIG.NAME;
+  const ui = _getUi_();
+  const menu = ui.createMenu(title);
+  menu.addItem(
+    CONFIG.MENU.LANCH_SIDEBAR.CAPTION,
+    CONFIG.MENU.LANCH_SIDEBAR.ACTION
+  );
+  menu.addItem(CONFIG.MENU.SEND_REPORT.CAPTION, CONFIG.MENU.SEND_REPORT.ACTION);
+  menu.addToUi();
+};
+
+const triggerCalendarUpdate = (e) => onCalendarUpdate_(e);
+const triggerWeeklyReport = () => sendReport_();
+const triggerMonthlyReport = () => sendReport_();
+const triggerYearlyReport = () => {
+  const date = new Date();
+  const month = date.getMonth();
+  if (month !== 0) return;
+  sendReport_();
+};
+
+const actionLanchSidebar = () =>
+  _tryFunction_(openSidebar_, CONFIG.MENU.LANCH_SIDEBAR.CAPTION);
+const actionSendReport = () =>
+  _tryFunction_(sendReport_, CONFIG.MENU.SEND_REPORT.CAPTION);
