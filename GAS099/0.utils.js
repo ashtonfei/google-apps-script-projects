@@ -65,7 +65,13 @@ function _getNextSyncToken_(id) {
 }
 
 function _getLastestEvent_(id, syncToken) {
-  const res = Calendar.Events.list(id, { syncToken });
+  let res = null;
+  try {
+    res = Calendar.Events.list(id, { syncToken });
+  } catch (error) {
+    syncToken = _getNextSyncToken_(id);
+    res = Calendar.Events.list(id, { syncToken });
+  }
   return {
     nextSyncToken: res.nextSyncToken,
     event: res.items[0],
