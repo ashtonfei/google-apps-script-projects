@@ -28,6 +28,7 @@ const getModel_ = () => {
 };
 
 const getMessage_ = () => {
+  SpreadsheetApp.getActiveSheet().getRange("A1").activate();
   const message = SpreadsheetApp.getActive()
     .getRange(RANGE_NAME.MESSAGE)
     .getDisplayValue()
