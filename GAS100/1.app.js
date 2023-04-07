@@ -79,23 +79,6 @@ const sendRequest_ = (payload) => {
 const updateHistory_ = (conversations) => {
   const ss = SpreadsheetApp.getActive();
   const range = ss.getRange(RANGE_NAME.HISTORY);
-  if (!conversations || conversations.length == 0) {
-    const values = range.getValues().filter((v) => v[0]);
-    if (values.length === 0) {
-      return;
-    }
-    values.unshift([null, null]);
-    range
-      .getSheet()
-      .getRange(
-        range.getRow(),
-        range.getColumn(),
-        values.length,
-        values[0].length
-      )
-      .setValues(values);
-    return;
-  }
   const desription = conversations[0].content;
   const values = [desription, JSON.stringify(conversations)];
   range
@@ -184,8 +167,22 @@ const actionSetApiKey = () => {
 
 const newChat_ = () => {
   const ss = SpreadsheetApp.getActive();
-  updateConversions_([]);
+  const sheet = ss.getActiveSheet();
+  const rangeHistory = ss.getRange(RANGE_NAME.HISTORY);
+  if (rangeHistory.getCell(1, 1).getValue()) {
+    const values = rangeHistory.getValues().filter((v) => v[0] && v[1]);
+    values.unshift([null, null]);
+    sheet
+      .getRange(
+        rangeHistory.getRow(),
+        rangeHistory.getColumn(),
+        values.length,
+        values[0].length
+      )
+      .setValues(values);
+  }
   ss.getRange(RANGE_NAME.CONVERSIONS).setValue(null);
+  ss.getRange(RANGE_NAME.MESSAGE).setValue("New chat ...");
 };
 
 const loadChat_ = () => {
@@ -194,7 +191,13 @@ const loadChat_ = () => {
   const ss = SpreadsheetApp.getActive();
   const sheet = ss.getActiveSheet();
   const row = ss.getSelection().getActiveRangeList().getRanges()[0].getRow();
-  let messages = sheet.getRange(row, 3).getValue();
+  const rangeHistory = ss.getRange(RANGE_NAME.HISTORY);
+  const rangeRow = rangeHistory.getRow();
+  const rangeColumn = rangeHistory.getColumn();
+
+  let [description, messages] = sheet
+    .getRange(row, rangeColumn, 1, 2)
+    .getValues()[0];
   if (!messages) {
     msg = `No hisotry data for the selected row ${row}.`;
     return _alert_(msg, title, "🟥 Error");
@@ -206,6 +209,23 @@ const loadChat_ = () => {
     return _alert_(msg, title, "🟥 Error");
   }
   updateConversions_(messages, false);
+  if (row == rangeRow) return;
+  const newValues = [];
+  let currentValues = [];
+  rangeHistory.getValues().forEach((values, index) => {
+    if (index == 0) {
+      newValues.push([description, JSON.stringify(messages)]);
+      currentValues = values;
+    } else if (index == row - rangeRow) {
+      currentValues[0] && newValues.push(currentValues);
+    } else {
+      values[0] && newValues.push(values);
+    }
+  });
+  rangeHistory.setValue(null);
+  sheet
+    .getRange(rangeRow, rangeColumn, newValues.length, newValues[0].length)
+    .setValues(newValues);
 };
 
 const onOpen = () => {
