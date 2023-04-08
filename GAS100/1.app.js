@@ -273,7 +273,7 @@ const openHelp_ = () => {
     <div style="font-family:Google Sans,Roboto,RobotoDraft,Helvetica,Arial,sans-serif; font-size: 14px;">
       <div>You need an API key from openai.com to make it working.</div>
       <div>You can find your API key at <a href="https://platform.openai.com/account/api-keys" target="_blank">https://platform.openai.com/account/api-keys</a></div>
-      <div style="padding-top: 1rem;">Check this <a href="https://youtube.com/ashtonfei" target="_blank">video</a> for the details if have any questions.</div>
+      <div style="padding-top: 1rem;">Check this <a href="https://youtu.be/wVy-X92R2rU" target="_blank">video</a> for the details if have any questions.</div>
   
       <div style="padding-top: 1rem;">Follow me</div>
       <div><a href="https://www.upwork.com/workwith/ashtonfei" target="_blank">Upwork</a></div>
