@@ -171,6 +171,7 @@ const setApiKey_ = () => {
     return _alert_(isValidApiKey, title, "🟥 Error");
   }
   PropertiesService.getUserProperties().setProperty(KEY, apiKey);
+  onOpen();
   _toast_("You can chat in the sheet now.", title);
 };
 
@@ -262,6 +263,7 @@ const actionLoadChat = () => _tryAction_(loadChat_);
 const actionRemoveApiKey = () => {
   _tryAction_(() => {
     PropertiesService.getUserProperties().deleteProperty(KEY);
+    onOpen();
     _toast_("API key has been removed from your settings.", APP_NAME);
   });
 };
