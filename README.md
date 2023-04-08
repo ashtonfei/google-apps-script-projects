@@ -7,6 +7,7 @@ My Google Apps Script projects shared on [:tv: YouTube](https://www.youtube.com/
 
 ### All projects
 
+- [GAS-100 ChatGPT in Google Sheets](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS100) - [:tv: YouTube](https://youtu.be/wVy-X92R2rU)
 - [GAS-099 Google Calendar Time Tracker](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS099) - [:tv: YouTube](https://youtu.be/43CKGNZKHRI)
 - [GAS-098 Maze Generator](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS098) - [:tv: YouTube](https://youtu.be/EwgH-7BnOZ0)
 - [GAS-097 Multiple Select in Google Sheets](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS097) - [:tv: YouTube](https://youtu.be/et_yAekJDf0)
