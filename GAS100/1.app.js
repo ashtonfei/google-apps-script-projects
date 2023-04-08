@@ -230,15 +230,16 @@ const loadChat_ = () => {
 
 const onOpen = () => {
   const apiKey = getApiKey_();
-  if (apiKey == null) {
-    return actionSetApiKey();
-  }
+  const ui = _getUi_();
+  const menu = ui.createMenu(APP_NAME);
   if (apiKey) {
-    const ui = _getUi_();
-    const menu = ui.createMenu(APP_NAME);
     menu.addItem("Remove API key", "actionRemoveApiKey");
-    menu.addToUi();
+  } else {
+    menu.addItem("Set API key", "actionSetApiKey");
   }
+  menu.addSeparator();
+  menu.addItem("Help", "actionOpenHelp");
+  menu.addToUi();
 };
 
 const actionSendMessage = () => _tryAction_(sendMessage_);
@@ -250,4 +251,25 @@ const actionRemoveApiKey = () => {
     PropertiesService.getUserProperties().deleteProperty(KEY);
     _toast_("API key has been removed from your settings.", APP_NAME);
   });
+};
+
+const openHelp_ = () => {
+  const html = `
+    <div style="">
+      <div>Check this <a href="https://youtube.com/ashtonfei" target="_blank">video</a> for the details if have any questions.</div>
+  
+      <div style="padding-top: 1rem;">Follow me</div>
+      <div><a href="https://www.upwork.com/workwith/ashtonfei" target="_blank">Upwork</a></div>
+      <div><a href="https://youtube.com/ashtonfei" target="_blank">YouTube</a></div>
+      <div><a href="https://github.com/ashtonfei" target="_blank">Github</a></div>
+      <div><a href="https://twitter.com/ashton_fei" target="_blank">Twitter</a></div>
+    </div>
+  `;
+  const ui = _getUi_();
+  const dialog = HtmlService.createHtmlOutput(html);
+  ui.showModalDialog(dialog, "Help");
+};
+
+const actionOpenHelp = () => {
+  _tryAction_(openHelp_);
 };
