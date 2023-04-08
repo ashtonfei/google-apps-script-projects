@@ -28,11 +28,11 @@ const getModel_ = () => {
 };
 
 const getMessage_ = () => {
-  SpreadsheetApp.getActiveSheet().getRange("A1").activate();
-  const message = SpreadsheetApp.getActive()
+  const range = SpreadsheetApp.getActiveSheet()
     .getRange(RANGE_NAME.MESSAGE)
-    .getDisplayValue()
-    .trim();
+    .activate();
+  SpreadsheetApp.flush();
+  const message = range.getDisplayValue().trim();
   if (!message) {
     throw new Error("Message is empty.");
   }
@@ -57,8 +57,7 @@ const getConversations_ = () => {
   return conversations;
 };
 
-const sendRequest_ = (payload) => {
-  const apiKey = getApiKey_();
+const sendRequest_ = (payload, apiKey = getApiKey_()) => {
   const options = {
     method: "POST",
     headers: {
@@ -140,7 +139,19 @@ const sendMessage_ = () => {
 };
 
 const validateApiKey_ = (apiKey) => {
-  return Boolean(apiKey);
+  const message = {
+    role: ROLE.SYSTEM,
+    content: "Hello",
+  };
+  const payload = {
+    model: getModel_(),
+    messages: [message],
+  };
+  const res = sendRequest_(payload, apiKey);
+  if (res.error) {
+    return res.error.message;
+  }
+  return true;
 };
 
 const setApiKey_ = () => {
@@ -154,8 +165,10 @@ const setApiKey_ = () => {
   if (apiKey == "") {
     return _alert_("You didn't enter any API key", title, "🟥 Error");
   }
-  if (validateApiKey_(apiKey) === false) {
-    return _alert_("Invalid API key.", title, "🟥 Error");
+
+  const isValidApiKey = validateApiKey_(apiKey);
+  if (isValidApiKey !== true) {
+    return _alert_(isValidApiKey, title, "🟥 Error");
   }
   PropertiesService.getUserProperties().setProperty(KEY, apiKey);
   _toast_("You can chat in the sheet now.", title);
@@ -257,8 +270,8 @@ const openHelp_ = () => {
   const html = `
     <div style="font-family:Google Sans,Roboto,RobotoDraft,Helvetica,Arial,sans-serif; font-size: 14px;">
       <div>You need an API key from openai.com to make it working.</div>
-      <div>You can find your API key at <a href="https://platform.openai.com/account/api-keys" target="_blank">https://platform.openai.com/account/api-keys</div>
-      <div>Check this <a href="https://youtube.com/ashtonfei" target="_blank">video</a> for the details if have any questions.</div>
+      <div>You can find your API key at <a href="https://platform.openai.com/account/api-keys" target="_blank">https://platform.openai.com/account/api-keys</a></div>
+      <div style="padding-top: 1rem;">Check this <a href="https://youtube.com/ashtonfei" target="_blank">video</a> for the details if have any questions.</div>
   
       <div style="padding-top: 1rem;">Follow me</div>
       <div><a href="https://www.upwork.com/workwith/ashtonfei" target="_blank">Upwork</a></div>
