@@ -255,7 +255,9 @@ const actionRemoveApiKey = () => {
 
 const openHelp_ = () => {
   const html = `
-    <div style="">
+    <div style="font-family:Google Sans,Roboto,RobotoDraft,Helvetica,Arial,sans-serif; font-size: 14px;">
+      <div>You need an API key from openai.com to make it working.</div>
+      <div>You can find your API key at <a href="https://platform.openai.com/account/api-keys" target="_blank">https://platform.openai.com/account/api-keys</div>
       <div>Check this <a href="https://youtube.com/ashtonfei" target="_blank">video</a> for the details if have any questions.</div>
   
       <div style="padding-top: 1rem;">Follow me</div>
