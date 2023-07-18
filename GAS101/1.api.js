@@ -1,21 +1,21 @@
-function getFormula() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName("YouTube");
-  console.log(sheet.getRange("C12").getFormulaR1C1());
+function reverseLanguageList_(list) {
+  const data = {};
+  Object.entries(list).forEach(([key, value]) => (data[value] = key));
+  return data;
 }
 
-function parseSubtitles_(values) {
+function parseSubtitles_(values, languageList) {
   const data = {};
+  const reversedLanguageList = reverseLanguageList_(languageList);
   const columns = values[0].length;
   for (let c = 0; c < columns; c++) {
     const language = values[0][c];
     if (!language) continue;
-    const languageId = values[0 + 2][c];
-    if (!languageId) continue;
-    const title = values[0 + 4][c];
+    const title = values[0 + 2][c];
     if (!title) continue;
-    const description = values[0 + 6][c];
+    const description = values[0 + 4][c];
     data[language] = {};
-    data[language][languageId] = {
+    data[language][reversedLanguageList[language]] = {
       title,
       description,
     };
@@ -25,28 +25,29 @@ function parseSubtitles_(values) {
 
 function parseVideoId_(url) {
   if (url.includes("watch?v=")) {
-    return url.split("watch?v=")[1].split("&")[0];
+    return url.split("watch?v=")[1].split(/[\/\&\?]/)[0];
   }
   if (url.includes("/video/")) {
-    return url.split("/video/")[1].split("/")[0];
+    return url.split("/video/")[1].split(/[\/\&\?]/)[0];
   }
   if (url.includes("/shorts/")) {
-    return url.split("/shorts/")[1].split("/")[0];
+    return url.split("/shorts/")[1].split(/[\/\&\?]/)[0];
   }
   if (url.includes("/youtu.be/")) {
-    return url.split("/youtu.be/")[1].split("/")[0];
+    return url.split("/youtu.be/")[1].split(/[\/\&\?]/)[0];
   }
   return url;
 }
 
-function getVideoInfo_() {
+function getVideoInfo_(languageList) {
   const ss = SpreadsheetApp.getActive();
   const RN = CONFIG.RANGE_NAME;
   const id = parseVideoId_(ss.getRange(RN.VIDEO).getDisplayValue());
   const defaultLanguage = ss.getRange(RN.DEFAULT_LANGUAGE).getDisplayValue();
   const categoryId = ss.getRange(RN.CATEGORY_ID).getDisplayValue();
   const subtitles = parseSubtitles_(
-    ss.getRange(RN.SUBTITLES).getDisplayValues()
+    ss.getRange(RN.SUBTITLES).getDisplayValues(),
+    languageList
   );
   return {
     id,
@@ -63,31 +64,35 @@ function updateVideoInfo_(video, languageList) {
   const ss = SpreadsheetApp.getActive();
   const RN = CONFIG.RANGE_NAME;
   ss.getRange(RN.CATEGORY_ID).setValue(video.snippet.categoryId);
+
   const defaultLanguage = languageList[video.snippet.defaultLanguage];
   ss.getRange(RN.DEFAULT_LANGUAGE).setValue(defaultLanguage || null);
-  const formula = `=IFERROR(VLOOKUP(R10C[0],languages,2,FALSE),"N/A")`;
-  const languageIds = [formula];
+
   const languages = [defaultLanguage];
   const titles = [video.snippet.title];
   const descriptions = [video.snippet.description];
-  if (!video.localizations) {
-    languageIds.push(formula);
-    languages.push("Chinese (China)");
-    titles.push("Chinese title");
-    descriptions.push("Chinese description");
+  if (video.localizations) {
+    const keys = Object.keys(video.localizations);
+    keys.sort().forEach((key) => {
+      if (key == video.snippet.defaultLanguage) {
+        return;
+      }
+      languages.push(languageList[key]);
+      titles.push(video.localizations[key].title);
+      descriptions.push(video.localizations[key].description);
+    });
   }
+
   const rangeSubtitles = ss.getRange(RN.SUBTITLES);
   rangeSubtitles.setValue(null);
+
   const sheet = rangeSubtitles.getSheet();
   const row = rangeSubtitles.getRow();
   const column = rangeSubtitles.getColumn();
   sheet.getRange(row, column, 1, languages.length).setValues([languages]);
+  sheet.getRange(row + 2, column, 1, titles.length).setValues([titles]);
   sheet
-    .getRange(row + 2, column, 1, languageIds.length)
-    .setValues([languageIds]);
-  sheet.getRange(row + 4, column, 1, titles.length).setValues([titles]);
-  sheet
-    .getRange(row + 6, column, 1, descriptions.length)
+    .getRange(row + 4, column, 1, descriptions.length)
     .setValues([descriptions]);
   SpreadsheetApp.flush();
 }
@@ -96,51 +101,66 @@ function fetchSubtitles_() {
   const ss = SpreadsheetApp.getActive();
   const title = CONFIG.ACTION.FETCH_SUBTITLES.CAPTION;
   let msg = null;
-  const { id } = getVideoInfo_();
+  const id = parseVideoId_(
+    ss.getRange(CONFIG.RANGE_NAME.VIDEO).getDisplayValue()
+  );
   if (!id) {
     msg = `No video URL or ID in the active cell.`;
     ss.getRange(CONFIG.RANGE_NAME.VIDEO).activate();
     return _alert_(msg, title);
   }
-  const part = "id,snippet";
+  const part = "id,snippet,localizations";
   const video = YouTube.Videos.list(part, { id }).items[0];
   if (!video) {
     msg = `Video with id "${id}" not available or you don't have the access.`;
     return _alert_(msg, title);
   }
-  const languages = fetchLanguages_(false);
-  updateVideoInfo_(video, languages);
+  const languageList = fetchLanguages_(false);
+  updateVideoInfo_(video, languageList);
+  msg = "Video subtitles have been fetched.";
+  return _toast_(msg, title);
 }
 
 function updateSubtitles_() {
   const title = CONFIG.ACTION.UPDATE_SUBTITLES.CAPTION;
-  const vedio = getVideoInfo_();
-  console.log(vedio);
-  const defaultLanguage = vedio.subtitles[vedio.defaultLanguage];
-  console.log(defaultLanguage);
+  let msg = null;
+  const languageList = fetchLanguages_(false);
+  const video = getVideoInfo_(languageList);
+  let defaultLanguage = video.subtitles[video.defaultLanguage];
+  let localizations = {};
+  Object.entries(video.subtitles).forEach(([key, value]) => {
+    if (key == video.defaultLanguage) {
+      const languageId = Object.keys(defaultLanguage)[0];
+      defaultLanguage = defaultLanguage[languageId];
+      defaultLanguage.id = languageId;
+    }
+    localizations = {
+      ...localizations,
+      ...value,
+    };
+  });
+
   const payload = {
-    id: "XNxceU899co",
-    localizations: {
-      "zh-CN": {
-        title: "用Chalkline提升你的生产力：数据筛选，自动化流程",
-        description: "用Chalkline提升你的生产力：数据筛选，自动化流程",
-      },
-    },
+    id: video.id,
+    localizations,
     snippet: {
-      defaultLanguage: "en",
-      title:
-        "Boost Your Productivity with Chalkline: Data Filtering, Google Forms Automation with Mail Merge",
-      categoryId: "27",
-      description: "",
+      defaultLanguage: defaultLanguage.id,
+      title: defaultLanguage.title,
+      categoryId: video.categoryId,
+      description: defaultLanguage.description,
     },
   };
+  console.log(payload);
+  const part = "id,snippet,localizations";
+  YouTube.Videos.update(payload, part);
+  msg = `Subtitles have been updated.`;
+  _toast_(msg, title);
 }
 
 function fetchLanguages_(updateSheet = true) {
   const key = CONFIG.KEY.LANGUAGE_CACHE;
   const cache = CacheService.getScriptCache();
   const cacheData = cache.get(key);
-  console.log(cacheData);
   let data = {};
   if (!cacheData || updateSheet === true) {
     const part = "snippet";
@@ -151,6 +171,9 @@ function fetchLanguages_(updateSheet = true) {
   } else {
     data = JSON.parse(cacheData);
   }
+
+  data["zh"] = data["zh"] || "Chinese";
+  data["zh-Hant"] = data["zh-Hant"] || "Chinese (Traditional)";
 
   if (updateSheet === true) {
     const values = [["name", "id"]];
@@ -164,4 +187,29 @@ function fetchLanguages_(updateSheet = true) {
     sheet.activate();
   }
   return data;
+}
+
+function googleTranslate_() {
+  const ss = SpreadsheetApp.getActive();
+  const rangeSubtitles = ss.getRange(CONFIG.RANGE_NAME.SUBTITLES);
+  const values = rangeSubtitles.getDisplayValues();
+  const formula = `=GOOGLETRANSLATE(R[0]C3,VLOOKUP(R10C3,languages,2,0),VLOOKUP(R10C[0],languages,2,0))`;
+  for (let i = 0; i < values[0].length; i++) {
+    if (i === 0) continue;
+    const language = values[0][i];
+    if (!language) continue;
+    values[2][i] === "" && (values[2][i] = formula);
+    values[4][i] === "" && (values[4][i] = formula);
+  }
+  rangeSubtitles.setValues(values);
+  SpreadsheetApp.flush();
+}
+
+function test() {
+  console.log(
+    SpreadsheetApp.getActive()
+      .getSheetByName("YouTube")
+      .getRange("D12")
+      .getFormulaR1C1()
+  );
 }

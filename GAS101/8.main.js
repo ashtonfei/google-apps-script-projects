@@ -14,6 +14,10 @@ const CONFIG = {
       ACTION: "actionFetchLanguages",
       CAPTION: "Fetch languages",
     },
+    GOOGLE_TRANSLATE: {
+      ACTION: "actionGoogleTranslate",
+      CAPTION: "Google translate",
+    },
     VERSIONS: {
       ACTION: "actionShowVersions",
       CAPTION: "Versions",
@@ -54,6 +58,10 @@ function actionUpdateSubtitles() {
 
 function actionFetchLanguages() {
   _tryAction_(fetchLanguages_, CONFIG.ACTION.FETCH_LANGUAGES.CAPTION);
+}
+
+function actionGoogleTranslate() {
+  _tryAction_(googleTranslate_, CONFIG.ACTION.GOOGLE_TRANSLATE.CAPTION);
 }
 
 function actionShowVersions() {
