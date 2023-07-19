@@ -62,15 +62,27 @@ function getVideoInfo_(languageList) {
  */
 function updateVideoInfo_(video, languageList) {
   const ss = SpreadsheetApp.getActive();
+  let { subtitleLanguages } = _getSettings_();
+  subtitleLanguages = subtitleLanguages
+    .trim()
+    .split(/\s*,\s*/)
+    .filter((v) => v);
+  if (subtitleLanguages.length === 0) {
+    subtitleLanguages = ["English", "Spanish", "Chinese"];
+  }
+
   const RN = CONFIG.RANGE_NAME;
   ss.getRange(RN.CATEGORY_ID).setValue(video.snippet.categoryId);
 
-  const defaultLanguage = languageList[video.snippet.defaultLanguage];
+  const defaultLanguage =
+    languageList[video.snippet.defaultLanguage] || subtitleLanguages[0];
   ss.getRange(RN.DEFAULT_LANGUAGE).setValue(defaultLanguage || null);
 
   const languages = [defaultLanguage];
   const titles = [video.snippet.title];
   const descriptions = [video.snippet.description];
+  subtitleLanguages = subtitleLanguages.filter((v) => v !== defaultLanguage);
+
   if (video.localizations) {
     const keys = Object.keys(video.localizations);
     keys.sort().forEach((key) => {
@@ -80,6 +92,16 @@ function updateVideoInfo_(video, languageList) {
       languages.push(languageList[key]);
       titles.push(video.localizations[key].title);
       descriptions.push(video.localizations[key].description);
+      subtitleLanguages = subtitleLanguages.filter(
+        (v) => v !== languageList[key]
+      );
+    });
+  }
+  if (subtitleLanguages.length) {
+    subtitleLanguages.forEach((v) => {
+      languages.push(v);
+      titles.push(null);
+      descriptions.push(null);
     });
   }
 
