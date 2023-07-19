@@ -129,15 +129,15 @@ function updateSubtitles_() {
   let defaultLanguage = video.subtitles[video.defaultLanguage];
   let localizations = {};
   Object.entries(video.subtitles).forEach(([key, value]) => {
+    localizations = {
+      ...localizations,
+      ...JSON.parse(JSON.stringify(value)),
+    };
     if (key == video.defaultLanguage) {
       const languageId = Object.keys(defaultLanguage)[0];
       defaultLanguage = defaultLanguage[languageId];
       defaultLanguage.id = languageId;
     }
-    localizations = {
-      ...localizations,
-      ...value,
-    };
   });
 
   const payload = {
@@ -150,7 +150,6 @@ function updateSubtitles_() {
       description: defaultLanguage.description,
     },
   };
-  console.log(payload);
   const part = "id,snippet,localizations";
   YouTube.Videos.update(payload, part);
   msg = `Subtitles have been updated.`;
