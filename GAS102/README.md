@@ -2,6 +2,7 @@
 
 [<img src="https://img.shields.io/badge/YouTube-@ashtonfei-red.svg" alt="View on YouTube">](https://youtube.com/ashtonfei)
 [<img src="https://img.shields.io/badge/Twitter-@ashton_fei-blue.svg" alt="Follow on Twitter">](https://twitter.com/ashton_fei)
+[<img src="https://img.shields.io/badge/Upwork-Ashton-green.svg" alt="Follow on Twitter">](https://upwork.com/workwith/ashtonfei)
 
 ## Links
 
