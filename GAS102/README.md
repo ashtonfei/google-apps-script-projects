@@ -1,8 +1,7 @@
 # GAS102 Google Forms for Booking & Cacellation
 
-[<img src="https://img.shields.io/badge/view-youtube-red.svg" alt="View on YouTube">](https://youtube.com/ashtonfei)
-[<img src="https://img.shields.io/badge/follow-twitter-blue.svg" alt="Follow on Twitter">](https://youtube.com/ashtonfei)
-[<img src="https://img.shields.io/badge/follow-instagram-black.svg" alt="Follow on Instagram">](https://youtube.com/ashtonfei)
+[<img src="https://img.shields.io/badge/YouTube-@ashtonfei-red.svg" alt="View on YouTube">](https://youtube.com/ashtonfei)
+[<img src="https://img.shields.io/badge/Twitter-@ashton_fei-blue.svg" alt="Follow on Twitter">](https://twitter.com/ashton_fei)
 
 ## Links
 
