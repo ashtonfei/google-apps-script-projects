@@ -3,7 +3,7 @@
 [<img src="https://img.shields.io/badge/Follow-YouTube-red.svg" alt="View on YouTube">](https://youtube.com/ashtonfei)
 [<img src="https://img.shields.io/badge/Follow-Tiwtter-blue.svg" alt="Follow on Twitter">](https://twitter.com/ashton_fei)
 [<img src="https://img.shields.io/badge/Work-Upwork-green.svg" alt="Follow on Twitter">](https://upwork.com/workwith/ashtonfei)
-![YouTube Cover](https://github.com/ashtonfei/google-apps-script-projects/assets/16481229/ff75f0e6-74a9-497b-bccf-c69216c2e48b)
+[![YouTube Cover](https://github.com/ashtonfei/google-apps-script-projects/assets/16481229/857d914e-dbc3-4717-9330-0d17255113cf)](https://youtu.be/iRqvvS0F9Bg)
 
 ## Links
 

@@ -6,7 +6,7 @@ My Google Apps Script projects shared on
 [:tv: YouTube](https://www.youtube.com/ashtonfei/), each branch is a project
 about the video. You can find the source code about the projects there, branch
 name is in the video title.
-[![apps script projects](https://user-images.githubusercontent.com/16481229/175765202-28144ec2-dcf6-4a1a-a78f-8602be486dfd.jpeg)](https://www.youtube.com/ashtonfei/)
+[![Google Apps Script Projects](https://github.com/ashtonfei/google-apps-script-projects/assets/16481229/baaf504e-ab5d-48b8-a423-cf1d14aded20)](https://youtube.com/@ashtonfei)
 
 ### All projects
 
