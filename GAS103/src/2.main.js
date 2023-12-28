@@ -29,9 +29,16 @@ const getFolder_ = (id = CONFIG.WATCH_FOLDER_ID) => {
 };
 
 const runQuery_ = (values = []) => (query, fields, pageToken) => {
-  const options = pageToken
-    ? { q: query, pageToken, fields }
-    : { q: query, fields };
+  const options = {
+    q: query,
+    fields,
+    supportsAllDrives: true, // for shared drives
+    includeItemsFromAllDrives: true, // for shared drives
+  };
+  if (pageToken) {
+    options.pageToken = pageToken;
+  }
+
   const { files, nextPageToken } = Drive.Files.list(options);
   values = [...values, ...files];
   if (!nextPageToken) return values;
