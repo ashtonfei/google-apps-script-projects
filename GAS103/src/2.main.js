@@ -1,5 +1,8 @@
 const createQuery_ = (folderId) => (startTime) => {
-  return `'${folderId}' in parents and (createdTime >= '${startTime}' or modifiedTime >= '${startTime}') and trashed = false`;
+  if (!startTime) {
+    return `'${folderId}' in parents`;
+  }
+  return `'${folderId}' in parents and (createdTime >= '${startTime}' or modifiedTime >= '${startTime}')`;
 };
 
 const createFields_ = (fields) => {
@@ -61,8 +64,7 @@ const getTrashedFiles_ = (folderId) => {
 
 const getUpdatedFiles_ = (folder) => {
   const folderId = folder.getId();
-  const lastRunAt = getLastRunAt_();
-  const startTime = lastRunAt || folder.getDateCreated().toISOString();
+  const startTime = getLastRunAt_();
   const { headers, keys } = _getHeaders_(CONFIG.HEADERS);
   const createRowValues = _createRowValues_(keys);
   const now = new Date().toISOString();

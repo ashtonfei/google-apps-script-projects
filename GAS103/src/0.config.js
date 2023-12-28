@@ -1,8 +1,8 @@
 const CONFIG = {
   NAME: "GAS103",
-  VERSION: "1.0.0",
+  VERSION: "1.0.1",
   SHEET_NAME: "Files",
-  WATCH_FOLDER_ID: "1VjzmYFV2mPZL_61ckM6dG__ouHcPeNJb",
+  WATCH_FOLDER_ID: "1X87CJq4NE-2r4rN-8hm_EHPx5Cus9V7f",
   KEY: {
     LAST_RUN_AT: "lastRunAt",
     INSTALLED: "installed",
