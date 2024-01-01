@@ -175,19 +175,28 @@ const copyScripts_ = () => {
   const { files, title } = getScriptFilesById_(scriptId);
   const filteredFiles = files.filter(filter);
 
-  const updatedValues = [["URL", "Script ID", "Updated At", "Status"]];
+  // const updatedValues = [["URL", "Script ID", "Updated At", "Status"]];
   const token = getAccessToken_();
-  targetFiles.forEach((file) => {
+  const dataRegionTo = rangeTo.getDataRegion();
+  const updateScriptId = _updateCell_(dataRegionTo, 2);
+  const updateUpdatedAt = _updateCell_(dataRegionTo, 3);
+  const updateStatus = _updateCell_(dataRegionTo, 4);
+  targetFiles.forEach((file, index) => {
     file.title = title;
+    const row = index + 2;
+    updateUpdatedAt(row, null);
+    updateStatus(row, "Copying");
+    SpreadsheetApp.flush();
     try {
       const { scriptId } = copyToFile_(file, filteredFiles, token);
-      updatedValues.push([file.url, scriptId, new Date(), "Success"]);
+      updateScriptId(row, scriptId);
+      updateUpdatedAt(row, new Date());
+      updateStatus(row, "Success");
     } catch (err) {
-      updatedValues.push([file.url, file.scriptId, new Date(), err.stack]);
+      updateUpdatedAt(row, new Date());
+      updateStatus(row, err.message);
     }
   });
-  const sheet = rangeTo.getSheet();
-  _valuesToSheet_(sheet)(updatedValues, rangeTo.getRow(), rangeTo.getColumn());
   SpreadsheetApp.flush();
   success("Script copy request has been completed.");
 };

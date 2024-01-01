@@ -51,3 +51,7 @@ const _action_ = (fn) => {
     _createAlert_("Error")(err.message);
   }
 };
+
+const _updateCell_ = (range, col) => (row, value) => {
+  range.getCell(row, col).setValue(value);
+};
