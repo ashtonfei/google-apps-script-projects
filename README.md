@@ -10,6 +10,8 @@ name is in the video title.
 
 ### All projects
 
+- [GAS104 Copy & Update Scripts to Multiple Files](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS104) -
+  [:tv: YouTube](https://youtu.be/8DL6UpiaxK4)
 - [GAS103 Watch Updates in a Google Drive Folder](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS103) -
   [:tv: YouTube](https://youtu.be/iRqvvS0F9Bg)
 - [GAS102 Booking & Cancellation with Google Calendar & Forms](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS102) -
