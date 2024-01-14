@@ -10,6 +10,8 @@ name is in the video title.
 
 ### All projects
 
+- [GAS105 Copy & Update Scripts to Multiple Files](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS105) -
+  [:tv: YouTube](https://youtu.be/cTY9bZYmSSc)
 - [GAS104 Copy & Update Scripts to Multiple Files](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS104) -
   [:tv: YouTube](https://youtu.be/8DL6UpiaxK4)
 - [GAS103 Watch Updates in a Google Drive Folder](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS103) -
