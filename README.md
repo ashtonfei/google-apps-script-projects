@@ -10,7 +10,7 @@ name is in the video title.
 
 ### All projects
 
-- [GAS105 Copy & Update Scripts to Multiple Files](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS105) -
+- [GAS105 Create Gmail Replies and Drafts with ChatGPT](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS105) -
   [:tv: YouTube](https://youtu.be/cTY9bZYmSSc)
 - [GAS104 Copy & Update Scripts to Multiple Files](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS104) -
   [:tv: YouTube](https://youtu.be/8DL6UpiaxK4)
