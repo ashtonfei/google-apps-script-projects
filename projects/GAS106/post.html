@@ -1,0 +1,60 @@
+<p>This is demo post for testing post views with Google Apps Script.</p>
+<!-- where the post count renders -->
+<p>Post Views: <span id="views"></span></p>
+
+<script>
+  const blogId = "4322776648572656092"; // can be found in the draft url
+  const postId = "6249167238377739742"; // can be found in the draft url
+  const api =
+    "https://script.google.com/macros/s/AKfycbySEsc6s-Y2Bz0JutUawH3AkhipseUSAjoJkwPk7tpINnw1y-70Kjc_09dzKBT9ZHg/exec";
+  // your apps script api (webapp url)
+  const idOfPostViews = "views"; // where the post views is rendered
+  const animate = viewAnimation();
+
+  fetchPostViews(blogId, postId);
+
+  function createBrowserFingerprint() {
+    const width = screen.width || "";
+    const height = screen.height || "";
+    const languages = navigator.languages;
+    const agent = navigator.userAgent;
+    const plugins = [];
+    for (let p of navigator.plugins) {
+      plugins.push(p.name);
+    }
+    plugins.sort();
+    return [width, height, ...languages, agent, ...plugins]
+      .join("")
+      .replace(/[^a-z0-9]/gi, "")
+      .slice(0, 250);
+  }
+
+  function viewAnimation(start = 0) {
+    return function () {
+      const animation = [".", "..", "..."];
+      const value = animation[start];
+      start++;
+      if (animation.length == start) start = 0;
+      return value;
+    };
+  }
+
+  function updatePostViews(id = idOfPostViews, views = animate()) {
+    document.getElementById(id).innerText = views;
+  }
+
+  async function fetchPostViews(blogId, postId) {
+    const fingerprint = createBrowserFingerprint();
+    const interval = setInterval(updatePostViews, 500);
+    const url = `${api}?postId=${postId}&blogId=${blogId}&key=${fingerprint}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      updatePostViews(idOfPostViews, data.views);
+    } catch (err) {
+      updatePostViews(idOfPostViews, err.message);
+    } finally {
+      clearInterval(interval);
+    }
+  }
+</script>
