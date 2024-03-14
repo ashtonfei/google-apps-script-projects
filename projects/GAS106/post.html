@@ -3,18 +3,28 @@
 <p>Post Views: <span id="views"></span></p>
 
 <script>
-  const blogId = "4322776648572656092"; // can be found in the draft url
-  const postId = "6249167238377739742"; // can be found in the draft url
-  // minutes for caching browser fingerprint
-  // set to 0 to disable the fingerprint check
-  // max value is 360 mins
-  const mins = 0;
+  /** START of configurations */
+
+  /** 1. Your Apps Script API (WebApp URL) */
   const api =
     "https://script.google.com/macros/s/AKfycbySEsc6s-Y2Bz0JutUawH3AkhipseUSAjoJkwPk7tpINnw1y-70Kjc_09dzKBT9ZHg/exec";
-  // your apps script api (webapp url)
-  const idOfPostViews = "views"; // where the post views is rendered
-  const animate = viewAnimation();
+  /** 2. Can be found in the draft url */
+  const blogId = "4322776648572656092";
+  /** 3. Can be found in the draft url */
+  const postId = "6249167238377739742";
+  /** 4.
+   * minutes for caching browser fingerprint
+   * set to 0 to disable the fingerprint check
+   * max value is 360 mins
+   */
+  const mins = 0;
 
+  /** 5. Where the post views is rendered */
+  const idOfPostViews = "views";
+
+  /** END of configurations */
+
+  const animate = viewAnimation();
   fetchPostViews(blogId, postId);
 
   function createBrowserFingerprint() {

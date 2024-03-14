@@ -1,5 +1,5 @@
 function createKey_(blogId, postId) {
-  return `${blogId}/${postId}`;
+  return `${postId}/${blogId}`;
 }
 
 function createJsonResponse_(data) {
