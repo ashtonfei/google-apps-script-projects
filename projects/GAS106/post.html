@@ -5,6 +5,10 @@
 <script>
   const blogId = "4322776648572656092"; // can be found in the draft url
   const postId = "6249167238377739742"; // can be found in the draft url
+  // minutes for caching browser fingerprint
+  // set to 0 to disable the fingerprint check
+  // max value is 360 mins
+  const mins = 0;
   const api =
     "https://script.google.com/macros/s/AKfycbySEsc6s-Y2Bz0JutUawH3AkhipseUSAjoJkwPk7tpINnw1y-70Kjc_09dzKBT9ZHg/exec";
   // your apps script api (webapp url)
@@ -43,10 +47,25 @@
     document.getElementById(id).innerText = views;
   }
 
+  function createQueryString(params) {
+    return Object.entries(params)
+      .filter(([_, value]) => value)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+  }
+
   async function fetchPostViews(blogId, postId) {
-    const fingerprint = createBrowserFingerprint();
+    const fingerprint =
+      mins > 0 && mins <= 360 ? createBrowserFingerprint() : "";
     const interval = setInterval(updatePostViews, 500);
-    const url = `${api}?postId=${postId}&blogId=${blogId}&key=${fingerprint}`;
+    const queryString = createQueryString({
+      postId,
+      blogId,
+      mins,
+      fingerprint,
+    });
+    const url = `${api}?${queryString}`;
+    console.log(url);
     try {
       const response = await fetch(url);
       const data = await response.json();
