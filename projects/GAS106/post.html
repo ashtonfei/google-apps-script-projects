@@ -65,7 +65,6 @@
       fingerprint,
     });
     const url = `${api}?${queryString}`;
-    console.log(url);
     try {
       const response = await fetch(url);
       const data = await response.json();
