@@ -153,11 +153,20 @@
     this.app.session = session;
   };
 
+  const createSubhead = function (item) {
+    return `${item.prefix}
+        ${item.usePreviousAsPrefix
+          .map((index) => this.form.items[index].value)
+          .join("")}.
+        ${item.description}`;
+  };
+
   // Vue Methods object
   const methods = {
     goToSession,
     submit,
     validateForm,
+    createSubhead,
   };
 
   const created = function () {
