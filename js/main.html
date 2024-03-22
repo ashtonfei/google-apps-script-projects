@@ -1,192 +1,194 @@
 <script>
-    
-    // Initialize Vue Material
-    Vue.use(VueMaterial.default)
-    
-    const validateForm = function(event = null,item){
-        item.valid = true
-        if (item.required){
-            if (item.type === "radio") {
-                if(item.value == null) item.valid = false
-            }else if(item.type === "checkbox"){
-                const min = item.min || 1
-                const max = item.max || item.options.length
-                if (item.value.length < min || item.value > max) item.valid = false
-            }else if(item.type === "date"){
-                if (item.value == null) item.valid = false
-            }else if(item.type === "file"){
-                const files = event.target.files
-                item.error = "This is a required question"
-                if (files.length){
-                    item.valid = false
-                    const file = files[0]
-                    
-                    if (file.size / 1000 > item.maxSize){
-                        item.error = `File size is over ${item.maxSize}KB`
-                        item.valid = false
-                    }else{
-                        const reader = new FileReader()
-                        reader.onload = (e) => {
-                            item.data = e.target.result
-                            item.valid = true
-                            this.form.valid = true
-                            const count = this.form.items.length
-                            for (let i = 0; i < count; i ++){
-                                if (this.form.items[i].valid !== true && 
-                                    this.form.items[i].required){
-                                    this.form.valid = false
-                                    break
-                                }
-                            }
-                        }
-                        reader.readAsDataURL(file)
-                    }
-                }else{
-                    item.valid = false
-                    item.data = null
+  // Initialize Vue Material
+  Vue.use(VueMaterial.default);
+
+  const validateForm = function (event = null, item) {
+    item.valid = true;
+    if (item.required) {
+      if (item.type === "radio") {
+        if (item.value == null) item.valid = false;
+      } else if (item.type === "checkbox") {
+        const min = item.min || 1;
+        const max = item.max || item.options.length;
+        if (item.value.length < min || item.value > max) item.valid = false;
+      } else if (item.type === "date") {
+        if (item.value == null) item.valid = false;
+      } else if (item.type === "file") {
+        const files = event.target.files;
+        item.error = "This is a required question";
+        if (files.length) {
+          item.valid = false;
+          const file = files[0];
+
+          if (file.size / 1000 > item.maxSize) {
+            item.error = `File size is over ${item.maxSize}KB`;
+            item.valid = false;
+          } else {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              item.data = e.target.result;
+              item.valid = true;
+              this.form.valid = true;
+              const count = this.form.items.length;
+              for (let i = 0; i < count; i++) {
+                if (
+                  this.form.items[i].valid !== true &&
+                  this.form.items[i].required
+                ) {
+                  this.form.valid = false;
+                  break;
                 }
-            }else{
-                if (item.value == null) {
-                    item.valid = false
-                }else{
-                    let regex = new RegExp(item.pattern, item.modifier)
-                    const match = item.value.match(regex)
-                    if (match === null){
-                        item.valid = false
-                    }else{
-                        if (item.length > 1) item.valid = false
-                        if (match[0] !== item.value) item.valid = false
-                    }
-                    if (!regex.test(item.value)) item.valid = false
-                }
-            }
-        }else{
-            if (item.type === "file"){
-                const files = event.target.files
-                item.error = null
-                if (files.length){
-                    item.valid = false
-                    const file = files[0]
-                    if (file.size / 1000 > item.maxSize){
-                        item.error = `File size is over ${item.maxSize}KB`
-                        item.valid = false
-                    }else{
-                        const reader = new FileReader()
-                        reader.onload = (e) => {
-                            item.data = e.target.result
-                            item.valid = true
-                            this.form.valid = true
-                            const count = this.form.items.length
-                            for (let i = 0; i < count; i ++){
-                                if (this.form.items[i].valid !== true && 
-                                    this.form.items[i].required){
-                                    this.form.valid = false
-                                    break
-                                }
-                            }
-                        }
-                        reader.readAsDataURL(file)
-                    }
-                }
-            }
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        } else {
+          item.valid = false;
+          item.data = null;
         }
-        
-        this.form.valid = true
-        const count = this.form.items.length
-        for (let i = 0; i < count; i ++){
-            if (this.form.items[i].valid !== true && 
-                this.form.items[i].required){
-                this.form.valid = false
-                break
-            }
+      } else {
+        if (item.value == null) {
+          item.valid = false;
+        } else {
+          let regex = new RegExp(item.pattern, item.modifier);
+          const match = item.value.match(regex);
+          if (match === null) {
+            item.valid = false;
+          } else {
+            if (item.length > 1) item.valid = false;
+            if (match[0] !== item.value) item.valid = false;
+          }
+          if (!regex.test(item.value)) item.valid = false;
         }
+      }
+    } else {
+      if (item.type === "file") {
+        const files = event.target.files;
+        item.error = null;
+        if (files.length) {
+          item.valid = false;
+          const file = files[0];
+          if (file.size / 1000 > item.maxSize) {
+            item.error = `File size is over ${item.maxSize}KB`;
+            item.valid = false;
+          } else {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              item.data = e.target.result;
+              item.valid = true;
+              this.form.valid = true;
+              const count = this.form.items.length;
+              for (let i = 0; i < count; i++) {
+                if (
+                  this.form.items[i].valid !== true &&
+                  this.form.items[i].required
+                ) {
+                  this.form.valid = false;
+                  break;
+                }
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      }
     }
 
-    const submit = function(){
-        this.app.submitting = true
-        const values = []
-        const headers = []
-        this.form.items.forEach(item=>{
-            headers.push(item.title)
-            if (Array.isArray(item.value)) {
-                values.push(item.value.join(","))
-            }else if(item.type === "date" && item.value){
-                values.push(new Date(item.value))
-            }else if(item.type === "file" && item.data){
-                values.push({name: item.value, data: item.data})
-            }else{
-                values.push(item.value)
-            }
-        })
-        
-        const response = JSON.stringify({headers, values})
-        google.script.run
-            .withSuccessHandler(result=>{
-                this.app.submitting = false
-                this.form.end.message = result
-                this.goToSession(this.form.end.session)
-                this.form.items.forEach(item=>{
-                    if (Array.isArray(item.value)){
-                        item.value = []
-                    }else if(item.type === "date"){
-                        item.value = new Date()
-                    }else if(item.type === "file"){
-                        item.data = null
-                        item.value = null
-                    }else{
-                        item.value = null
-                    }
-                    item.valid = null
-                })
-            })
-            .withFailureHandler(error=>{
-                this.app.submitting = false
-                this.form.end.message = error.message
-                this.goToSession(this.form.end.session)
-            })
-            .saveDataToSheet(response)
+    this.form.valid = true;
+    const count = this.form.items.length;
+    for (let i = 0; i < count; i++) {
+      if (this.form.items[i].valid !== true && this.form.items[i].required) {
+        this.form.valid = false;
+        break;
+      }
     }
+  };
 
-    const goToSession = function(session = app.session){
-        this.app.session = session
-    }
+  const submit = function () {
+    this.app.submitting = true;
+    const values = [];
+    const headers = [];
+    this.form.items.forEach((item) => {
+      headers.push(item.title);
+      if (Array.isArray(item.value)) {
+        values.push(item.value.join(","));
+      } else if (item.type === "date" && item.value) {
+        values.push(new Date(item.value));
+      } else if (item.type === "file" && item.data) {
+        values.push({ name: item.value, data: item.data });
+      } else {
+        values.push(item.value);
+      }
+    });
 
-    // Vue Methods object
-    const methods = {
-        goToSession,
-        submit,
-        validateForm,
-    }
-
-    const created = function(){
-        this.checkValidDateTime = setInterval(()=>{
-            const now = new Date()
-            const validFrom = new Date(this.form.validFrom) || now
-            const validTo = new Date(this.form.validTo) || now
-            if (now > validTo || now < validFrom){
-                this.form.visible = false
-            }else{
-                this.form.visible = true
-            }
-        }, 1 * 1000)    
-    }
-
-    const destroyed = function(){
-        clearInterval(this.checkValidDateTime)
-    }
-
-    // Vue Object
+    const response = JSON.stringify({ headers, values });
     google.script.run
-        .withSuccessHandler(data=>{
-            data = JSON.parse(data)
-            data.checkValidDateTime = null
-            new Vue({
-                el: "#app",
-                data,
-                methods,
-                created,
-                destroyed,
-            })
-        })
-        .getAppData()
+      .withSuccessHandler((result) => {
+        this.app.submitting = false;
+        this.form.end.message = result;
+        this.goToSession(this.form.end.session);
+        this.form.items.forEach((item) => {
+          if (Array.isArray(item.value)) {
+            item.value = [];
+          } else if (item.type === "date") {
+            item.value = new Date();
+          } else if (item.type === "file") {
+            item.data = null;
+            item.value = null;
+          } else {
+            item.value = null;
+          }
+          item.valid = null;
+        });
+      })
+      .withFailureHandler((error) => {
+        this.app.submitting = false;
+        this.form.end.message = error.message;
+        this.goToSession(this.form.end.session);
+      })
+      .saveDataToSheet(response);
+  };
+
+  const goToSession = function (session = app.session) {
+    this.app.session = session;
+  };
+
+  // Vue Methods object
+  const methods = {
+    goToSession,
+    submit,
+    validateForm,
+  };
+
+  const created = function () {
+    this.checkValidDateTime = setInterval(() => {
+      const now = new Date();
+      const validFrom = new Date(this.form.validFrom) || now;
+      const validTo = new Date(this.form.validTo) || now;
+      if (now > validTo || now < validFrom) {
+        this.form.visible = false;
+      } else {
+        this.form.visible = true;
+      }
+    }, 1 * 1000);
+  };
+
+  const destroyed = function () {
+    clearInterval(this.checkValidDateTime);
+  };
+
+  // Vue Object
+  google.script.run
+    .withSuccessHandler((data) => {
+      data = JSON.parse(data);
+      data.checkValidDateTime = null;
+      new Vue({
+        el: "#app",
+        data,
+        methods,
+        created,
+        destroyed,
+      });
+    })
+    .getAppData();
 </script>

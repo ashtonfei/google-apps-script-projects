@@ -1,209 +1,259 @@
 <template v-if=" app.session === form.start.session ">
-    <div class="md-content md-layout md-alignment-center-left">
-        <div class="cover" :style="form.start.style"></div>
-        <div class="md-layout-item md-size-50 md-medium-60 md-small-70 md-xsmall-size-95">
-            <div class="md-title" v-html="form.start.title"></div>
-            <div class="sub-head" style="margin-bottom: 24px;" v-html="form.start.subTitle"></div>
-            <div>
-                <md-button 
-                    class="md-primary md-raised"
-                    :disabled="!form.visible"
-                    @click="goToSession(form.start.next)">
-                        <md-icon v-if="form.start.startButtonIcon">{{form.start.startButtonIcon}}</md-icon>
-                        <md-tooltip md-direction="bottom">{{form.start.startButtonName}}</md-tooltip>
-                    </md-button>
-            </div>
-            <div v-if="form.validFrom" style="margin-top: 12px;">
-                <small>
-                    <span>This form is only available from {{new Date(form.validFrom).toLocaleString()}}</span>
-                    <span v-if="form.validTo"> to {{new Date(form.validTo).toLocaleString()}}</span>.
-                </small>
-            </div>
-        </div>
+  <div class="md-content md-layout md-alignment-center-left">
+    <div class="cover" :style="form.start.style"></div>
+    <div
+      class="md-layout-item md-size-50 md-medium-60 md-small-70 md-xsmall-size-95"
+    >
+      <div class="md-title" v-html="form.start.title"></div>
+      <div
+        class="sub-head"
+        style="margin-bottom: 24px"
+        v-html="form.start.subTitle"
+      ></div>
+      <div>
+        <md-button
+          class="md-primary md-raised"
+          :disabled="!form.visible"
+          @click="goToSession(form.start.next)"
+        >
+          <md-icon v-if="form.start.startButtonIcon"
+            >{{form.start.startButtonIcon}}</md-icon
+          >
+          <md-tooltip md-direction="bottom"
+            >{{form.start.startButtonName}}</md-tooltip
+          >
+        </md-button>
+      </div>
+      <div v-if="form.validFrom" style="margin-top: 12px">
+        <small>
+          <span
+            >This form is only available from {{new
+            Date(form.validFrom).toLocaleString()}}</span
+          >
+          <span v-if="form.validTo">
+            to {{new Date(form.validTo).toLocaleString()}}</span
+          >.
+        </small>
+      </div>
     </div>
+  </div>
 </template>
 
 <template v-for="(item, i) in form.items">
-    <div 
-        class="md-content md-layout md-alignment-center-left"
-        v-if=" app.session === i && form.visible" 
-        :key=" 'form-item-' + i ">
-        <div class="cover" :style="item.style"></div>
-        <div class="md-layout-item md-size-50 md-medium-60 md-small-70 md-xsmall-size-95">
-            <div class="md-title" >{{i+1}}. {{item.title}} <small v-if="item.required">*</small></div>
-            <div class="sub-head" v-if="item.usePreviousAsPrefix">{{item.prefix}} {{item.usePreviousAsPrefix.map(index=>form.items[index].value).join(" ")}}. {{item.description}}</div>
-            <div class="sub-head" v-else>{{item.description}}</div>
-            <md-field 
-                v-if=" item.type === 'input' "
-                :class=" item.valid === false ? 'md-invalid' : '' ">
-                <md-input
-                    :disabled="app.submitting"
-                    :required="item.required"
-                    :placeholder="item.placeholder"
-                    v-model.trim="item.value"
-                    @blur="validateForm(null, item)"
-                    @keyup="validateForm(null, item)">
-                </md-input>
-                <span class="md-error">{{item.error}}</span>
-            </md-field>
+  <div
+    class="md-content md-layout md-alignment-center-left"
+    v-if=" app.session === i && form.visible"
+    :key=" 'form-item-' + i "
+  >
+    <div class="cover" :style="item.style"></div>
+    <div
+      class="md-layout-item md-size-50 md-medium-60 md-small-70 md-xsmall-size-95"
+    >
+      <div class="md-title">
+        {{i+1}}. {{item.title}} <small v-if="item.required">*</small>
+      </div>
+      <div class="sub-head" v-if="item.usePreviousAsPrefix">
+        {{item.prefix}}
+        {{item.usePreviousAsPrefix.map(index=>form.items[index].value).join("
+        ")}}. {{item.description}}
+      </div>
+      <div class="sub-head" v-else>{{item.description}}</div>
+      <md-field
+        v-if=" item.type === 'input' "
+        :class=" item.valid === false ? 'md-invalid' : '' "
+      >
+        <md-input
+          :disabled="app.submitting"
+          :required="item.required"
+          :placeholder="item.placeholder"
+          v-model.trim="item.value"
+          @blur="validateForm(null, item)"
+          @keyup="validateForm(null, item)"
+        >
+        </md-input>
+        <span class="md-error">{{item.error}}</span>
+      </md-field>
 
-            <md-field 
-                v-else-if=" item.type === 'textarea' "
-                :class=" item.valid === false ? 'md-invalid' : '' ">
-                <md-textarea
-                    :disabled="app.submitting"
-                    :required="item.required"
-                    :placeholder="item.placeholder" 
-                    v-model.trim="item.value"
-                    @blur="validateForm(null, item)"
-                    @keyup="validateForm(null, item)"
-                    md-autogrow></md-textarea>
-                <span class="md-error">{{item.error}}</span>
-            </md-field>
+      <md-field
+        v-else-if=" item.type === 'textarea' "
+        :class=" item.valid === false ? 'md-invalid' : '' "
+      >
+        <md-textarea
+          :disabled="app.submitting"
+          :required="item.required"
+          :placeholder="item.placeholder"
+          v-model.trim="item.value"
+          @blur="validateForm(null, item)"
+          @keyup="validateForm(null, item)"
+          md-autogrow
+        ></md-textarea>
+        <span class="md-error">{{item.error}}</span>
+      </md-field>
 
-            <div v-else-if=" item.type === 'date' ">
-                <md-datepicker
-                    :disabled="app.submitting"
-                    :required="item.required"
-                    v-model="item.value"
-                    @input="validateForm(null, item)"
-                    @blur="validateForm(null, item)"
-                    :class=" item.valid === false ? 'md-invalid' : '' "
-                    :md-debounce="100"
-                    md-immediately>
-                    <span class="md-error">{{item.error}}</span>
-                </md-datepicker>
-            </div>
-            
-            <div v-else-if=" item.type === 'radio' ">
-                <md-radio
-                    v-for="(option, i) in item.options"
-                    :key=" 'radio-' + i "
-                    :value="option"
-                    v-model="item.value"
-                    :disabled="app.submitting"
-                    @blur="validateForm(null, item)"
-                    @change="validateForm(null, item)">
-                    {{option}}
-                </md-radio>
-                <span class="error" v-if="item.valid === false">{{item.error}}</span>
-            </div>
-            
-            <div v-else-if=" item.type === 'checkbox' ">
-                <md-checkbox
-                    v-for="(option, i) in item.options"
-                    :key=" 'checkbox-' + i "
-                    :value="option"
-                    v-model="item.value"
-                    :disabled="app.submitting"
-                    @blur="validateForm(null, item)"
-                    @change="validateForm(null, item)">
-                    {{option}}
-                </md-checkbox>
-                <span class="error" v-if="item.valid === false">{{item.error}}</span>
-            </div>
+      <div v-else-if=" item.type === 'date' ">
+        <md-datepicker
+          :disabled="app.submitting"
+          :required="item.required"
+          v-model="item.value"
+          @input="validateForm(null, item)"
+          @blur="validateForm(null, item)"
+          :class=" item.valid === false ? 'md-invalid' : '' "
+          :md-debounce="100"
+          md-immediately
+        >
+          <span class="md-error">{{item.error}}</span>
+        </md-datepicker>
+      </div>
 
-            <md-field 
-                v-else-if=" item.type === 'file' "
-                :class=" item.valid === false ? 'md-invalid' : '' ">
-                <md-file
-                    :required="item.required"
-                    :disabled="app.submitting"
-                    :accept="item.fileTypes"
-                    v-model="item.value"
-                    @click="validateForm(this.event, item)"
-                    @blur="validateForm(this.event, item)"
-                    @md-change="validateForm(this.event, item)">
-                </md-file>
-                <span class="md-error">{{item.error}}</span>
-            </md-field>
-        
-            <div>
-                <template v-if=" i === form.items.length - 1 ">
-                    <md-button
-                        v-if="!app.submitting"
-                        class="md-raised"
-                        :disabled="app.submitting"
-                        @click="goToSession(i - 1)">
-                        <md-icon>chevron_left</md-icon>
-                        <md-tooltip md-direction="bottom">Previous</md-tooltip>
-                    </md-button>
-                    <md-button
-                        v-if="!app.submitting"
-                        class="md-raised md-primary"
-                        :disabled="app.submitting || !form.valid"
-                        @click="submit">
-                        Submit
-                        <md-tooltip md-direction="bottom">Submit</md-tooltip>
-                    </md-button>
-                    <md-progress-spinner
-                        v-if="app.submitting"
-                        :md-diameter="30" 
-                        :md-stroke="3" 
-                        md-mode="indeterminate">
-                        <md-tooltip md-direction="bottom">submitting...</md-tooltip>
-                    </md-progress-spinner>
-                </template>
-                
-                <template v-else>
-                    <md-button
-                        v-if="i === 0"
-                        class="md-raised"
-                        :disabled="app.submitting"
-                        @click="goToSession(form.start.session)">
-                        <md-icon>chevron_left</md-icon>
-                        <md-tooltip md-direction="bottom">Previous</md-tooltip>
-                    </md-button>
-                    <md-button
-                        class="md-raised"
-                        :disabled="app.submitting"
-                        @click="goToSession(i - 1)"
-                        v-else>
-                        <md-icon>chevron_left</md-icon>
-                        <md-tooltip md-direction="bottom">Previous</md-tooltip>
-                    </md-button>
-                    <md-button
-                        class="md-raised md-accent"
-                        :disabled="(app.submitting || !item.valid) && item.required"
-                        @click="goToSession(i + 1)">
-                        <md-icon>chevron_right</md-icon>
-                        <md-tooltip md-direction="bottom">Next</md-tooltip>
-                    </md-button>
-                </template>
-            </div>
-            
-            <div class="md-layout">
-                <md-progress-bar 
-                    md-mode="determinate" 
-                    class="md-accent md-layout-item md-size-50 md-small-size-100" 
-                    :md-value=" ((i + 1) / form.items.length) * 100 ">
-                </md-progress-bar>
-                <md-tooltip md-direction="bottom">({{i + 1}}/{{form.items.length}})</md-tooltip>
-            </div>
-        </div>
+      <div v-else-if=" item.type === 'radio' ">
+        <md-radio
+          v-for="(option, i) in item.options"
+          :key=" 'radio-' + i "
+          :value="option"
+          v-model="item.value"
+          :disabled="app.submitting"
+          @blur="validateForm(null, item)"
+          @change="validateForm(null, item)"
+        >
+          {{option}}
+        </md-radio>
+        <span class="error" v-if="item.valid === false">{{item.error}}</span>
+      </div>
+
+      <div v-else-if=" item.type === 'checkbox' ">
+        <md-checkbox
+          v-for="(option, i) in item.options"
+          :key=" 'checkbox-' + i "
+          :value="option"
+          v-model="item.value"
+          :disabled="app.submitting"
+          @blur="validateForm(null, item)"
+          @change="validateForm(null, item)"
+        >
+          {{option}}
+        </md-checkbox>
+        <span class="error" v-if="item.valid === false">{{item.error}}</span>
+      </div>
+
+      <md-field
+        v-else-if=" item.type === 'file' "
+        :class=" item.valid === false ? 'md-invalid' : '' "
+      >
+        <md-file
+          :required="item.required"
+          :disabled="app.submitting"
+          :accept="item.fileTypes"
+          v-model="item.value"
+          @click="validateForm(this.event, item)"
+          @blur="validateForm(this.event, item)"
+          @md-change="validateForm(this.event, item)"
+        >
+        </md-file>
+        <span class="md-error">{{item.error}}</span>
+      </md-field>
+
+      <div>
+        <template v-if=" i === form.items.length - 1 ">
+          <md-button
+            v-if="!app.submitting"
+            class="md-raised"
+            :disabled="app.submitting"
+            @click="goToSession(i - 1)"
+          >
+            <md-icon>chevron_left</md-icon>
+            <md-tooltip md-direction="bottom">Previous</md-tooltip>
+          </md-button>
+          <md-button
+            v-if="!app.submitting"
+            class="md-raised md-primary"
+            :disabled="app.submitting || !form.valid"
+            @click="submit"
+          >
+            Submit
+            <md-tooltip md-direction="bottom">Submit</md-tooltip>
+          </md-button>
+          <md-progress-spinner
+            v-if="app.submitting"
+            :md-diameter="30"
+            :md-stroke="3"
+            md-mode="indeterminate"
+          >
+            <md-tooltip md-direction="bottom">submitting...</md-tooltip>
+          </md-progress-spinner>
+        </template>
+
+        <template v-else>
+          <md-button
+            v-if="i === 0"
+            class="md-raised"
+            :disabled="app.submitting"
+            @click="goToSession(form.start.session)"
+          >
+            <md-icon>chevron_left</md-icon>
+            <md-tooltip md-direction="bottom">Previous</md-tooltip>
+          </md-button>
+          <md-button
+            class="md-raised"
+            :disabled="app.submitting"
+            @click="goToSession(i - 1)"
+            v-else
+          >
+            <md-icon>chevron_left</md-icon>
+            <md-tooltip md-direction="bottom">Previous</md-tooltip>
+          </md-button>
+          <md-button
+            class="md-raised md-accent"
+            :disabled="(app.submitting || !item.valid) && item.required"
+            @click="goToSession(i + 1)"
+          >
+            <md-icon>chevron_right</md-icon>
+            <md-tooltip md-direction="bottom">Next</md-tooltip>
+          </md-button>
+        </template>
+      </div>
+
+      <div class="md-layout">
+        <md-progress-bar
+          md-mode="determinate"
+          class="md-accent md-layout-item md-size-50 md-small-size-100"
+          :md-value=" ((i + 1) / form.items.length) * 100 "
+        >
+        </md-progress-bar>
+        <md-tooltip md-direction="bottom"
+          >({{i + 1}}/{{form.items.length}})</md-tooltip
+        >
+      </div>
     </div>
+  </div>
 </template>
 
-
 <template v-if=" app.session === form.end.session && form.visible">
-    <div class="md-content md-layout md-alignment-center-left">
-        <div class="cover" :style="form.end.style"></div>
-        <div class="md-layout-item md-size-50 md-medium-60 md-small-70 md-xsmall-size-95">
-            <div class="md-title" v-html="form.end.title"></div>
-            <div v-html="form.end.message"></div>
-            <div>
-                <md-button 
-                    class="md-raised"
-                    @click="goToSession(form.items.length - 1)">
-                        <md-icon>chevron_left</md-icon>
-                    </md-button>
-                <md-button 
-                    class="md-primary md-raised"
-                    @click="goToSession(form.start.session)">
-                        <md-icon v-if="form.end.endButtonIcon">{{form.end.endButtonIcon}}</md-icon>
-                        <md-tooltip md-direction="bottom">{{form.end.endButtonName}}</md-tooltip>
-                    </md-button>
-            </div>
-        </div>
+  <div class="md-content md-layout md-alignment-center-left">
+    <div class="cover" :style="form.end.style"></div>
+    <div
+      class="md-layout-item md-size-50 md-medium-60 md-small-70 md-xsmall-size-95"
+    >
+      <div class="md-title" v-html="form.end.title"></div>
+      <div v-html="form.end.message"></div>
+      <div>
+        <md-button
+          class="md-raised"
+          @click="goToSession(form.items.length - 1)"
+        >
+          <md-icon>chevron_left</md-icon>
+        </md-button>
+        <md-button
+          class="md-primary md-raised"
+          @click="goToSession(form.start.session)"
+        >
+          <md-icon v-if="form.end.endButtonIcon"
+            >{{form.end.endButtonIcon}}</md-icon
+          >
+          <md-tooltip md-direction="bottom"
+            >{{form.end.endButtonName}}</md-tooltip
+          >
+        </md-button>
+      </div>
     </div>
+  </div>
 </template>
