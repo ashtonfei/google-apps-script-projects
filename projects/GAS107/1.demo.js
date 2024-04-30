@@ -1,15 +1,19 @@
 const getNamedValues_ = () => {
   const ss = SpreadsheetApp.getActive();
   const values = {};
+  const specialValues = {
+    "\\n": "\n",
+    "\\t": "\t",
+    "\\s": " ",
+  };
   ss.getNamedRanges().forEach((r) => {
     const name = r.getName();
     const value = r.getRange().getDisplayValue();
-    if (value === "\\n") {
-      return (values[name] = "\n");
+    if (value in specialValues) {
+      return (values[name] = specialValues[value]);
     }
     values[name] = value;
   });
-  console.log(values);
   return values;
 };
 
