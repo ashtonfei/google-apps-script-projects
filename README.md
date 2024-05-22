@@ -10,6 +10,12 @@ name is in the video title.
 
 ### All projects
 
+- [GAS108 Employee Profile App with Data in Sheets](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS108) -
+  [:tv: YouTube](https://youtu.be/GO-jyUF6Yn0)
+- [GAS107 Join & Split Rich Text Values In Google Sheets](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS107) -
+  [:tv: YouTube](https://youtu.be/R3dC3ZkAYIo)
+- [GAS106 Add View Count to Your Blogger Posts](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS106) -
+  [:tv: YouTube](https://youtu.be/hdvCj1z7Aa4)
 - [GAS105 Create Gmail Replies and Drafts with ChatGPT](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS105) -
   [:tv: YouTube](https://youtu.be/cTY9bZYmSSc)
 - [GAS104 Copy & Update Scripts to Multiple Files](https://github.com/ashtonfei/google-apps-script-projects/tree/master/GAS104) -
