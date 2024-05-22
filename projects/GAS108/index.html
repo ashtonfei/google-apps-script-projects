@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <style>
+      html {
+        overflow: auto;
+      }
+      [v-cloak] > * {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" v-cloak>
+      <v-app>
+        <v-main>
+          <v-container :fluid="settings.fluid">
+            <v-row>
+              <v-col cols="12">
+                <div class="title">{{ settings.title }}</div>
+                <div class="caption">{{ settings.subtitle }}</div>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6" md="4" lg="3" xl="2" v-for="item in data">
+                <v-card outlined @click="showProfile(item)">
+                  <v-img
+                    :src="getProfileUrl(item)"
+                    :lazy-src="getProfileUrl(item)"
+                    alt="profile"
+                    :aspect-ratio="getAspectRatio()"
+                  >
+                    <template v-slot:placeholder>
+                      <v-row
+                        class="fill-height ma-0"
+                        align="center"
+                        justify="center"
+                      >
+                        <v-progress-circular
+                          indeterminate
+                          size="60"
+                          color="grey lighten-3"
+                        ></v-progress-circular>
+                      </v-row>
+                    </template>
+                  </v-img>
+                  <v-card-title>{{createTitle(item)}}</v-card-title>
+                  <v-card-subtitle>{{createSubtitle(item)}}</v-card-subtitle>
+                </v-card>
+              </v-col>
+            </v-row>
+            <template>
+              <v-row justify="center">
+                <v-dialog
+                  v-model="dialog.value"
+                  scrollable
+                  min-width="300px"
+                  max-width="800px"
+                >
+                  <v-card>
+                    <v-card-title
+                      >{{dialog.title}}
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="closeDialog">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+                    </v-card-title>
+                    <v-card-text class="pt-3" style="max-height: 600px">
+                      <v-row>
+                        <v-col cols="12" md="6">
+                          <v-img
+                            :src="getProfileUrl(dialog.item)"
+                            alt="profile"
+                            :aspect-ratio="getAspectRatio()"
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                          <v-list-item
+                            two-line
+                            v-for="header in dialog.headers"
+                            :key="header"
+                          >
+                            <v-list-item-content>
+                              <v-list-item-title class="text-wrap">
+                                {{dialog.item[header]}}
+                              </v-list-item-title>
+                              <v-list-item-subtitle class="text-wrap">
+                                {{header}}
+                              </v-list-item-subtitle>
+                            </v-list-item-content>
+                          </v-list-item>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-dialog>
+              </v-row>
+            </template>
+          </v-container>
+        </v-main>
+      </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data: () => ({
+          loading: false,
+          dialog: {
+            value: false,
+            item: {},
+            title: "Dialog",
+          },
+          data: [
+            {
+              "Full Name": "Abby Fei",
+              "Profile Url": "https://source.unsplash.com/random/?male",
+              Bio: "This is a test bio",
+              Website: "https://onescript.work",
+              Birthday:
+                "Wed May 22 2024 00:00:00 GMT+0800 (China Standard Time)",
+              Gender: "Male",
+              row_: 1,
+            },
+            {
+              "Full Name": "Bob Fei",
+              "Profile Url": "https://source.unsplash.com/random/?female",
+              Bio: "This is a test bio",
+              Website: "https://onescript.work",
+              Birthday:
+                "Wed May 22 2024 00:00:00 GMT+0800 (China Standard Time)",
+              Gender: "Female",
+              row_: 2,
+            },
+            {
+              "Full Name": "Chris Fei",
+              "Profile Url": "https://source.unsplash.com/random/?travel",
+              Bio: "This is a test bio",
+              Website: "https://onescript.work",
+              Birthday:
+                "Wed May 22 2024 00:00:00 GMT+0800 (China Standard Time)",
+              Gender: "Male",
+              row_: 3,
+            },
+          ],
+          settings: {
+            app: "Employee Profile App: GAS108",
+            title: "Employee Profiles",
+            fluid: true,
+            subtitle:
+              "A light weight app built with Google Sheets & Apps Script",
+            sheetNameData: "Data",
+            headerProfileUrl: "Profile Url",
+            profileTitle: "{{Full Name}}",
+            profileSubtitle: "{{Bio}}",
+            profileAspectRatio: "1/1",
+            headers: "Full Name, Profile Url, Bio, Website, Birthday, Gender",
+          },
+        }),
+        methods: {
+          getAspectRatio() {
+            try {
+              return eval(this.settings.profileAspectRatio);
+            } catch (err) {
+              return 1;
+            }
+          },
+          updatePlaceholders(text, item) {
+            Object.entries(item).forEach(([key, value]) => {
+              text = text.replace(new RegExp(`{{${key}}}`, "gi"), value);
+            });
+            return text;
+          },
+          getProfileUrl(item) {
+            return item[this.settings.headerProfileUrl];
+          },
+          createTitle(item) {
+            return this.updatePlaceholders(this.settings.profileTitle, item);
+          },
+          createSubtitle(item) {
+            return this.updatePlaceholders(this.settings.profileSubtitle, item);
+          },
+          showProfile(item) {
+            const headers = this.settings.headers
+              .split(/\s*,\s*/)
+              .filter((v) => v);
+            this.dialog = {
+              value: true,
+              item,
+              headers,
+              title: "Profile",
+            };
+          },
+          closeDialog() {
+            this.dialog.value = false;
+          },
+          error(msg) {
+            console.log(msg);
+          },
+        },
+        created() {
+          try {
+            this.loading = true;
+            const { data, settings } = JSON.parse(`<?= data ?>`.slice(1, -1));
+            this.data = data;
+            this.settings = settings;
+          } catch (err) {
+            this.error(err.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+      });
+    </script>
+  </body>
+</html>
