@@ -2,6 +2,7 @@ const mergeDocs = () => {
   const updateStatus_ = (status, message) => {
     rangeStatus.setValue(status);
     rangeMergedDoc.setValue(message);
+    SpreadsheetApp.flush();
   };
   const ss = SpreadsheetApp.getActive();
   const sheet = ss.getSheetByName("App");
@@ -54,47 +55,50 @@ const mergeDocs = () => {
 };
 
 /**
- * @param {GoogleAppsScript.Document.Document} targetDoc
- * @param {GoogleAppsScript.Document.Document} doc
- */
-const appendDoc_ = (targetDoc, doc, keepPagebreak = true) => {
-  const bodyTarget = targetDoc.getBody();
-  const body = doc.getBody();
-  const countOfElement = body.getNumChildren();
-  if (countOfElement === 0) return;
-  keepPagebreak && bodyTarget.appendPageBreak();
-
-  for (let i = 0; i < countOfElement; i++) {
-    const child = body.getChild(i);
-    const type = child.getType();
-    const copy = child.copy();
-    if (type === DocumentApp.ElementType.TABLE) {
-      bodyTarget.appendTable(copy.asTable());
-    } else if (type === DocumentApp.ElementType.PAGE_BREAK) {
-      bodyTarget.appendPageBreak(copy.asPageBreak());
-    } else if (type === DocumentApp.ElementType.INLINE_IMAGE) {
-      bodyTarget.appendImage(copy.asInlineImage());
-    } else if (type === DocumentApp.ElementType.HORIZONTAL_RULE) {
-      bodyTarget.appendHorizontalRule();
-    } else if (type === DocumentApp.ElementType.LIST_ITEM) {
-      const listItem = copy.asListItem();
-      bodyTarget
-        .appendListItem(listItem)
-        .setAttributes(listItem.getAttributes());
-    } else {
-      bodyTarget.appendParagraph(copy.asParagraph());
-    }
-  }
-
-  return targetDoc;
-};
-
-/**
  * @param {string[]} urlsOrIds a list of Google Docs urls or ids
- * @return {GoogleAppsScript.Drive.File} a merged Google Docs
+ * @param {boolean} keepPagebreak Insert a pagebreak between docs to be merged
+ * @param {string} filename The file name of the merged file
+ * @return {GoogleAppsScript.Drive.File} a merged Google Docs file
  */
 const mergeDocs_ = (urlsOrIds, keepPagebreak = true, filename) => {
   const urlFilter = (v) => v.startsWith("https://");
+
+  /**
+   * @param {GoogleAppsScript.Document.Document} targetDoc
+   * @param {boolean} keepPagebreak Insert a pagebreak between docs to be merged
+   * @param {GoogleAppsScript.Document.Document} doc
+   */
+  const appendDoc_ = (targetDoc, doc, keepPagebreak = true) => {
+    const bodyTarget = targetDoc.getBody();
+    const body = doc.getBody();
+    const countOfElement = body.getNumChildren();
+    if (countOfElement === 0) return;
+    keepPagebreak && bodyTarget.appendPageBreak();
+
+    for (let i = 0; i < countOfElement; i++) {
+      const child = body.getChild(i);
+      const type = child.getType();
+      const copy = child.copy();
+      if (type === DocumentApp.ElementType.TABLE) {
+        bodyTarget.appendTable(copy.asTable());
+      } else if (type === DocumentApp.ElementType.PAGE_BREAK) {
+        bodyTarget.appendPageBreak(copy.asPageBreak());
+      } else if (type === DocumentApp.ElementType.INLINE_IMAGE) {
+        bodyTarget.appendImage(copy.asInlineImage());
+      } else if (type === DocumentApp.ElementType.HORIZONTAL_RULE) {
+        bodyTarget.appendHorizontalRule();
+      } else if (type === DocumentApp.ElementType.LIST_ITEM) {
+        const listItem = copy.asListItem();
+        bodyTarget
+          .appendListItem(listItem)
+          .setAttributes(listItem.getAttributes());
+      } else {
+        bodyTarget.appendParagraph(copy.asParagraph());
+      }
+    }
+
+    return targetDoc;
+  };
 
   const [firstDoc, ...restDocs] = urlsOrIds
     .map((v) => {
