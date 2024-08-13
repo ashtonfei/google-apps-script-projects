@@ -1,88 +1,65 @@
-<p>This is demo post for testing post views with Google Apps Script.</p>
-<!-- where the post count renders -->
-<p>Post Views: <span id="views"></span></p>
-
-<script>
-  /** START of configurations */
-
-  /** 1. Your Apps Script API (WebApp URL) */
-  const api =
-    "https://script.google.com/macros/s/AKfycbySEsc6s-Y2Bz0JutUawH3AkhipseUSAjoJkwPk7tpINnw1y-70Kjc_09dzKBT9ZHg/exec";
-  /** 2. Can be found in the draft url */
-  const blogId = "4322776648572656092";
-  /** 3. Can be found in the draft url */
-  const postId = "6249167238377739742";
-  /** 4.
-   * minutes for caching browser fingerprint
-   * set to 0 to disable the fingerprint check
-   * max value is 360 mins
+<script type="text/javascript">
+  /** From Ashton (13/Aug/2024):
+   * This is an updated version of the script for the blogger to use
    */
-  const mins = 0;
 
-  /** 5. Where the post views is rendered */
-  const idOfPostViews = "views";
+  const url = "UPDATE THE VALUE HERE WITH YOUR WEB APP URL";
 
-  /** END of configurations */
+  const updatePostViews = async () => {
+    /**
+     * The page views will be display in post header first
+     * If post header is not found, the sharing header will be used
+     */
+    const sharing =
+      document.querySelector(".item-view .post-header") ||
+      document.querySelector(".item-view .sharing") ||
+      document.querySelector(".post-view .post-header") ||
+      document.querySelector(".post-view .sharing") ||
+      document.querySelector(".page-view .post-header") ||
+      document.querySelector(".page-view .sharing");
 
-  const animate = viewAnimation();
-  fetchPostViews(blogId, postId);
-
-  function createBrowserFingerprint() {
-    const width = screen.width || "";
-    const height = screen.height || "";
-    const languages = navigator.languages;
-    const agent = navigator.userAgent;
-    const plugins = [];
-    for (let p of navigator.plugins) {
-      plugins.push(p.name);
-    }
-    plugins.sort();
-    return [width, height, ...languages, agent, ...plugins]
-      .join("")
-      .replace(/[^a-z0-9]/gi, "")
-      .slice(0, 250);
-  }
-
-  function viewAnimation(start = 0) {
-    return function () {
-      const animation = [".", "..", "..."];
-      const value = animation[start];
-      start++;
-      if (animation.length == start) start = 0;
-      return value;
+    if (!sharing) return;
+    const svg = `<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline
+        icon-tabler-eye" style="color: var(--main-color); margin:
+          0px;"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+          d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path><path d="M21 12c-2.4 4
+          -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9
+          6"></path></svg>`;
+    const eye = `<span class="material-symbols-outlined">visibility</span>`;
+    const createViews = (views = "...") => {
+      const element = document.createElement("div");
+      element.innerHTML = `<div style="display: flex; align-items:
+        center;">${svg}<span style="margin-left:0.2rem;"
+          id="blog-post-view">${views}</span></div>`;
+      return element;
     };
-  }
-
-  function updatePostViews(id = idOfPostViews, views = animate()) {
-    document.getElementById(id).innerText = views;
-  }
-
-  function createQueryString(params) {
-    return Object.entries(params)
-      .filter(([_, value]) => value)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
-  }
-
-  async function fetchPostViews(blogId, postId) {
-    const fingerprint =
-      mins > 0 && mins <= 360 ? createBrowserFingerprint() : "";
-    const interval = setInterval(updatePostViews, 500);
-    const queryString = createQueryString({
-      postId,
-      blogId,
-      mins,
-      fingerprint,
-    });
-    const url = `${api}?${queryString}`;
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      updatePostViews(idOfPostViews, data.views);
-    } catch (err) {
-      updatePostViews(idOfPostViews, err.message);
-    } finally {
-      clearInterval(interval);
-    }
-  }
+    let start = 3;
+    let loading = null;
+    let element = createViews("...");
+    sharing.style.display = "flex";
+    sharing.style.justifyContent = "space-between";
+    sharing.appendChild(element);
+    start--;
+    loading = setInterval(() => {
+      const views = Array(start).fill(".").join("");
+      element.querySelector("span").innerText = views;
+      start--;
+      if (start === 0) {
+        start = 3;
+      }
+    }, 1000);
+    const href = location.href;
+    const api = `${url}?url=${href}`;
+    const data = await fetch(api);
+    const { views } = await data.json();
+    loading && clearInterval(loading);
+    element.querySelector("span").innerText = views;
+  };
+  updatePostViews();
+  window.onload = () => {
+    const bloggerSection = document.querySelector(".blogger");
+    bloggerSection && (bloggerSection.style.display = "none");
+  };
 </script>

@@ -1,5 +1,31 @@
-function createKey_(blogId, postId) {
-  return `${postId}/${blogId}`;
+/**
+ * From Ashton (13/Aug/2024):
+ * I updated the API to use the post/page URL as a unique key
+ * so we don't need to use the blog id and post id as the key any more
+ */
+
+/**
+ * Ignore requests from other websites
+ */
+const PREFIX_WHITE_LIST = [
+  "https://ashtonfei.blogspot.com/",
+  "https://ashtontheroad.blogspot.com/",
+  "https://miaomiaofriends.blogspot.com/",
+  "https://automatetheboring.blogspot.com/",
+  "https://yougastube.blogspot.com/",
+];
+
+function getBaseUrl_(url) {
+  if (url.includes("://")) {
+    url = url.split("://")[1];
+  }
+  if (url.includes("?")) {
+    url = url.split("?")[0];
+  }
+  if (url.includes("#")) {
+    url = url.split("#")[0];
+  }
+  return url;
 }
 
 function createJsonResponse_(data) {
@@ -8,23 +34,12 @@ function createJsonResponse_(data) {
     .setContent(JSON.stringify(data));
 }
 
-function updatePostViews_(blogId, postId, fingerprint, mins) {
-  const cache = CacheService.getScriptCache();
-  const seconds = /^\d+$/.test(mins) ? mins * 60 : 0;
-  const maxSeconds = 6 * 60 * 60; // 6 hours is the max cache time
-  const useFingerprint = seconds > 0 && seconds <= maxSeconds && fingerprint;
-  const visited = useFingerprint ? cache.get(fingerprint) : false;
-
-  const key = createKey_(blogId, postId);
+function updatePostViews_(url) {
+  const key = getBaseUrl_(url);
   const props = PropertiesService.getScriptProperties();
-  const currentViews = (props.getProperty(key) || 0) * 1;
-  if (visited) return currentViews;
-  const views = currentViews + 1;
-  if (useFingerprint) {
-    cache.put(fingerprint, "VISITED", seconds);
-  }
-  props.setProperty(key, views);
-  return visited ? currentViews || 1 : views;
+  const views = (props.getProperty(key) || 1) * 1;
+  props.setProperty(key, views + 1);
+  return views;
 }
 
 /**
@@ -32,17 +47,15 @@ function updatePostViews_(blogId, postId, fingerprint, mins) {
  * @param {GoogleAppsScript.Events.DoGet} e
  */
 function doGet(e) {
-  const { postId, blogId, fingerprint, mins } = e.parameter;
-  if (!blogId) {
+  const { url } = e.parameter;
+  if (!url) {
     return;
   }
-  if (!postId) {
+  if (!PREFIX_WHITE_LIST.find((v) => url.startsWith(v))) {
     return;
   }
-  const views = updatePostViews_(blogId, postId, fingerprint, mins);
+  const views = updatePostViews_(url);
   return createJsonResponse_({
-    blogId,
-    postId,
     views,
   });
 }
