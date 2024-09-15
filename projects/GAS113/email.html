@@ -1,0 +1,21 @@
+<!-- 
+You can use data from the report by referencing the named range
+e.g. data.reportClient
+- 'data' is the object
+- 'reportClient' is the key to access the value 
+-->
+
+<div>
+  <p>Hi <?!= data.reportClient ?>,</p>
+
+  <p>
+    Here is the time tracking report for the tasks have been complted from <?!=
+    data.reportStart ?> to <?!= data.reportEnd ?>, check the details in the
+    attachment.
+  </p>
+
+  <div>Total hours: <?!= data.reportHours ?></div>
+  <div>Total costs: <?!= data.reportCosts ?></div>
+
+  <p>Thanks,<br /><?!= data.reportBy ?></p>
+</div>
