@@ -14,6 +14,9 @@ New projects start from GAS085 are in
 [projects](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects)
 folder, old ones are in the branches.
 
+- [GAS114 Unleash the Power of Image Annotation | Integrate Vision API with Google Sheets and Forms](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS114) - [:tv: YouTube](https://youtu.be/Ra9vlnZhGGM)
+- [GAS113 Personal Time Tracker for Your Projects in Google Sheets](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS113) - [:tv: YouTube](https://youtu.be/Q49pBQpRE8o)
+- [GAS112 Compress Uploaded Images in Google Forms to Save Your Drive Space](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS112) - [:tv: YouTube](https://youtu.be/ks0-DI7VR5Q)
 - [GAS111 Export Multiple Gmail Threads as PDFs or One Single PDF](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS111) -
   [:tv: YouTube](https://youtu.be/tzDkQGKRSPc)
 - [GAS110 Merge Multiple Google Docs into One](https://github.com/ashtonfei/google-apps-script-projects/tree/master/projects/GAS110) -
