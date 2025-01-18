@@ -1,0 +1,388 @@
+<!doctype html>
+<html>
+  <head>
+    <base target="_top" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/vue-material/dist/vue-material.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/vue-material/dist/theme/default.css"
+    />
+    <style>
+      [v-cloak] {
+        display: block;
+        padding: 50px 0;
+      }
+
+      @keyframes spinner {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      [v-cloak]:before {
+        content: "";
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        margin-top: -25px;
+        margin-left: -25px;
+        border-radius: 50%;
+        border: 5px solid #ccc;
+        border-top-color: #448aff;
+        animation: spinner 0.8s linear infinite;
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      [v-cloak] > * {
+        display: none;
+      }
+    </style>
+    <style>
+      #app {
+        padding: 8px;
+        padding-bottom: 16px;
+        background: #fff;
+      }
+
+      .md-button {
+        margin-left: 0px;
+      }
+
+      .md-field {
+        margin-bottom: 8px;
+      }
+
+      .md-field::after {
+        height: 0.5px !important;
+      }
+
+      .md-has-textarea {
+        margin-top: 4px !important;
+      }
+
+      .md-chips {
+        padding-top: 0px !important;
+      }
+
+      .md-subheading {
+        margin-top: 8px;
+        color: #448aff;
+      }
+
+      .md-divider {
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app" v-cloak>
+      <md-snackbar :md-active.sync="snackbar.active" md-persistent>
+        {{snackbar.content}}
+      </md-snackbar>
+      <div v-if="loadingError">
+        <p>{{loadingError}}</p>
+      </div>
+      <div v-else>
+        <div class="md-subheading">From author</div>
+        <p>
+          This addon can create a trigger to read XML attachments from your
+          Gmail, convert and write them to the spreadsheet which runs daily.
+          Local XML files can also be imported manually. I assume your XML files
+          have the same data structure, more configurations can be done below.
+          <br />
+          <a
+            href="https://www.youtube.com/ashtonfei/"
+            target="_blank"
+            class="md-caption"
+            >Ashton Fei</a
+          >
+        </p>
+        <div class="md-subheading">Trigger Settings</div>
+        <div>
+          <md-switch v-model="app.enabled" :disabled="submitting"
+            >Enable XML Addon</md-switch
+          >
+        </div>
+        <md-field v-if="app.enabled">
+          <label for="movie">Time of the day to execute</label>
+          <md-select v-model="app.hour" :disabled="submitting">
+            <md-option v-for="(option, i) in app.hours" :value="i"
+              >{{option}}</md-option
+            >
+          </md-select>
+        </md-field>
+        <div class="md-subheading">
+          Gmail Query Settings
+          <span>
+            <a
+              href="https://support.google.com/mail/answer/7190?hl=en"
+              target="_blank"
+            >
+              <md-icon>help_outline</md-icon>
+            </a>
+          </span>
+        </div>
+        <md-field>
+          <label>Subject</label>
+          <md-input
+            v-model.trim="app.subject"
+            :disabled="submitting"
+          ></md-input>
+        </md-field>
+        <md-field>
+          <label>From</label>
+          <md-input
+            v-model.trim="app.from"
+            type="email"
+            :disabled="submitting"
+          ></md-input>
+        </md-field>
+        <md-field>
+          <label>To</label>
+          <md-input
+            v-model.trim="app.to"
+            type="email"
+            :disabled="submitting"
+          ></md-input>
+        </md-field>
+        <md-field>
+          <label>Other queries</label>
+          <md-input v-model.trim="app.others" :disabled="submitting"></md-input>
+        </md-field>
+        <md-field>
+          <label>Full search query(try it in Gmail)</label>
+          <md-textarea :value="query" md-autogrow disabled></md-textarea>
+        </md-field>
+
+        <div class="md-subheading">XML Settings</div>
+        <div>
+          <label>Excluded Tags</label>
+          <md-chips
+            v-model="app.tags"
+            md-placeholder="Add tags..."
+            :md-static="submitting"
+            :md-check-duplicated="true"
+            :md-auto-insert="true"
+          ></md-chips>
+        </div>
+        <md-field>
+          <label>Repeat child tag in the root</label>
+          <md-input
+            v-model.trim="app.repeatTag"
+            :disabled="submitting"
+          ></md-input>
+        </md-field>
+        <div>
+          <md-checkbox v-model="app.keepOldRecords" :disabled="submitting"
+            >Keep old records</md-checkbox
+          >
+        </div>
+        <div>
+          <md-button
+            class="md-raised md-primary"
+            :disabled="submitting"
+            @click="saveSettings"
+          >
+            Save Settings</md-button
+          >
+          <md-button
+            class="md-raised md-accent"
+            :disabled="submitting"
+            @click="runQuery"
+          >
+            Run Query
+            <md-tooltip md-direction="bottom"
+              >Save settings before running</md-tooltip
+            >
+          </md-button>
+        </div>
+
+        <md-divider></md-divider>
+        <div class="md-subheading">Import from local</div>
+        <md-field>
+          <label>Import XML</label>
+          <md-file
+            v-model="filesFieldValue"
+            @md-change="readFiles"
+            :disabled="submitting"
+            accept=".xml"
+            multiple
+          />
+        </md-field>
+        <div>
+          <md-button
+            class="md-raised md-primary"
+            :disabled="submitting || files.length === 0"
+            @click="importXml"
+          >
+            Import
+            <md-tooltip md-direction="bottom"
+              >XMLs should have the same structure</md-tooltip
+            >
+          </md-button>
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/vue@2"></script>
+    <script src="https://unpkg.com/vue-material"></script>
+    <script>
+      Vue.use(VueMaterial.default);
+
+      /**
+       * Show message as a snackbar
+       */
+      const showSnackbar = function (content, submitting = false) {
+        const data = {
+          active: true,
+          content: content,
+        };
+        this.snackbar = data;
+        if (!submitting) this.submitting = false;
+      };
+
+      /**
+       * Run the query
+       */
+      const runQuery = function () {
+        this.submitting = true;
+        this.showSnackbar("Running the query...", true);
+        google.script.run
+          .withSuccessHandler((appData) => {
+            const app = JSON.parse(appData);
+            this.app = app;
+            this.showSnackbar("Query was run successfully.");
+          })
+          .withFailureHandler((error) => {
+            this.showSnackbar(error.message);
+          })
+          .runQuery();
+      };
+
+      /**
+       * Save the settings
+       */
+      const saveSettings = function () {
+        this.submitting = true;
+        this.showSnackbar("Saving the settings...", true);
+        const app = JSON.stringify(this.app);
+        google.script.run
+          .withSuccessHandler((appData) => {
+            this.app = JSON.parse(appData);
+            this.showSnackbar("XML addon settings have been saved.");
+          })
+          .withFailureHandler((error) => {
+            this.showSnackbar(error.message);
+          })
+          .saveSettings(app);
+      };
+
+      /**
+       * handle files
+       */
+      const readFiles = function (fileList) {
+        this.files = [];
+        for (let i = 0; i < fileList.length; i++) {
+          const file = fileList[i];
+          const reader = new FileReader();
+          reader.filename = file.name;
+          reader.onload = (event) => {
+            this.files.push({
+              data: event.target.result,
+              name: event.target.filename,
+            });
+          };
+          reader.readAsText(file);
+        }
+      };
+
+      /**
+       * Import xml from local
+       */
+      const importXml = function () {
+        this.submitting = true;
+        this.showSnackbar("Importing XML files...", true);
+        google.script.run
+          .withSuccessHandler(() => {
+            this.showSnackbar("XML files have been imported.");
+            this.files = [];
+            this.filesFieldValue = "";
+          })
+          .withFailureHandler((error) => {
+            this.showSnackbar(error.message);
+          })
+          .importXml(this.files);
+      };
+
+      // Vue methods object
+      const methods = {
+        showSnackbar,
+        saveSettings,
+        runQuery,
+        readFiles,
+        importXml,
+      };
+
+      // Vue data object
+      const data = {
+        submitting: false,
+        loadingError: null,
+        snackbar: {
+          active: false,
+          content: null,
+        },
+        files: [],
+        filesFieldValue: "",
+      };
+
+      // Vue computed object
+      const computed = {
+        query: function () {
+          const items = [];
+          if (this.app.subject) items.push("subject:" + this.app.subject);
+          if (this.app.from) items.push("from:" + this.app.from);
+          if (this.app.to) items.push("to:" + this.app.to);
+          if (this.app.others) items.push(this.app.others);
+          items.push(this.app.xml);
+          return items.join(" ");
+        },
+      };
+
+      /**
+       * loading function
+       */
+      google.script.run
+        .withSuccessHandler((appData) => {
+          const app = JSON.parse(appData);
+          data.app = app;
+          new Vue({
+            el: "#app",
+            data,
+            methods,
+            computed,
+          });
+        })
+        .withFailureHandler((error) => {
+          data.loadingError = error.message;
+          new Vue({
+            el: "#app",
+            data,
+          });
+        })
+        .getAppData();
+    </script>
+  </body>
+</html>
+
